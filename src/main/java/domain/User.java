@@ -29,4 +29,20 @@ public class User {
     public void setNomUtilisateur(String nomUtilisateur){
         this.nomUtilisateur = nomUtilisateur;
     }
+
+    public String getMotDePasseHash(){
+        return motDePasseHash;
+    }
+
+    public void SetMotDePasseHash(String motDePasseHash){
+        this.motDePasseHash = motDePasseHash;
+    }
+
+    public Role getRole(){
+        return role;
+    }
+
+    public void setRole(Role role){
+        this.role = role;
+    }
 }
