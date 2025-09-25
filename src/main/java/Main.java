@@ -1,11 +1,11 @@
-import util.DBconnection;
+import util.JDBCUtil;
 
 import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args){
         try{
-            Connection conn = DBconnection.getInstance().getConnection();
+            Connection conn = JDBCUtil.getInstance().getConnection();
 
             if (conn != null && !conn.isClosed()){
                 System.out.println("Connection to PostgreSQL is working!");
