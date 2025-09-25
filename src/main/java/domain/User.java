@@ -30,11 +30,11 @@ public class User {
         this.email = email;
     }
 
-    public String getMotDePasseHash(){
+    public String getPassword(){
         return password;
     }
 
-    public void SetMotDePasseHash(String motDePasseHash){
+    public void getPassword(String motDePasseHash){
         this.password = motDePasseHash;
     }
 

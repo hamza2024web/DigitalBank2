@@ -1,27 +1,22 @@
 package dto;
 
+import domain.Enums.Role;
+
 public class LoginRequestDTO {
-    private String username;
-    private String password;
+    private String email;
+    private Role role;
 
-    public LoginRequestDTO(String username , String password){
-        this.username = username;
-        this.password = password;
+    public LoginRequestDTO(String email , Role role){
+        this.email = email;
+        this.role = role;
     }
 
-    public String getUername(){
-        return username;
+    public String getEmail(){
+        return email;
     }
 
-    public void setUSername(String username){
-        this.username = username;
+    public Role getRole(){
+        return role;
     }
 
-    public String getPassword(){
-        return password;
-    }
-
-    public void setPassword(String password){
-        this.password = password;
-    }
 }
