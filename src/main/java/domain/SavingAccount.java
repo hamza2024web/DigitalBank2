@@ -7,18 +7,18 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class SavingAccount extends Account{
-    private Double tauxInteret;
+    private BigDecimal tauxInteret;
 
-    public SavingAccount(String id, String iban, AccountType type, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, Double tauxInteret){
+    public SavingAccount(String id, String iban, AccountType type, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, BigDecimal tauxInteret){
         super(id,iban,type,solde,devise,dateCreation,isActive,client);
         this.tauxInteret = tauxInteret;
     }
 
-    public Double getTauxInteret(){
+    public BigDecimal getTauxInteret(){
         return tauxInteret;
     }
 
-    public void setTauxInteret(Double tauxInteret){
+    public void setTauxInteret(BigDecimal tauxInteret){
         this.tauxInteret = tauxInteret;
     }
 }
