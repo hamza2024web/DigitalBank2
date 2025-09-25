@@ -85,9 +85,9 @@ public class UserRepositoryImpl implements UserRepository{
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException{
         User user  = new User(
-                rs.getString("email");
-                rs.getString("password");
-                Role.valueOf(rs.getString("role"));
+                rs.getString("email"),
+                rs.getString("password"),
+                Role.valueOf(rs.getString("role"))
         );
         user.setId(rs.getLong("id"));
         return user;
