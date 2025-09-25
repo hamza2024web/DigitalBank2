@@ -16,7 +16,8 @@ public abstract class Account{
     protected boolean isActive;
     protected Client client;
 
-    public Account(String iban , AccountType type , BigDecimal solde , Currency devise , LocalDate dateCreation , boolean isactive , Client client){
+    public Account(String id , String iban , AccountType type , BigDecimal solde , Currency devise , LocalDate dateCreation , boolean isActive , Client client){
+        this.id = id;
         this.iban = iban;
         this.type = type;
         this.solde = solde;
@@ -24,6 +25,10 @@ public abstract class Account{
         this.dateCreation = dateCreation;
         this.isActive = isActive;
         this.client = client;
+    }
+
+    public String getId(){
+        return id;
     }
 
     public String getIban(){
@@ -54,6 +59,9 @@ public abstract class Account{
         return client;
     }
 
+    public void setId(String id){
+        this.id = id;
+    }
     public void SetIban(String iban){
         this.iban = iban;
     }
