@@ -19,10 +19,9 @@ public class Main {
         AuthView authView = new AuthView();
         ConsoleView consoleView = new ConsoleView();
 
-        AuthController authcontroller = new AuthController(authManager,authorization,authView,consoleView);
+        AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
 
-        MenuNavigator menuNavigator = new MenuNavigator(authManager , authorization , authView , consoleView);
-
+        MenuNavigator menuNavigator = new MenuNavigator(authController);
         menuNavigator.start();
     }
 }
