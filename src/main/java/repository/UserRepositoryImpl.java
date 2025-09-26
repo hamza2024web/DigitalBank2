@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository{
         String sql = "INSERT INTO users (email,password,role) VALUES (?,?,?)";
         try(PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setString(1,user.getEmail());
-            stmt.setString(2,user.getPassword());
+            stmt.setString(2,user.getMotDePasseHash());
             stmt.setString(3,user.getRole().name());
             stmt.executeUpdate();
 
@@ -63,7 +63,7 @@ public class UserRepositoryImpl implements UserRepository{
         String sql = "UPDATE users SET email = ?, password = ? , role = ? WHERE id = ?";
         try(PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setString(1,user.getEmail());
-            stmt.setString(2,hashPassword(user.getPassword()));
+            stmt.setString(2,user.getMotDePasseHash());
             stmt.setString(2,user.getRole().name());
             stmt.setLong(4,user.getId());
             stmt.executeUpdate();
@@ -93,11 +93,4 @@ public class UserRepositoryImpl implements UserRepository{
         return user;
     }
 
-    private String hashPassword(String password){
-        return BCrypt.hashpw(password,BCrypt.gensalt());
-    }
-
-    public boolean checkedPassword(String plainPassword, String hashedPassword){
-        return BCrypt.checkpw(plainPassword,hashedPassword);
-    }
 }

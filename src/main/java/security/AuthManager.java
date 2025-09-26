@@ -2,29 +2,23 @@ package security;
 
 import domain.User;
 import org.mindrot.jbcrypt.BCrypt;
+import repository.UserRepository;
 import repository.UserRepositoryImpl;
 
 public class AuthManager {
 
-    private final UserRepositoryImpl userRepository;
+    private final UserRepository userRepository;
 
-    public AuthManager(UserRepositoryImpl userRepository){
+    public AuthManager(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
-    public User login(String email , String password){
+    public User login(String email , String plainPassword){
         User user = userRepository.findByEmail(email);
-        if (user != null && checkPassword(password,user.getPassword())){
+
+        if (user != null && BCrypt.checkpw(plainPassword, user.getMotDePasseHash())){
             return user;
         }
         return null;
-    }
-
-    public void logout(){
-
-    }
-
-    private boolean checkPassword(String plainPassword, String hashedPassword){
-        return BCrypt.checkpw(plainPassword,hashedPassword);
     }
 }

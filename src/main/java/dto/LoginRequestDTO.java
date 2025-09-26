@@ -4,19 +4,19 @@ import domain.Enums.Role;
 
 public class LoginRequestDTO {
     private String email;
-    private Role role;
+    private String password;
 
-    public LoginRequestDTO(String email , Role role){
+    public LoginRequestDTO(String email , String password){
         this.email = email;
-        this.role = role;
+        this.password = password;
     }
 
     public String getEmail(){
         return email;
     }
 
-    public Role getRole(){
-        return role;
+    public String getPassword(){
+        return password;
     }
 
 }

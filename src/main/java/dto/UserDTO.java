@@ -13,7 +13,7 @@ public class UserDTO {
         this.role = role;
     }
 
-    public Long getID(){
+    public Long getId(){
         return id;
     }
 

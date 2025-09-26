@@ -28,15 +28,15 @@ public class AuthController {
         String email = authView.askEmail();
         String password = authView.askPassword();
 
-        LoginRequestDTO loginDTO = new LoginRequestDTO(email,null);
+        LoginRequestDTO loginDTO = new LoginRequestDTO(email,password);
 
-        currentUser = authManager.login(loginDTO.getEmail(),password);
+        currentUser = authManager.login(loginDTO.getEmail(),loginDTO.getPassword());
 
         if (currentUser != null){
             UserDTO userDTO = new UserDTO(currentUser.getId(),currentUser.getEmail(),currentUser.getRole());
-            consoleView.showMessage("Login successful! Welcome " + userDTO.getEmail() + " | Role : " + userDTO.getRole());
+            consoleView.showMessage("✅ Login successful! Welcome \" + userDTO.getEmail() + \" | Role: \" + userDTO.getRole()");
         } else {
-            consoleView.showMessage("Login failed! Check your credentials.");
+            consoleView.showMessage("❌ Login failed! Check your credentials.");
         }
     }
 

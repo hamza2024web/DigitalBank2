@@ -1,19 +1,28 @@
+import controller.AuthController;
+import repository.UserRepositoryImpl;
+import security.AuthManager;
+import security.Authorization;
 import util.JDBCUtil;
+import view.AuthView;
+import view.ConsoleView;
+import view.MenuNavigator;
 
 import java.sql.Connection;
 
 public class Main {
     public static void main(String[] args){
-        try{
-            Connection conn = JDBCUtil.getInstance().getConnection();
+        UserRepositoryImpl userRepository = new UserRepositoryImpl();
 
-            if (conn != null && !conn.isClosed()){
-                System.out.println("Connection to PostgreSQL is working!");
-            }else {
-                System.out.println("Connection failed!");
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        AuthManager authManager = new AuthManager(userRepository);
+        Authorization authorization = new Authorization();
+
+        AuthView authView = new AuthView();
+        ConsoleView consoleView = new ConsoleView();
+
+        AuthController authcontroller = new AuthController(authManager,authorization,authView,consoleView);
+
+        MenuNavigator menuNavigator = new MenuNavigator(authManager , authorization , authView , consoleView);
+
+        menuNavigator.start();
     }
 }
