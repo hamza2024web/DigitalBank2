@@ -4,13 +4,13 @@ import domain.Enums.Role;
 
 public class User {
     private Long id;
-    private String nomUtilisateur;
-    private String motDePasseHash;
+    private String email;
+    private String password;
     private Role role;
 
-    public User(String nomUtilisateur , String motDePasseHash , Role role){
-        this.nomUtilisateur = nomUtilisateur;
-        this.motDePasseHash = motDePasseHash;
+    public User(String email , String password , Role role){
+        this.email = email;
+        this.password = password;
         this.role = role;
     }
 
@@ -22,20 +22,20 @@ public class User {
         this.id = id;
     }
 
-    public String getNomUtilisateur(){
-        return nomUtilisateur;
+    public String getEmail(){
+        return email;
     }
 
-    public void setNomUtilisateur(String nomUtilisateur){
-        this.nomUtilisateur = nomUtilisateur;
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public String getMotDePasseHash(){
-        return motDePasseHash;
+        return password;
     }
 
-    public void SetMotDePasseHash(String motDePasseHash){
-        this.motDePasseHash = motDePasseHash;
+    public void setMotDePasseHash(String motDePasseHash){
+        this.password = motDePasseHash;
     }
 
     public Role getRole(){

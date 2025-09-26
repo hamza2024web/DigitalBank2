@@ -1,4 +1,7 @@
 package repository;
 
-public class AccountRepository {
+import domain.Account;
+
+public interface AccountRepository {
+    void save(Account account);
 }
