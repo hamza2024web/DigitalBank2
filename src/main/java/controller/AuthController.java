@@ -4,6 +4,7 @@ import domain.Enums.Role;
 import domain.User;
 import dto.LoginRequestDTO;
 import dto.UserDTO;
+import mapper.UserMapper;
 import security.AuthManager;
 import security.Authorization;
 import view.AuthView;
@@ -34,9 +35,9 @@ public class AuthController {
 
         if (currentUser != null){
             UserDTO userDTO = new UserDTO(currentUser.getId(),currentUser.getEmail(),currentUser.getRole());
-            consoleView.showMessage("✅ Login successful! Welcome \" + userDTO.getEmail() + \" | Role: \" + userDTO.getRole()");
+            consoleView.showMessage("Login successful! Welcome " + userDTO.getEmail() + " | Role: " + userDTO.getRole() + " . ");
         } else {
-            consoleView.showMessage("❌ Login failed! Check your credentials.");
+            consoleView.showMessage("Login failed! Check your credentials.");
         }
     }
 
@@ -54,9 +55,6 @@ public class AuthController {
     }
 
     public UserDTO getCurrentUserDTO(){
-        if (currentUser != null){
-            return new UserDTO(currentUser.getId(),currentUser.getEmail(),currentUser.getRole());
-        }
-        return null;
+        return UserMapper.toUserDTO(currentUser);
     }
 }

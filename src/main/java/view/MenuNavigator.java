@@ -55,7 +55,7 @@ public class MenuNavigator {
     }
 
     private void showManagerMenu(){
-        System.out.println("=== MANAGER MANU ====");
+        System.out.println("=== MANAGER MENU ====");
         System.out.println("1. Approve Transaction");
         System.out.println("2. View Teller Performance");
     }
