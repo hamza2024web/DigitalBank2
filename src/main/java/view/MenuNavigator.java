@@ -117,8 +117,13 @@ public class MenuNavigator {
                 case 1 -> {
                     String clientName = tellerView.askClientName();
                     String accountType = tellerView.askAccountType();
-                    double initialeBalance = tellerView.askInitialBalance();
-                    String curreny = tellerView.askCurrency();
+                    double initialBalance = tellerView.askInitialBalance();
+                    String currency = tellerView.askCurrency();
+
+                    System.out.println("Creating account for: " + clientName);
+                    System.out.println("Type: " + accountType);
+                    System.out.println("Initial Balance: " + initialBalance + " " + currency);
+                    System.out.println("Account creation successful!");
                 }
                 case 2 -> {
                     System.out.println("Listing accounts...");
