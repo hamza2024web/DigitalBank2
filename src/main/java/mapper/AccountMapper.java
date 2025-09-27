@@ -1,48 +1,60 @@
 package mapper;
 
-import domain.Account;
-import domain.CreditAccount;
-import domain.CurrentAccount;
-import domain.SavingAccount;
+import domain.*;
+import domain.Enums.Currency;
 import dto.AccountDTO;
 import domain.Enums.AccountType;
+import dto.CreateAccountDTO;
+
+import java.math.BigDecimal;
+
+import static domain.Enums.AccountType.COURANT;
+import static domain.Enums.AccountType.EPARGNE;
 
 public class AccountMapper {
-    public static Account fromDTO(AccountDTO dto) {
-        switch (dto.getType()) {
+    public static Account toAccount(CreateAccountDTO dto, Client client) {
+        switch (dto.getAccountType()) {
             case COURANT:
                 return new CurrentAccount(
-                        dto.getId(),
-                        dto.getIban(),
-                        dto.getType(),
-                        dto.getSolde(),
-                        dto.getDevise(),
-                        dto.getDateCreation(),
-                        dto.isActive(),
-                        dto.getClient(),
-                        dto.getDecouvertAutorise()
+                        null,
+                        null,
+                        COURANT,
+                        BigDecimal.valueOf(dto.getInitialeBalance()),
+                        Currency.valueOf(dto.getCurrency().toUpperCase()),
+                        null,
+                        true,
+                        client,
+                        BigDecimal.ZERO
                 );
 
             case EPARGNE:
                 return new SavingAccount(
-                        dto.getId(),
-                        dto.getIban(),
-                        dto.getType(),
-                        dto.getSolde(),
-                        dto.getDevise(),
-                        dto.getDateCreation(),
-                        dto.isActive(),
-                        dto.getClient(),
-                        dto.getTauxInteret()
-                );
-
-            case CREDIT:
-                return new CreditAccount(
-
+                        null,
+                        null,
+                        EPARGNE,
+                        BigDecimal.valueOf(dto.getInitialeBalance()),
+                        Currency.valueOf(dto.getCurrency().toUpperCase()),
+                        null,
+                        true,
+                        client,
+                        BigDecimal.valueOf(0.03)
                 );
 
             default:
-                throw new IllegalArgumentException("Unknown account type: " + dto.getType());
+                throw new IllegalArgumentException("Unsupported account type: " + dto.getAccountType());
         }
+    }
+
+    public static AccountDTO toAccontDTO(Account account){
+        return new AccountDTO(
+          account.getId(),
+          account.getIban(),
+          account.getAccountType(),
+          account.getSolde(),
+          account.getDevise(),
+          account.getDate(),
+          account.getActive(),
+          account.getClient()
+        );
     }
 }

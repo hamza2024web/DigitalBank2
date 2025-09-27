@@ -32,6 +32,17 @@ public class AccountDTO {
         this.tauxInteret = tauxInteret;
     }
 
+    public AccountDTO(String id, String iban, AccountType accountType, BigDecimal solde, Currency devise, LocalDate date, boolean active, Client client) {
+        this.id = id;
+        this.iban = iban;
+        this.type = accountType;
+        this.solde = solde;
+        this.devise = devise;
+        this.dateCreation = date;
+        this.isActive = active;
+        this.client = client;
+    }
+
     public String getId() {
         return id;
     }
