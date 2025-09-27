@@ -45,7 +45,7 @@ public class AccountMapper {
         }
     }
 
-    public static AccountDTO toAccontDTO(Account account){
+    public static AccountDTO toAccountDTO(Account account){
         return new AccountDTO(
           account.getId(),
           account.getIban(),
