@@ -62,7 +62,7 @@ public abstract class Account{
     public void setId(String id){
         this.id = id;
     }
-    public void SetIban(String iban){
+    public void setIban(String iban){
         this.iban = iban;
     }
 

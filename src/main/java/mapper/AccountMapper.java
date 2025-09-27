@@ -1,6 +1,7 @@
 package mapper;
 
 import domain.Account;
+import domain.CreditAccount;
 import domain.CurrentAccount;
 import domain.SavingAccount;
 import dto.AccountDTO;
@@ -36,8 +37,9 @@ public class AccountMapper {
                 );
 
             case CREDIT:
-                // tu pourras créer une classe CreditAccount ici plus tard
-                throw new UnsupportedOperationException("Credit account not implemented yet");
+                return new CreditAccount(
+
+                );
 
             default:
                 throw new IllegalArgumentException("Unknown account type: " + dto.getType());
