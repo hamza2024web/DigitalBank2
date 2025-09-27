@@ -120,10 +120,7 @@ public class MenuNavigator {
                     double initialBalance = tellerView.askInitialBalance();
                     String currency = tellerView.askCurrency();
 
-                    System.out.println("Creating account for: " + clientName);
-                    System.out.println("Type: " + accountType);
-                    System.out.println("Initial Balance: " + initialBalance + " " + currency);
-                    System.out.println("Account creation successful!");
+
                 }
                 case 2 -> {
                     System.out.println("Listing accounts...");
