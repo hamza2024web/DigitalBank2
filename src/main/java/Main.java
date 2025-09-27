@@ -6,6 +6,7 @@ import util.JDBCUtil;
 import view.AuthView;
 import view.ConsoleView;
 import view.MenuNavigator;
+import view.TellerView;
 
 import java.sql.Connection;
 
@@ -20,8 +21,9 @@ public class Main {
         ConsoleView consoleView = new ConsoleView();
 
         AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
+        TellerView tellerView = new TellerView();
 
-        MenuNavigator menuNavigator = new MenuNavigator(authController);
+        MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView);
         menuNavigator.start();
     }
 }
