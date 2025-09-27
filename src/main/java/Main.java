@@ -1,3 +1,4 @@
+import controller.AccountController;
 import controller.AuthController;
 import repository.UserRepositoryImpl;
 import security.AuthManager;
@@ -22,8 +23,9 @@ public class Main {
 
         AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
         TellerView tellerView = new TellerView();
+        AccountController accountController = new AccountController();
 
-        MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView);
+        MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView,accountController);
         menuNavigator.start();
     }
 }

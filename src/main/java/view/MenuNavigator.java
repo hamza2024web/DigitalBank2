@@ -1,7 +1,9 @@
 package view;
 
+import controller.AccountController;
 import controller.AuthController;
 import domain.User;
+import dto.CreateAccountDTO;
 import dto.UserDTO;
 import security.AuthManager;
 import security.Authorization;
@@ -11,11 +13,13 @@ import java.util.Scanner;
 public class MenuNavigator {
     private final AuthController authController;
     private final TellerView tellerView;
+    private final AccountController accountController;
     private final Scanner scanner = new Scanner(System.in);
 
-    public MenuNavigator(AuthController authController, TellerView tellerView){
+    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController){
         this.authController = authController;
         this.tellerView = tellerView;
+        this.accountController = accountController;
     }
 
     public void start(){
@@ -120,7 +124,8 @@ public class MenuNavigator {
                     double initialBalance = tellerView.askInitialBalance();
                     String currency = tellerView.askCurrency();
 
-
+                    CreateAccountDTO createAccountDTO = new CreateAccountDTO(clientName,accountType,initialBalance,currency);
+                    accountController.createAccount(createAccountDTO);
                 }
                 case 2 -> {
                     System.out.println("Listing accounts...");
