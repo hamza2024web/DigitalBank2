@@ -46,7 +46,7 @@ public class AccountService {
 
             String fullName = firstName + " " + lastName;
 
-            Client client = new Client(generateClientId(),lastName, fullName, income);
+            Client client = new Client(lastName, fullName, income);
 
             return client;
 
@@ -76,7 +76,4 @@ public class AccountService {
         return "MA64BMCE" + String.format("%020d", System.currentTimeMillis() % 100000000000000000L);
     }
 
-    private String generateClientId() {
-        return "CLI-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-    }
 }

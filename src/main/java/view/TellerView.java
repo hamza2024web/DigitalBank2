@@ -39,7 +39,7 @@ public class TellerView {
     }
 
     public String askClientFirstName(){
-        System.out.print("Enter client name: ");
+        System.out.print("Enter client first name: ");
         String firstName = scanner.nextLine().trim();
         while (firstName.isEmpty()) {
             System.out.print("Client name cannot be empty. Please enter client name: ");

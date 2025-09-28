@@ -108,7 +108,7 @@ public class AccountRepositoryImpl implements AccountRepository{
     }
 
     private void saveAccount(Connection connection , Account account) throws SQLException{
-        String sql = "INSERT INTO accounts (id,iban,type,balance,devise,date_creation,is_active,client_id) VALUES (?,?,?,?,?,?,?,?) ";
+        String sql = "INSERT INTO accounts (id,iban,type,solde,devise,date_creation,is_active,client_id) VALUES (?,?,?::account_type_enum,?,?::currency_enum,?,?,?) ";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setString(1, account.getId());
             stmt.setString(2, account.getIban());
@@ -117,7 +117,7 @@ public class AccountRepositoryImpl implements AccountRepository{
             stmt.setString(5, account.getDevise().toString());
             stmt.setDate(6, java.sql.Date.valueOf(account.getDate()));
             stmt.setBoolean(7, account.getActive());
-            stmt.setString(8, account.getClient().getId());
+            stmt.setLong(8, account.getClient().getId());
 
             stmt.executeUpdate();
         }

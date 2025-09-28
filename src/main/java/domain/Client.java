@@ -3,18 +3,18 @@ package domain;
 import java.math.BigDecimal;
 
 public class Client {
-    private String id;
+    private Long id;
     private String nom;
     private String prenom;
     private BigDecimal revenueMensuel;
 
-    public Client(String id, String nom , String prenom , BigDecimal revenueMensuel){
+    public Client(String nom , String prenom , BigDecimal revenueMensuel){
         this.nom = nom;
         this.prenom = prenom;
         this.revenueMensuel = revenueMensuel;
     }
 
-    public String getId(){
+    public long getId(){
         return id;
     }
 

@@ -16,7 +16,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     public void save(Client client) {
         String sql = "INSERT INTO clients (id, prenom, nom, revenue_mensuel) VALUES (?,?,?,?)";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, client.getId());
+            stmt.setLong(1, client.getId());
             stmt.setString(2, client.getPrenom());
             stmt.setString(3, client.getNom());
             stmt.setBigDecimal(4, client.getRevenueMensuel());
@@ -81,7 +81,7 @@ public class ClientRepositoryImpl implements ClientRepository {
             stmt.setString(1, client.getPrenom());
             stmt.setString(2, client.getNom());
             stmt.setBigDecimal(3, client.getRevenueMensuel());
-            stmt.setString(4, client.getId());
+            stmt.setLong(4, client.getId());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,7 +129,6 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     private Client mapResultSetToClient(ResultSet rs) throws SQLException {
         return new Client(
-                rs.getString("id"),
                 rs.getString("prenom"),
                 rs.getString("nom"),
                 rs.getBigDecimal("revenue_mensuel")
