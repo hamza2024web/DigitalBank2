@@ -8,17 +8,16 @@ import dto.CreateAccountDTO;
 
 import java.math.BigDecimal;
 
-import static domain.Enums.AccountType.COURANT;
-import static domain.Enums.AccountType.EPARGNE;
-
 public class AccountMapper {
     public static Account toAccount(CreateAccountDTO dto, Client client) {
-        switch (dto.getAccountType()) {
+        AccountType accountType = AccountType.valueOf(dto.getAccountType().toUpperCase());
+
+        switch (accountType) {
             case COURANT:
                 return new CurrentAccount(
                         null,
                         null,
-                        COURANT,
+                        AccountType.COURANT,
                         new BigDecimal(dto.getInitialBalance()),
                         Currency.valueOf(dto.getCurrency().toUpperCase()),
                         null,
@@ -31,17 +30,28 @@ public class AccountMapper {
                 return new SavingAccount(
                         null,
                         null,
-                        EPARGNE,
+                        AccountType.EPARGNE,
                         new BigDecimal(dto.getInitialBalance()),
                         Currency.valueOf(dto.getCurrency().toUpperCase()),
                         null,
                         true,
                         client,
-                        BigDecimal.valueOf(0.03)
+                        new BigDecimal("0.03")
+                );
+
+            case CREDIT:
+                return new CreditAccount(
+                        null,
+                        null,
+                        client,
+                        new BigDecimal(dto.getInitialBalance()),
+                        36,
+                        5.0,
+                        null
                 );
 
             default:
-                throw new IllegalArgumentException("Unsupported account type: " + dto.getAccountType());
+                throw new IllegalArgumentException("Unsupported account type: " + accountType);
         }
     }
 

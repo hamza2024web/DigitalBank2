@@ -8,9 +8,9 @@ public class Enheance {
     private BigDecimal montant;
     private LocalDate dateEcheance;
     private boolean estPayee;
-    private Credit credit;
+    private CreditAccount credit;
 
-    public Enheance(Long id, BigDecimal montant, LocalDate dateEcheance, boolean estPayee, Credit credit) {
+    public Enheance(Long id, BigDecimal montant, LocalDate dateEcheance, boolean estPayee, CreditAccount credit) {
         this.id = id;
         this.montant = montant;
         this.dateEcheance = dateEcheance;
@@ -50,11 +50,11 @@ public class Enheance {
         this.estPayee = estPayee;
     }
 
-    public Credit getCredit() {
+    public CreditAccount getCredit() {
         return credit;
     }
 
-    public void setCredit(Credit credit) {
+    public void setCredit(CreditAccount credit) {
         this.credit = credit;
     }
 }

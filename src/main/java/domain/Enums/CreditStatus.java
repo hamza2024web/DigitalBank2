@@ -4,5 +4,6 @@ public enum CreditStatus   {
     ACTIVE,
     LATE,
     CLOSED,
-    REJECTED
+    REJECTED,
+    PENDING
 }
