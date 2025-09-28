@@ -58,7 +58,7 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public Optional<Account> findByIban(String iban) {
-        String sql = "SELECT * FROM accounts WHERE iban = ?";
+        String sql = "SELECT * FROM accounts INNER JOIN courant_accounts ON courant_accounts.account_id = accounts.id INNER JOIN saving_accounts ON saving_accounts.account_id = accounts.id WHERE iban = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, iban);
 

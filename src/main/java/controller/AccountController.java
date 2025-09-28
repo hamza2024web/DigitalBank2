@@ -1,9 +1,12 @@
 package controller;
 
 import domain.User;
+import dto.AccountDTO;
 import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import service.AccountService;
+
+import java.util.List;
 
 public class AccountController {
     private final AccountService accountService;
@@ -21,7 +24,15 @@ public class AccountController {
     }
 
     public void clientAccountRequest(ClientAccountsRequestDTO clientAccountRequest , User teller){
-        accountService.clientAccountRequest(clientAccountRequest,teller);
+        List<AccountDTO> accounts = accountService.clientAccountRequest(clientAccountRequest,teller);
 
+        if(accounts.isEmpty()){
+            System.out.println("No accounts found for this client.");
+        } else {
+            System.out.println("Accounts for client:");
+            for (AccountDTO account : accounts) {
+                System.out.println("IBAN: " + account.getIban() + ", Type: " + account.getType() + ", Balance: " + account.getSolde() + ", Currency: " + account.getDevise() + ", Created Date: " + account.getDateCreation());
+            }
+        }
     }
 }
