@@ -1,6 +1,7 @@
 import controller.AccountController;
 import controller.AuthController;
 import repository.AccountRepositoryImpl;
+import repository.ClientRepositoryImpl;
 import repository.UserRepositoryImpl;
 import security.AuthManager;
 import security.Authorization;
@@ -26,7 +27,8 @@ public class Main {
         AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
         TellerView tellerView = new TellerView();
         AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
-        AccountService accountService = new AccountService(accountRepository);
+        ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
+        AccountService accountService = new AccountService(accountRepository,clientRepository);
         AccountController accountController = new AccountController(accountService);
 
         MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView,accountController);

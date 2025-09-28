@@ -8,13 +8,14 @@ public class Client {
     private String prenom;
     private BigDecimal revenueMensuel;
 
-    public Client(String nom , String prenom , BigDecimal revenueMensuel){
+    public Client(Long id, String nom , String prenom , BigDecimal revenueMensuel){
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.revenueMensuel = revenueMensuel;
     }
 
-    public long getId(){
+    public Long getId(){
         return id;
     }
 
@@ -28,6 +29,10 @@ public class Client {
 
     public BigDecimal getRevenueMensuel(){
         return revenueMensuel;
+    }
+
+    public void setId(Long id){
+        this.id = id;
     }
 
     public void setNom(String nom){

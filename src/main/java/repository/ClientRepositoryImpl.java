@@ -14,14 +14,18 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public void save(Client client) {
-        String sql = "INSERT INTO clients (id, prenom, nom, revenue_mensuel) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO clients (prenom, nom, revenue_mensuel) VALUES (?,?,?) RETURNING id";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setLong(1, client.getId());
-            stmt.setString(2, client.getPrenom());
-            stmt.setString(3, client.getNom());
-            stmt.setBigDecimal(4, client.getRevenueMensuel());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+            stmt.setString(1, client.getPrenom());
+            stmt.setString(2, client.getNom());
+            stmt.setBigDecimal(3, client.getRevenueMensuel());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    client.setId(rs.getLong("id")); // set generated ID
+                }
+            }
+        } catch(SQLException e){
             e.printStackTrace();
         }
     }
@@ -92,7 +96,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     public void delete(String clientId) {
         String sql = "DELETE FROM clients WHERE id = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, clientId);
+            stmt.setLong(1, Long.parseLong(clientId));
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -103,7 +107,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     public boolean exists(String clientId) {
         String sql = "SELECT COUNT(*) FROM clients WHERE id = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, clientId);
+            stmt.setLong(1, Long.parseLong(clientId));
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next() && rs.getInt(1) > 0;
             }
@@ -129,6 +133,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     private Client mapResultSetToClient(ResultSet rs) throws SQLException {
         return new Client(
+                rs.getLong("id"),
                 rs.getString("prenom"),
                 rs.getString("nom"),
                 rs.getBigDecimal("revenue_mensuel")
