@@ -1,37 +1,42 @@
 import controller.AccountController;
 import controller.AuthController;
-import repository.AccountRepositoryImpl;
-import repository.ClientRepositoryImpl;
-import repository.UserRepositoryImpl;
+import domain.User;
+import repository.*;
 import security.AuthManager;
 import security.Authorization;
-import service.AccountService;
-import util.JDBCUtil;
-import view.AuthView;
-import view.ConsoleView;
-import view.MenuNavigator;
-import view.TellerView;
-
-import java.sql.Connection;
+import service.*;
+import view.*;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
+        // Repositories
         UserRepositoryImpl userRepository = new UserRepositoryImpl();
-
-        AuthManager authManager = new AuthManager(userRepository);
-        Authorization authorization = new Authorization();
-
-        AuthView authView = new AuthView();
-        ConsoleView consoleView = new ConsoleView();
-
-        AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
-        TellerView tellerView = new TellerView();
         AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
         ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
-        AccountService accountService = new AccountService(accountRepository,clientRepository);
+        OperationRepositoryImpl operationRepository = new OperationRepositoryImpl();
+        AuditLogRepositoryImpl auditLogRepository = new AuditLogRepositoryImpl();
+
+        // Auth Layer
+        AuthManager authManager = new AuthManager(userRepository);
+        Authorization authorization = new Authorization();
+        AuthView authView = new AuthView();
+        ConsoleView consoleView = new ConsoleView();
+        AuthController authController = new AuthController(authManager, authorization, authView, consoleView);
+
+        // Login first
+        User loggedInUser = authController.login();
+
+        // Services
+        AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository);
+
+        // Controllers
         AccountController accountController = new AccountController(accountService);
 
-        MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView,accountController);
+        // Views
+        TellerView tellerView = new TellerView();
+
+        // Menu Navigator
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, accountController, loggedInUser);
         menuNavigator.start();
     }
 }

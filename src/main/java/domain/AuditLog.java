@@ -14,8 +14,7 @@ public class AuditLog {
     private boolean success;
     private String errorMessage;
 
-    public AuditLog(Long id, LocalDateTime timestamp, String action, String details, Long userId, Role userRole, boolean success, String errorMessage) {
-        this.id = id;
+    public AuditLog(LocalDateTime timestamp, String action, String details, Long userId, Role userRole, boolean success, String errorMessage) {
         this.timestamp = timestamp;
         this.action = action;
         this.details = details;
@@ -27,10 +26,6 @@ public class AuditLog {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getTimestamp() {

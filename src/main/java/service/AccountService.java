@@ -1,25 +1,35 @@
 package service;
 
 import domain.Account;
+import domain.AuditLog;
 import domain.Client;
+import domain.OperationHistory;
 import dto.CreateAccountDTO;
 import dto.AccountDTO;
 import mapper.AccountMapper;
 import repository.AccountRepositoryImpl;
+import repository.AuditLogRepositoryImpl;
 import repository.ClientRepositoryImpl;
+import repository.OperationRepositoryImpl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.UUID;
 
 public class AccountService {
 
     private final AccountRepositoryImpl accountRepository;
     private final ClientRepositoryImpl clientRepository;
+    private final OperationRepositoryImpl operationRepository;
+    private final AuditLogRepositoryImpl auditLogRepository;
 
-    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository) {
+    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository,OperationRepositoryImpl operationRepository ,AuditLogRepositoryImpl auditLogRepository) {
         this.accountRepository = accountRepository;
         this.clientRepository = clientRepository;
+        this.operationRepository = operationRepository;
+        this.auditLogRepository = auditLogRepository;
     }
 
     public AccountDTO createAccount(CreateAccountDTO createAccountDTO) {
@@ -36,6 +46,25 @@ public class AccountService {
             setAccountSpecificProperties(account);
 
             accountRepository.save(account);
+
+            OperationHistory op = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_CREATION",
+                    account.getId().toString(),
+                    account.getId().toString(),
+                    "Initial account creation",
+                    "SUCCESS",
+                    account.getSolde(),
+                    account.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+
+            operationRepository.save(op);
+
+            AuditLog log = new AuditLog(
+                    LocalDateTime.now(),
+
+            );
 
             return AccountMapper.toAccountDTO(account);
 

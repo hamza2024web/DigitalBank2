@@ -5,8 +5,6 @@ import controller.AuthController;
 import domain.User;
 import dto.CreateAccountDTO;
 import dto.UserDTO;
-import security.AuthManager;
-import security.Authorization;
 
 import java.util.Scanner;
 
@@ -14,9 +12,10 @@ public class MenuNavigator {
     private final AuthController authController;
     private final TellerView tellerView;
     private final AccountController accountController;
+
     private final Scanner scanner = new Scanner(System.in);
 
-    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController){
+    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController, User loggedInUser){
         this.authController = authController;
         this.tellerView = tellerView;
         this.accountController = accountController;
