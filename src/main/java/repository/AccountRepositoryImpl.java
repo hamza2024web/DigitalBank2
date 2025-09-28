@@ -3,13 +3,16 @@ package repository;
 import domain.Account;
 import domain.CreditAccount;
 import domain.CurrentAccount;
+import domain.Enums.Currency;
 import domain.SavingAccount;
 import util.JDBCUtil;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +58,37 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public Optional<Account> findByIban(String iban) {
+        String sql = "SELECT * FROM accounts WHERE iban = ?";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            stmt.setString(1, iban);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String type = rs.getString("type");
+                    Account account;
+
+                    String AccountIban = rs.getString("iban");
+                    BigDecimal solde = rs.getBigDecimal("solde");
+                    Currency devise = Currency.valueOf(rs.getString("devise"));
+                    LocalDate dateCreation = rs.getDate("date_creation").toLocalDate();
+
+                    if ("COURANT".equalsIgnoreCase(type)) {
+                        BigDecimal decouvertAutorise = rs.getBigDecimal("decouvert_autorise");
+                        account = new CurrentAccount(AccountIban, solde, devise, dateCreation, decouvertAutorise);
+                    } else if ("EPARGNE".equalsIgnoreCase(type)) {
+                        BigDecimal tauxInteret = rs.getBigDecimal("taux_interet");
+                        account = new SavingAccount(AccountIban, solde, devise, dateCreation, tauxInteret);
+                    } else {
+                        throw new IllegalStateException("Unknown account type: " + type);
+                    }
+
+                    return Optional.of(account);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return Optional.empty();
     }
 

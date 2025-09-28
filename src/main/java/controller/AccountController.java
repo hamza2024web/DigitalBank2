@@ -1,6 +1,7 @@
 package controller;
 
 import domain.User;
+import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import service.AccountService;
 
@@ -17,5 +18,10 @@ public class AccountController {
                 + " | Type: " + createAccountDTO.getAccountType()
                 + " | Balance: " + createAccountDTO.getInitialBalance()
                 + " | Currency: " + createAccountDTO.getCurrency());
+    }
+
+    public void clientAccountRequest(ClientAccountsRequestDTO clientAccountRequest , User teller){
+        accountService.clientAccountRequest(clientAccountRequest,teller);
+
     }
 }

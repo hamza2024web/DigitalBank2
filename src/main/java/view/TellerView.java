@@ -93,13 +93,13 @@ public class TellerView {
             System.out.print("Enter account ID: ");
             try {
                 id = scanner.nextInt();
-                scanner.nextLine(); // consume newline
+                scanner.nextLine();
                 if (id <= 0) {
                     System.out.println("Account ID must be positive. Please enter a valid ID.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid account ID.");
-                scanner.nextLine(); // consume invalid input
+                scanner.nextLine();
             }
         }
         return id;
@@ -111,13 +111,13 @@ public class TellerView {
             System.out.print("Enter destination account ID: ");
             try {
                 id = scanner.nextInt();
-                scanner.nextLine(); // consume newline
+                scanner.nextLine();
                 if (id <= 0) {
                     System.out.println("Destination account ID must be positive. Please enter a valid ID.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid destination account ID.");
-                scanner.nextLine(); // consume invalid input
+                scanner.nextLine();
             }
         }
         return id;
@@ -141,6 +141,10 @@ public class TellerView {
         return amount;
     }
 
+    public String askTellerIbanClient(){
+        System.out.println("Enter Account IBAN : ");
+        return scanner.nextLine();
+    }
     public void showMessage(String message){
         System.out.println(message);
     }

@@ -3,6 +3,7 @@ package view;
 import controller.AccountController;
 import controller.AuthController;
 import domain.User;
+import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import dto.UserDTO;
 
@@ -15,7 +16,6 @@ public class MenuNavigator {
 
     private final Scanner scanner = new Scanner(System.in);
     private final User loggedInUser;
-
     public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController , User loggedInUser){
         this.authController = authController;
         this.tellerView = tellerView;
@@ -72,14 +72,12 @@ public class MenuNavigator {
             switch (choice) {
                 case 1 -> {
                     System.out.println("Managing users...");
-                    // Add admin user management logic here
                 }
                 case 2 -> {
                     System.out.println("Viewing reports...");
-                    // Add reports logic here
                 }
                 case 3 -> {
-                    return; // Back to main menu
+                    return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -99,14 +97,12 @@ public class MenuNavigator {
             switch (choice) {
                 case 1 -> {
                     System.out.println("Approving transactions...");
-                    // Add transaction approval logic here
                 }
                 case 2 -> {
                     System.out.println("Viewing teller performance...");
-                    // Add performance viewing logic here
                 }
                 case 3 -> {
-                    return; // Back to main menu
+                    return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }
@@ -131,7 +127,9 @@ public class MenuNavigator {
                     accountController.createAccount(createAccountDTO,loggedInUser);
                 }
                 case 2 -> {
-                    System.out.println("Listing accounts...");
+                    String clientIban = tellerView.askTellerIbanClient();
+                    ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
+                    accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
                 }
                 case 3 -> {
                     System.out.println("Requesting account closure...");
@@ -159,11 +157,11 @@ public class MenuNavigator {
     private int getValidChoice() {
         try {
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine();
             return choice;
         } catch (Exception e) {
-            scanner.nextLine(); // consume invalid input
-            return -1; // invalid choice
+            scanner.nextLine();
+            return -1;
         }
     }
 }

@@ -1,6 +1,7 @@
 package service;
 
 import domain.*;
+import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import dto.AccountDTO;
 import mapper.AccountMapper;
@@ -75,6 +76,10 @@ public class AccountService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to create account: " + e.getMessage(), e);
         }
+    }
+
+    public ClientAccountsRequestDTO clientAccountRequest(ClientAccountsRequestDTO clientAccountsRequest , User teller){
+        clientRepository.
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {

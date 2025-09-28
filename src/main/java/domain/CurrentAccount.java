@@ -14,6 +14,10 @@ public class CurrentAccount extends Account{
         this.decouvertAutorise = decouvertAutorise;
     }
 
+    public CurrentAccount(String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, BigDecimal decouvertAutorise) {
+        super(null, iban, AccountType.COURANT, solde, devise, dateCreation, true, null);
+        this.decouvertAutorise = decouvertAutorise;
+    }
     public BigDecimal getDecouvertAutorise(){
         return decouvertAutorise;
     }

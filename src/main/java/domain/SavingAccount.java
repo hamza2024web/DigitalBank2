@@ -14,6 +14,11 @@ public class SavingAccount extends Account{
         this.tauxInteret = tauxInteret;
     }
 
+    public SavingAccount(String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, BigDecimal decouvertAutorise) {
+        super(null, iban, AccountType.EPARGNE, solde, devise, dateCreation, true, null);
+        this.tauxInteret = tauxInteret;
+    }
+
     public BigDecimal getTauxInteret(){
         return tauxInteret;
     }

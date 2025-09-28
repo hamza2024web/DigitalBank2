@@ -23,7 +23,7 @@ public class Main {
         ConsoleView consoleView = new ConsoleView();
         AuthController authController = new AuthController(authManager, authorization, authView, consoleView);
 
-        // Login first
+        // Login first (returning authenticated teller)
         User loggedInUser = authController.login();
 
         // Services
@@ -35,7 +35,7 @@ public class Main {
         // Views
         TellerView tellerView = new TellerView();
 
-        // Menu Navigator
+        // Menu Navigator — pass the authenticated user down
         MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, accountController, loggedInUser);
         menuNavigator.start();
     }
