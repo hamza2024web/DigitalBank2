@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class AccountService {
@@ -78,8 +80,32 @@ public class AccountService {
         }
     }
 
-    public ClientAccountsRequestDTO clientAccountRequest(ClientAccountsRequestDTO clientAccountsRequest , User teller){
-        clientRepository.
+    public List<AccountDTO> clientAccountRequest(ClientAccountsRequestDTO clientAccountsRequest , User teller){
+        String iban = clientAccountsRequest.getClientIban();
+
+        Optional<Account> accountOpt = accountRepository.findByIban(iban);
+
+        if(accountOpt.isEmpty()){
+            throw new RuntimeException("No account found for IBAN: " + iban);
+        }
+
+        Account account = accountOpt.get();
+        Client client = account.getClient();
+
+        List<Account> ClientAccounts = accountRepository.findByClientId(client.getId().toString());
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "CLIENT_ACCOUNTS_REQUEST",
+                "Teller " + teller.getId() + " requested accounts for client " + client.getId(),
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
+
+        return ClientAccounts.stream().map(AccountMapper::toAccountDTO).toList();
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {
