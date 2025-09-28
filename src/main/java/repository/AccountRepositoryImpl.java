@@ -1,9 +1,15 @@
 package repository;
 
 import domain.Account;
+import domain.CreditAccount;
+import domain.CurrentAccount;
+import domain.SavingAccount;
 import util.JDBCUtil;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +17,35 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public void save(Account account) {
+        Connection connection = null;
+        try {
+            connection = JDBCUtil.getInstance().getConnection();
+            connection.setAutoCommit(false);
 
+            saveAccount(connection,account);
+
+            saveAccountSpecificData(connection,account);
+
+            connection.commit();
+        } catch(SQLException e){
+            try {
+                if (connection != null) {
+                    connection.rollback(); // Rollback on error
+                }
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true); // Reset auto-commit
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -46,11 +80,93 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public boolean exists(String accountId) {
+        String sql = "SELECT COUNT(*) FROM accounts WHERE id = ?";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setString(1,accountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return false;
     }
 
     @Override
     public boolean ibanExists(String iban) {
+        String sql = "SELECT COUNT(*) FROM accounts WHERE iban = ?";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setString(1,iban);
+
+            try (ResultSet rs = stmt.executeQuery()){
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
         return false;
+    }
+
+    private void saveAccount(Connection connection , Account account) throws SQLException{
+        String sql = "INSERT INTO accounts (id,iban,type,balance,devise,date_creation,is_active,client_id) VALUES (?,?,?,?,?,?,?,?) ";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setString(1, account.getId());
+            stmt.setString(2, account.getIban());
+            stmt.setString(3, account.getAccountType().toString());
+            stmt.setBigDecimal(4, account.getSolde());
+            stmt.setString(5, account.getDevise().toString());
+            stmt.setDate(6, java.sql.Date.valueOf(account.getDate()));
+            stmt.setBoolean(7, account.getActive());
+            stmt.setString(8, account.getClient().getId());
+
+            stmt.executeUpdate();
+        }
+    }
+
+    private void saveAccountSpecificData(Connection connection, Account account) throws SQLException {
+        if (account instanceof CurrentAccount currentAccount){
+            saveCourantAccountData(connection,currentAccount);
+        } else if (account instanceof SavingAccount savingAccount){
+            saveEpargneAccountData(connection,savingAccount);
+        } else if (account instanceof CreditAccount creditAccount){
+            saveCreditAccountData(connection, creditAccount);
+        }
+    }
+
+    private void saveCourantAccountData(Connection connection, CurrentAccount account) throws SQLException {
+        String sql = "INSERT INTO courant_accounts (account_id, decouvert_autorise) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, account.getId());
+            stmt.setBigDecimal(2, account.getDecouvertAutorise());
+            stmt.executeUpdate();
+        }
+    }
+
+    private void saveEpargneAccountData(Connection connection, SavingAccount account) throws SQLException {
+        String sql = "INSERT INTO saving_accounts (account_id, taux_interet) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, account.getId());
+            stmt.setBigDecimal(2, account.getTauxInteret());
+            stmt.executeUpdate();
+        }
+    }
+
+    private void saveCreditAccountData(Connection connection, CreditAccount account) throws SQLException {
+        String sql = "INSERT INTO credit_accounts (account_id, montant_demande, duree_mois, taux_annuel, statut, solde_restant, date_demande, date_prochaine_echeance, compte_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, account.getId());
+            stmt.setBigDecimal(2, account.getMontantDemande());
+            stmt.setInt(3, account.getDureeMois());
+            stmt.setDouble(4, account.getTauxAnnuel());
+            stmt.setString(5, account.getStatut().toString());
+            stmt.setBigDecimal(6, account.getSoldeRestant());
+            stmt.setDate(7, java.sql.Date.valueOf(account.getDateDemande()));
+            stmt.setDate(8, java.sql.Date.valueOf(account.getDateProchaineEcheance()));
+            stmt.setString(9, account.getRelatedAccount() != null ? account.getRelatedAccount().getId() : null);
+            stmt.executeUpdate();
+        }
     }
 }

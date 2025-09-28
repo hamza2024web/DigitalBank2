@@ -15,19 +15,16 @@ public class CreditAccount extends Account {
     private BigDecimal soldeRestant;
     private LocalDate dateDemande;
     private LocalDate dateProchaineEcheance;
-    private Account relatedAccount; // Account linked to this credit
+    private Account relatedAccount;
 
-    // Constructor with proper name and parent constructor call
     public CreditAccount(String id, String iban, AccountType type, BigDecimal solde,
                          Currency devise, LocalDate dateCreation, boolean isActive, Client client,
                          BigDecimal montantDemande, int dureeMois, Double tauxAnnuel,
                          CreditStatus statut, BigDecimal soldeRestant, LocalDate dateDemande,
                          LocalDate dateProchaineEcheance, Account relatedAccount) {
 
-        // Call parent constructor
         super(id, iban, type, solde, devise, dateCreation, isActive, client);
 
-        // Initialize credit-specific fields
         this.montantDemande = montantDemande;
         this.dureeMois = dureeMois;
         this.tauxAnnuel = tauxAnnuel;
@@ -38,16 +35,13 @@ public class CreditAccount extends Account {
         this.relatedAccount = relatedAccount;
     }
 
-    // Simplified constructor for creating new credit requests
     public CreditAccount(String id, String iban, Client client,
                          BigDecimal montantDemande, int dureeMois, Double tauxAnnuel,
                          Account relatedAccount) {
 
-        // Call parent constructor with default values
         super(id, iban, AccountType.CREDIT, BigDecimal.ZERO,
                 Currency.MAD, LocalDate.now(), true, client);
 
-        // Initialize credit-specific fields
         this.montantDemande = montantDemande;
         this.dureeMois = dureeMois;
         this.tauxAnnuel = tauxAnnuel;
