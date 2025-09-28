@@ -14,11 +14,13 @@ public class MenuNavigator {
     private final AccountController accountController;
 
     private final Scanner scanner = new Scanner(System.in);
+    private final User loggedInUser;
 
-    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController, User loggedInUser){
+    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController , User loggedInUser){
         this.authController = authController;
         this.tellerView = tellerView;
         this.accountController = accountController;
+        this.loggedInUser = loggedInUser;
     }
 
     public void start(){
@@ -126,7 +128,7 @@ public class MenuNavigator {
                     String currency = tellerView.askCurrency();
 
                     CreateAccountDTO createAccountDTO = new CreateAccountDTO(firstName,lastName,mounthlyIncome,accountType,initialBalance,currency);
-                    accountController.createAccount(createAccountDTO);
+                    accountController.createAccount(createAccountDTO,loggedInUser);
                 }
                 case 2 -> {
                     System.out.println("Listing accounts...");

@@ -1,9 +1,6 @@
 package service;
 
-import domain.Account;
-import domain.AuditLog;
-import domain.Client;
-import domain.OperationHistory;
+import domain.*;
 import dto.CreateAccountDTO;
 import dto.AccountDTO;
 import mapper.AccountMapper;
@@ -32,7 +29,7 @@ public class AccountService {
         this.auditLogRepository = auditLogRepository;
     }
 
-    public AccountDTO createAccount(CreateAccountDTO createAccountDTO) {
+    public AccountDTO createAccount(CreateAccountDTO createAccountDTO, User teller) {
         try {
             Client client = findOrCreateClient(createAccountDTO);
 
@@ -63,8 +60,15 @@ public class AccountService {
 
             AuditLog log = new AuditLog(
                     LocalDateTime.now(),
-
+                    "ACCOUNT_CREATION",
+                    "Created account for client " + client.getPrenom(),
+                    teller.getId(),
+                    teller.getRole(),
+                    true,
+                    null
             );
+
+            auditLogRepository.save(log);
 
             return AccountMapper.toAccountDTO(account);
 
