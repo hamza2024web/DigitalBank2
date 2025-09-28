@@ -8,10 +8,10 @@ import java.util.Optional;
 public interface ClientRepository {
     void save(Client client);
     Optional<Client> findById(String clientId);
-    Optional<Client> findByFirsName(String fullName);
+    Optional<Client> findByFirsName(String firstName);
     List<Client> findAll();
     void update(Client client);
     void delete(String clientId);
     boolean exists(String clientId);
-    boolean existsByFirsName(String fullName);
+    boolean existsByFirsName(String firstName);
 }
