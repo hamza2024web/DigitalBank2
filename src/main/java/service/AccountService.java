@@ -61,7 +61,7 @@ public class AccountService {
             AuditLog log = new AuditLog(
                     LocalDateTime.now(),
                     "ACCOUNT_CREATION",
-                    "Created account for client " + client.getPrenom(),
+                    "Created account (ID=" + account.getId() + ", IBAN=" + account.getIban() + ") for client (ID=" + client.getId() + ", Name=" + client.getNom() + " " + client.getPrenom() + ")",
                     teller.getId(),
                     teller.getRole(),
                     true,
