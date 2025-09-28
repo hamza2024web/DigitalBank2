@@ -119,12 +119,14 @@ public class MenuNavigator {
 
             switch (choice) {
                 case 1 -> {
-                    String clientName = tellerView.askClientName();
+                    String firstName = tellerView.askClientFirstName();
+                    String lastName = tellerView.askClientLastName();
+                    String mounthlyIncome = tellerView.askClientMounthlyIncome();
                     String accountType = tellerView.askAccountType();
-                    double initialBalance = tellerView.askInitialBalance();
+                    String initialBalance = tellerView.askInitialBalanceInput();
                     String currency = tellerView.askCurrency();
 
-                    CreateAccountDTO createAccountDTO = new CreateAccountDTO(clientName,accountType,initialBalance,currency);
+                    CreateAccountDTO createAccountDTO = new CreateAccountDTO(firstName,lastName,mounthlyIncome,accountType,initialBalance,currency);
                     accountController.createAccount(createAccountDTO);
                 }
                 case 2 -> {

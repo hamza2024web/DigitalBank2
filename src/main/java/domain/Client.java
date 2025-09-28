@@ -5,13 +5,11 @@ public class Client {
     private String nom;
     private String prenom;
     private Double revenueMensuel;
-    private User utilisateur;
 
-    public Client(String nom , String prenom , Double revenueMensuel , User utilisateur){
+    public Client(String nom , String prenom , Double revenueMensuel){
         this.nom = nom;
         this.prenom = prenom;
         this.revenueMensuel = revenueMensuel;
-        this.utilisateur = utilisateur;
     }
 
     public Long getId(){
@@ -30,10 +28,6 @@ public class Client {
         return revenueMensuel;
     }
 
-    public User getUtilisateur(){
-        return utilisateur;
-    }
-
     public void setNom(String nom){
         this.nom = nom;
     }
@@ -44,10 +38,6 @@ public class Client {
 
     public void setRevenueMensuel(Double revenueMensuel){
         this.revenueMensuel = revenueMensuel;
-    }
-
-    public void setUtilisateur(User utlisateur){
-        this.utilisateur = utilisateur;
     }
 
 }

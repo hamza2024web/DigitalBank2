@@ -1,5 +1,6 @@
 package view;
 
+import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -37,16 +38,25 @@ public class TellerView {
         }
     }
 
-    public String askClientName(){
+    public String askClientFirstName(){
         System.out.print("Enter client name: ");
-        String name = scanner.nextLine().trim();
-        while (name.isEmpty()) {
+        String firstName = scanner.nextLine().trim();
+        while (firstName.isEmpty()) {
             System.out.print("Client name cannot be empty. Please enter client name: ");
-            name = scanner.nextLine().trim();
+            firstName = scanner.nextLine().trim();
         }
-        return name;
+        return firstName;
     }
 
+    public String askClientLastName(){
+        System.out.println("Enter client last name : ");
+        String lastName = scanner.nextLine().trim();
+        while (lastName.isEmpty()){
+            System.out.println("Client name cannot be empty. Please enter client last name: ");
+            lastName = scanner.nextLine().trim();
+        }
+        return lastName;
+    }
     public String askAccountType(){
         System.out.print("Enter account type (Courant/Epargne/Credit): ");
         String type = scanner.nextLine().trim().toUpperCase();
@@ -57,22 +67,14 @@ public class TellerView {
         return type;
     }
 
-    public double askInitialBalance(){
-        double balance = -1;
-        while (balance < 0) {
-            System.out.print("Enter initial balance: ");
-            try {
-                balance = scanner.nextDouble();
-                scanner.nextLine(); // consume newline
-                if (balance < 0) {
-                    System.out.println("Balance cannot be negative. Please enter a valid amount.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid number.");
-                scanner.nextLine(); // consume invalid input
-            }
-        }
-        return balance;
+    public String askClientMounthlyIncome(){
+        System.out.println("Enter mounthly income : ");
+        return scanner.nextLine().trim();
+    }
+
+    public String askInitialBalanceInput() {
+        System.out.print("Enter initial balance: ");
+        return scanner.nextLine().trim();
     }
 
     public String askCurrency(){

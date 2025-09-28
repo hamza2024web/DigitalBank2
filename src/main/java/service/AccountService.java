@@ -24,7 +24,7 @@ public class AccountService {
         Account account = AccountMapper.toAccount(createAccountDTO , client);
 
         account.setId(generateAccountId());
-        account.setIban(generateIban);
+        account.setIban(generateIban());
         account.setDateCreation(LocalDate.now());
         account.setActive(true);
 
