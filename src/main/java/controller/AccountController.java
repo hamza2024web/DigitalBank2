@@ -12,9 +12,9 @@ public class AccountController {
 
     public void createAccount(CreateAccountDTO createAccountDTO){
         accountService.createAccount(createAccountDTO);
-        System.out.println("Creating account for: " + createAccountDTO.getClientName()
+        System.out.println("Creating account for: " + createAccountDTO.getFirstName() + createAccountDTO.getLastName()
                 + " | Type: " + createAccountDTO.getAccountType()
-                + " | Balance: " + createAccountDTO.getInitialeBalance()
+                + " | Balance: " + createAccountDTO.getInitialBalance()
                 + " | Currency: " + createAccountDTO.getCurrency());
     }
 }

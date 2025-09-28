@@ -19,7 +19,7 @@ public class AccountMapper {
                         null,
                         null,
                         COURANT,
-                        BigDecimal.valueOf(dto.getInitialeBalance()),
+                        new BigDecimal(dto.getInitialBalance()),
                         Currency.valueOf(dto.getCurrency().toUpperCase()),
                         null,
                         true,
@@ -32,7 +32,7 @@ public class AccountMapper {
                         null,
                         null,
                         EPARGNE,
-                        BigDecimal.valueOf(dto.getInitialeBalance()),
+                        new BigDecimal(dto.getInitialBalance()),
                         Currency.valueOf(dto.getCurrency().toUpperCase()),
                         null,
                         true,
@@ -47,14 +47,14 @@ public class AccountMapper {
 
     public static AccountDTO toAccountDTO(Account account){
         return new AccountDTO(
-          account.getId(),
-          account.getIban(),
-          account.getAccountType(),
-          account.getSolde(),
-          account.getDevise(),
-          account.getDate(),
-          account.getActive(),
-          account.getClient()
+                account.getId(),
+                account.getIban(),
+                account.getAccountType(),
+                account.getSolde(),
+                account.getDevise(),
+                account.getDate(),
+                account.getActive(),
+                account.getClient()
         );
     }
 }

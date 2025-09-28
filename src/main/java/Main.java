@@ -1,8 +1,10 @@
 import controller.AccountController;
 import controller.AuthController;
+import repository.AccountRepositoryImpl;
 import repository.UserRepositoryImpl;
 import security.AuthManager;
 import security.Authorization;
+import service.AccountService;
 import util.JDBCUtil;
 import view.AuthView;
 import view.ConsoleView;
@@ -23,7 +25,9 @@ public class Main {
 
         AuthController authController = new AuthController(authManager, authorization , authView , consoleView);
         TellerView tellerView = new TellerView();
-        AccountController accountController = new AccountController();
+        AccountRepositoryImpl accountRepository = new AccountRepositoryImpl();
+        AccountService accountService = new AccountService(accountRepository);
+        AccountController accountController = new AccountController(accountService);
 
         MenuNavigator menuNavigator = new MenuNavigator(authController,tellerView,accountController);
         menuNavigator.start();
