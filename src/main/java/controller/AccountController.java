@@ -59,4 +59,14 @@ public class AccountController {
             System.out.println("✗ Error processing withdrawal: " + e.getMessage());
         }
     }
+
+    public void clientTransferAccount(ClientAccountTransferDTO clientTransferAccount,User teller){
+        try {
+            AccountDTO transferAccount = accountService.clientTransferAccount(clientTransferAccount,teller);
+        } catch (IllegalArgumentException e){
+            System.out.println("✗ Transfer failed: " + e.getMessage());
+        }catch (RuntimeException e){
+            System.out.println("✗ Error processing transfer : " + e.getMessage());
+        }
+    }
 }

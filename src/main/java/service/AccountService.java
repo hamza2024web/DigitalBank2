@@ -242,6 +242,31 @@ public class AccountService {
         return AccountMapper.toAccountDTO(account);
     }
 
+    public AccountDTO clientTransferAccount(ClientAccountTransferDTO clientTransferAccount,User teller){
+        String sendIban = clientTransferAccount.getSendClientIban();
+        String destinationIban = clientTransferAccount.getDestinationClientIban();
+        String amountTransaction = clientTransferAccount.getAmountTransaction();
+
+        Optional<Account> sendIbanAccount = accountRepository.findByIban(sendIban);
+        Optional<Account> destinationIbanAccount = accountRepository.findByIban(destinationIban);
+
+        if (sendIbanAccount.isEmpty()){
+            throw new RuntimeException("No Account found for this IBAN: " + sendIban);
+        }
+
+        if (destinationIbanAccount.isEmpty()){
+            throw new RuntimeException("No Account found for this IBAN: " + destinationIban);
+        }
+
+        Account sendAccount = sendIbanAccount.get();
+        Account destiantionAccount = sendIbanAccount.get();
+
+        if (!destiantionAccount.getActive()){
+            throw new RuntimeException("The Account with this IBAN : " + destinationIban + " Is not Active .");
+        } else {
+            if (sendAccount.getSolde() >= )
+        }
+    }
     private Client findOrCreateClient(CreateAccountDTO dto) {
         var existing = clientRepository.findByFirsName(dto.getFirstName());
         if (existing.isPresent()) {

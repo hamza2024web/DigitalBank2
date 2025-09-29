@@ -147,8 +147,13 @@ public class MenuNavigator {
                     accountController.clientAccountWithdrawal(clientAccountWithdrawal,loggedInUser);
                 }
                 case 6 -> {
-                    String sendClientIban = tellerView.askTeller
+                    String sendClientIban = tellerView.askTellerIbanClient();
+                    String destinationClientIban = tellerView.askDestinationAccountId();
+                    String amountTransaction = tellerView.askTransactionAmount();
                     System.out.println("Processing transfer...");
+                    ClientAccountTransferDTO clientTransferAccount = new ClientAccountTransferDTO(sendClientIban,destinationClientIban,amountTransaction,loggedInUser);
+                    accountController.clientTransferAccount(clientTransferAccount,loggedInUser);
+
                 }
                 case 7 -> {
                     System.out.println("Showing transaction history...");
