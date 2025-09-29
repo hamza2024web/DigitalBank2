@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class OperationRepositoryImpl implements OperationRepository {
     @Override
     public void save(OperationHistory operationHistory) {
-        String sql = "INSERT INTO operation_history (date_operation,operation_type,source_account_id,destination_account_id,description,status,amount,currency,reference) VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO operation_history (date_operation,operation_type,source_account_id,destination_account_id,description,status,amount,currency,reference) VALUES (?,?,?,?,?,?,?,?::currency_enum,?)";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setTimestamp(1, java.sql.Timestamp.valueOf(operationHistory.getDateOperation()));
             stmt.setString(2,operationHistory.getOperationType());

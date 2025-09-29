@@ -14,7 +14,7 @@ public class MenuNavigator {
     private final AuthController authController;
     private final TellerView tellerView;
     private final AccountController accountController;
-
+    private User loggedInUser;
     private final Scanner scanner = new Scanner(System.in);
     public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController){
         this.authController = authController;
@@ -34,10 +34,9 @@ public class MenuNavigator {
 
             switch(choice){
                 case 1 -> {
-                    authController.login();
-                    UserDTO userDTO = authController.getCurrentUserDTO();
-                    if (userDTO != null){
-                        handleRoleBasedMenu(userDTO);
+                    loggedInUser = authController.login();
+                    if (loggedInUser != null){
+                        handleRoleBasedMenu(UserMapper.toUserDTO(loggedInUser));
                     }
                 }
                 case 2 -> authController.logout();
@@ -115,11 +114,6 @@ public class MenuNavigator {
 
             switch (choice) {
                 case 1 -> {
-                    User loggedInUser = authController.login();
-                    if (loggedInUser != null){
-                        handleRoleBasedMenu(UserMapper.toUserDTO(loggedInUser));
-                    }
-
                     String firstName = tellerView.askClientFirstName();
                     String lastName = tellerView.askClientLastName();
                     String mounthlyIncome = tellerView.askClientMounthlyIncome();
@@ -131,11 +125,6 @@ public class MenuNavigator {
                     accountController.createAccount(createAccountDTO,loggedInUser);
                 }
                 case 2 -> {
-                    User loggedInUser = authController.login();
-                    if (loggedInUser != null){
-                        handleRoleBasedMenu(UserMapper.toUserDTO(loggedInUser));
-                    }
-
                     String clientIban = tellerView.askTellerIbanClient();
                     ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);

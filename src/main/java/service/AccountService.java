@@ -83,6 +83,8 @@ public class AccountService {
     public List<AccountDTO> clientAccountRequest(ClientAccountsRequestDTO clientAccountsRequest , User teller){
         String iban = clientAccountsRequest.getClientIban();
 
+        System.out.println("Searching IBAN: '" + iban + "'");
+
         Optional<Account> accountOpt = accountRepository.findByIban(iban);
 
         if(accountOpt.isEmpty()){

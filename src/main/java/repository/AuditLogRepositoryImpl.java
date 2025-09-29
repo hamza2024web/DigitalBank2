@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public class AuditLogRepositoryImpl implements AuditLogRepository{
     @Override
     public void save(AuditLog auditLog) {
-        String sql = "INSERT INTO audit_log (timestamp,user_id,user_role,action,details,success,error_message) VALUES (?,?,?,?,?,?,?) ";
+        String sql = "INSERT INTO audit_log (timestamp,user_id,user_role,action,details,success,error_message) VALUES (?,?,?::role_enum,?,?,?,?) ";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setTimestamp(1, java.sql.Timestamp.valueOf(auditLog.getTimestamp()));
             stmt.setLong(2,auditLog.getUserId());
