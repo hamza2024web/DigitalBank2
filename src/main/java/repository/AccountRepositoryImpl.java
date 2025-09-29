@@ -1,10 +1,7 @@
 package repository;
 
-import domain.Account;
-import domain.CreditAccount;
-import domain.CurrentAccount;
+import domain.*;
 import domain.Enums.Currency;
-import domain.SavingAccount;
 import util.JDBCUtil;
 
 import java.math.BigDecimal;
@@ -58,7 +55,7 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public Optional<Account> findByIban(String iban) {
-        String sql = "SELECT * FROM accounts INNER JOIN courant_accounts ON courant_accounts.account_id = accounts.id INNER JOIN saving_accounts ON saving_accounts.account_id = accounts.id WHERE iban = ?";
+        String sql = "SELECT * FROM accounts LEFT JOIN courant_accounts ON courant_accounts.account_id = accounts.id LEFT JOIN saving_accounts ON saving_accounts.account_id = accounts.id WHERE iban = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, iban);
 
@@ -72,6 +69,12 @@ public class AccountRepositoryImpl implements AccountRepository{
                     Currency devise = Currency.valueOf(rs.getString("devise"));
                     LocalDate dateCreation = rs.getDate("date_creation").toLocalDate();
 
+                    ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
+                    Long clientId = rs.getLong("client_id");
+                    String client_id = String.valueOf(clientId);
+
+                    Optional<Client> client = clientRepository.findById(client_id).orElseThrow(() -> new RuntimeException("Client not found with id: " + client_id));
+
                     if ("COURANT".equalsIgnoreCase(type)) {
                         BigDecimal decouvertAutorise = rs.getBigDecimal("decouvert_autorise");
                         account = new CurrentAccount(AccountIban, solde, devise, dateCreation, decouvertAutorise);
@@ -82,6 +85,7 @@ public class AccountRepositoryImpl implements AccountRepository{
                         throw new IllegalStateException("Unknown account type: " + type);
                     }
 
+                    account.setClient(client);
                     return Optional.of(account);
                 }
             }
