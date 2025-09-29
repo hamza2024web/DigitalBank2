@@ -31,7 +31,7 @@ public class AccountController {
         } else {
             System.out.println("Accounts for client:");
             for (AccountDTO account : accounts) {
-                System.out.println("IBAN: " + account.getIban() + ", Type: " + account.getType() + ", Balance: " + account.getSolde() + ", Currency: " + account.getDevise() + ", Created Date: " + account.getDateCreation());
+                System.out.println("Nom : " + account.getClient().getNom() + "Prenom : " + account.getClient().getPrenom() + "Mounthly Income : " + account.getClient().getRevenueMensuel() + "IBAN: " + account.getIban() + ", Type: " + account.getType() + ", Balance: " + account.getSolde() + ", Currency: " + account.getDevise() + ", Created Date: " + account.getDateCreation());
             }
         }
     }

@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ClientRepository {
     void save(Client client);
-    Optional<Client> findById(String clientId);
+    Optional<Client> findById(Long clientId);
     Optional<Client> findByFirsName(String firstName);
     List<Client> findAll();
     void update(Client client);

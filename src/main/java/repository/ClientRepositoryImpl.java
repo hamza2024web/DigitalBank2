@@ -31,10 +31,10 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Optional<Client> findById(String clientId) {
+    public Optional<Client> findById(Long clientId) {
         String sql = "SELECT * FROM clients WHERE id = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, clientId);
+            stmt.setLong(1, clientId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(mapResultSetToClient(rs));

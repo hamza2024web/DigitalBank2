@@ -70,10 +70,9 @@ public class AccountRepositoryImpl implements AccountRepository{
                     LocalDate dateCreation = rs.getDate("date_creation").toLocalDate();
 
                     ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
-                    Long clientId = rs.getLong("client_id");
-                    String client_id = String.valueOf(clientId);
+                    Long client_id = rs.getLong("client_id");
 
-                    Optional<Client> client = clientRepository.findById(client_id).orElseThrow(() -> new RuntimeException("Client not found with id: " + client_id));
+                    Client client = clientRepository.findById(client_id).orElseThrow(() -> new RuntimeException("Client not found with id: " + client_id));
 
                     if ("COURANT".equalsIgnoreCase(type)) {
                         BigDecimal decouvertAutorise = rs.getBigDecimal("decouvert_autorise");
@@ -86,6 +85,7 @@ public class AccountRepositoryImpl implements AccountRepository{
                     }
 
                     account.setClient(client);
+
                     return Optional.of(account);
                 }
             }
