@@ -44,7 +44,7 @@ public class AccountController {
         System.out.println("Client: " + updatedAccount.getClient().getNom() + " " + updatedAccount.getClient().getPrenom());
         System.out.println("IBAN: " + updatedAccount.getIban());
         System.out.println("New Balance: " + updatedAccount.getSolde() + " " + updatedAccount.getDevise());
-        System.out.println("Deposit performed by teller: " + teller.getEmail() + " (ID: " + teller.getId() + ")");
+        System.out.println("Deposit performed by teller: " + teller.getEmail() + " . ");
     }
 
 }

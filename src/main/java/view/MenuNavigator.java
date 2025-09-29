@@ -138,9 +138,9 @@ public class MenuNavigator {
                 case 4 -> {
                     String clientIban = tellerView.askTellerIbanClient();
                     String amount = tellerView.askTellerAmountClient();
+                    System.out.println("Processing deposit...");
                     ClientAccountDepositDTO clientAccountDeposit = new ClientAccountDepositDTO(clientIban, amount, loggedInUser);
                     accountController.clientAccountDeposit(clientAccountDeposit,loggedInUser);
-                    System.out.println("Processing deposit...");
                 }
                 case 5 -> {
                     System.out.println("Processing withdrawal...");
