@@ -1,17 +1,15 @@
 package service;
 
 import domain.*;
+import domain.Enums.TransactionStatus;
+import domain.Enums.TransactionType;
 import dto.*;
 import mapper.AccountMapper;
-import repository.AccountRepositoryImpl;
-import repository.AuditLogRepositoryImpl;
-import repository.ClientRepositoryImpl;
-import repository.OperationRepositoryImpl;
+import repository.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,12 +20,13 @@ public class AccountService {
     private final ClientRepositoryImpl clientRepository;
     private final OperationRepositoryImpl operationRepository;
     private final AuditLogRepositoryImpl auditLogRepository;
-
-    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository,OperationRepositoryImpl operationRepository ,AuditLogRepositoryImpl auditLogRepository) {
+    private final TransactionRepositoryImpl transactionRepository;
+    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository,OperationRepositoryImpl operationRepository ,AuditLogRepositoryImpl auditLogRepository,TransactionRepositoryImpl transactionRepository) {
         this.accountRepository = accountRepository;
         this.clientRepository = clientRepository;
         this.operationRepository = operationRepository;
         this.auditLogRepository = auditLogRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public AccountDTO createAccount(CreateAccountDTO createAccountDTO, User teller) {
@@ -367,6 +366,18 @@ public class AccountService {
         );
         auditLogRepository.save(receiverLog);
 
+        Transaction transaction = new Transaction(
+                transferAmount,
+                TransactionType.TRANSFERIN,
+                TransactionStatus.SUCCESS,
+                LocalDateTime.now(),
+                sendAccount.getDevise(),
+                "TRANSFER AN AMOUNT " + transferAmount + "TO ACCOUNT : " + sendAccount.getIban() + " .",
+                sendAccount,
+                destinationAccount
+        );
+
+        transactionRepository.save(transaction);
         return AccountMapper.toAccountDTO(sendAccount);
     }
 

@@ -11,5 +11,6 @@ public class FeeRuleRepositoryImpl implements FeeRuleRepository{
     @Override
     public Optional<FeeRule> findActiveByOperationAndCurrency(TransactionType operationType, Currency currency) {
 
+        return Optional.empty();
     }
 }

@@ -1,4 +1,7 @@
 package repository;
 
-public class TransactionRepository {
+import domain.Transaction;
+
+public interface TransactionRepository {
+    void save(Transaction transaction);
 }
