@@ -6,6 +6,7 @@ import domain.User;
 import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import dto.UserDTO;
+import mapper.UserMapper;
 
 import java.util.Scanner;
 
@@ -15,12 +16,10 @@ public class MenuNavigator {
     private final AccountController accountController;
 
     private final Scanner scanner = new Scanner(System.in);
-    private final User loggedInUser;
-    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController , User loggedInUser){
+    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController){
         this.authController = authController;
         this.tellerView = tellerView;
         this.accountController = accountController;
-        this.loggedInUser = loggedInUser;
     }
 
     public void start(){
@@ -116,6 +115,11 @@ public class MenuNavigator {
 
             switch (choice) {
                 case 1 -> {
+                    User loggedInUser = authController.login();
+                    if (loggedInUser != null){
+                        handleRoleBasedMenu(UserMapper.toUserDTO(loggedInUser));
+                    }
+
                     String firstName = tellerView.askClientFirstName();
                     String lastName = tellerView.askClientLastName();
                     String mounthlyIncome = tellerView.askClientMounthlyIncome();
@@ -127,6 +131,11 @@ public class MenuNavigator {
                     accountController.createAccount(createAccountDTO,loggedInUser);
                 }
                 case 2 -> {
+                    User loggedInUser = authController.login();
+                    if (loggedInUser != null){
+                        handleRoleBasedMenu(UserMapper.toUserDTO(loggedInUser));
+                    }
+
                     String clientIban = tellerView.askTellerIbanClient();
                     ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
