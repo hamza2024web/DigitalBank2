@@ -55,7 +55,11 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public Optional<Account> findByIban(String iban) {
-        String sql = "SELECT * FROM accounts LEFT JOIN courant_accounts ON courant_accounts.account_id = accounts.id LEFT JOIN saving_accounts ON saving_accounts.account_id = accounts.id WHERE iban = ?";
+        String sql = "SELECT * FROM accounts " +
+                "LEFT JOIN courant_accounts ON courant_accounts.account_id = accounts.id " +
+                "LEFT JOIN saving_accounts ON saving_accounts.account_id = accounts.id " +
+                "WHERE iban = ?";
+
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, iban);
 
@@ -64,33 +68,35 @@ public class AccountRepositoryImpl implements AccountRepository{
                     String type = rs.getString("type");
                     Account account;
 
-                    String AccountIban = rs.getString("iban");
+                    String accountId = rs.getString("id");
+                    String accountIban = rs.getString("iban");
                     BigDecimal solde = rs.getBigDecimal("solde");
                     Currency devise = Currency.valueOf(rs.getString("devise"));
                     LocalDate dateCreation = rs.getDate("date_creation").toLocalDate();
 
                     ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
-                    Long client_id = rs.getLong("client_id");
-
-                    Client client = clientRepository.findById(client_id).orElseThrow(() -> new RuntimeException("Client not found with id: " + client_id));
+                    Long clientId = rs.getLong("client_id");
+                    Client client = clientRepository.findById(clientId)
+                            .orElseThrow(() -> new RuntimeException("Client not found with id: " + clientId));
 
                     if ("COURANT".equalsIgnoreCase(type)) {
                         BigDecimal decouvertAutorise = rs.getBigDecimal("decouvert_autorise");
-                        account = new CurrentAccount(AccountIban, solde, devise, dateCreation, decouvertAutorise);
+                        account = new CurrentAccount(accountIban, solde, devise, dateCreation, decouvertAutorise);
                     } else if ("EPARGNE".equalsIgnoreCase(type)) {
                         BigDecimal tauxInteret = rs.getBigDecimal("taux_interet");
-                        account = new SavingAccount(AccountIban, solde, devise, dateCreation, tauxInteret);
+                        account = new SavingAccount(accountIban, solde, devise, dateCreation, tauxInteret);
                     } else {
                         throw new IllegalStateException("Unknown account type: " + type);
                     }
 
+                    account.setId(accountId);
                     account.setClient(client);
 
                     return Optional.of(account);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Database error while finding account by IBAN: " + iban, e);
         }
 
         return Optional.empty();
@@ -108,7 +114,18 @@ public class AccountRepositoryImpl implements AccountRepository{
 
     @Override
     public void update(Account account) {
+        String sql = "UPDATE accounts SET solde = ? WHERE id = ?";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setBigDecimal(1,account.getSolde());
+            stmt.setString(2,account.getId());
 
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated == 0){
+                throw new RuntimeException("No account found with ID: " + account.getId());
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

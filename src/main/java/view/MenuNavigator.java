@@ -115,7 +115,6 @@ public class MenuNavigator {
 
             switch (choice) {
                 case 1 -> {
-                    System.out.println("Requesting create account ...");
                     String firstName = tellerView.askClientFirstName();
                     String lastName = tellerView.askClientLastName();
                     String mounthlyIncome = tellerView.askClientMounthlyIncome();
@@ -125,12 +124,13 @@ public class MenuNavigator {
 
                     CreateAccountDTO createAccountDTO = new CreateAccountDTO(firstName,lastName,mounthlyIncome,accountType,initialBalance,currency);
                     accountController.createAccount(createAccountDTO,loggedInUser);
+                    System.out.println("Requesting create account ...");
                 }
                 case 2 -> {
-                    System.out.println("Requesting account ...");
                     String clientIban = tellerView.askTellerIbanClient();
                     ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
+                    System.out.println("Requesting account ...");
                 }
                 case 3 -> {
                     System.out.println("Requesting account closure...");
@@ -138,7 +138,8 @@ public class MenuNavigator {
                 case 4 -> {
                     String clientIban = tellerView.askTellerIbanClient();
                     String amount = tellerView.askTellerAmountClient();
-                    ClientAccountDepositDTO clientAccountDeposit = new ClientAccountDepositDTO(clientIban,amount,loggedInUser);
+                    ClientAccountDepositDTO clientAccountDeposit = new ClientAccountDepositDTO(clientIban, amount, loggedInUser);
+                    accountController.clientAccountDeposit(clientAccountDeposit,loggedInUser);
                     System.out.println("Processing deposit...");
                 }
                 case 5 -> {

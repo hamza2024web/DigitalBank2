@@ -2,6 +2,7 @@ package controller;
 
 import domain.User;
 import dto.AccountDTO;
+import dto.ClientAccountDepositDTO;
 import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import service.AccountService;
@@ -35,4 +36,15 @@ public class AccountController {
             }
         }
     }
+
+    public void clientAccountDeposit(ClientAccountDepositDTO clientAccountDeposit, User teller) {
+        AccountDTO updatedAccount = accountService.clientAccountDeposit(clientAccountDeposit, teller);
+
+        System.out.println("Deposit successful!");
+        System.out.println("Client: " + updatedAccount.getClient().getNom() + " " + updatedAccount.getClient().getPrenom());
+        System.out.println("IBAN: " + updatedAccount.getIban());
+        System.out.println("New Balance: " + updatedAccount.getSolde() + " " + updatedAccount.getDevise());
+        System.out.println("Deposit performed by teller: " + teller.getEmail() + " (ID: " + teller.getId() + ")");
+    }
+
 }

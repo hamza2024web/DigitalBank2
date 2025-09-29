@@ -1,6 +1,7 @@
 package service;
 
 import domain.*;
+import dto.ClientAccountDepositDTO;
 import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import dto.AccountDTO;
@@ -108,6 +109,58 @@ public class AccountService {
         auditLogRepository.save(log);
 
         return ClientAccounts.stream().map(AccountMapper::toAccountDTO).toList();
+    }
+
+    public AccountDTO clientAccountDeposit(ClientAccountDepositDTO clientAccountDeposit, User teller) {
+        String iban = clientAccountDeposit.getClientIban();
+        String amountStr = clientAccountDeposit.getAmount(); // Get amount from DTO
+
+        Optional<Account> accountByIban = accountRepository.findByIban(iban);
+
+        if (accountByIban.isEmpty()) {
+            throw new RuntimeException("No account found for IBAN: " + iban);
+        }
+
+        Account account = accountByIban.get();
+
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(amountStr);
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Amount must be positive");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid amount format");
+        }
+
+        account.setSolde(account.getSolde().add(amount));
+        accountRepository.update(account);
+
+        OperationHistory op = new OperationHistory(
+                LocalDateTime.now(),
+                "ACCOUNT_DEPOSIT",
+                account.getId().toString(),
+                account.getId().toString(),
+                "DEPOSIT THE AMOUNT: " + amount + ".",
+                "SUCCESS",
+                account.getSolde(),
+                account.getDevise(),
+                UUID.randomUUID().toString()
+        );
+        operationRepository.save(op);
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_DEPOSIT",
+                "DEPOSIT account (ID=" + account.getId() + ", IBAN=" + account.getIban() + ")",
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
+
+        return AccountMapper.toAccountDTO(account);
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {
