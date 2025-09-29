@@ -33,5 +33,4 @@ public class AppConfig {
         return amlThreshold;
     }
 
-
 }
