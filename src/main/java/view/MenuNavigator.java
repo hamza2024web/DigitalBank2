@@ -3,10 +3,7 @@ package view;
 import controller.AccountController;
 import controller.AuthController;
 import domain.User;
-import dto.ClientAccountDepositDTO;
-import dto.ClientAccountsRequestDTO;
-import dto.CreateAccountDTO;
-import dto.UserDTO;
+import dto.*;
 import mapper.UserMapper;
 
 import java.util.Scanner;
@@ -143,7 +140,11 @@ public class MenuNavigator {
                     accountController.clientAccountDeposit(clientAccountDeposit,loggedInUser);
                 }
                 case 5 -> {
+                    String clientIban = tellerView.askTellerIbanClient();
+                    String amount = tellerView.askTellerAmountClient();
                     System.out.println("Processing withdrawal...");
+                    ClientAccountWithdrawalDTO clientAccountWithdrawal = new ClientAccountWithdrawalDTO(clientIban, amount , loggedInUser);
+                    accountController.clientAccountWithdrawal(clientAccountWithdrawal,loggedInUser);
                 }
                 case 6 -> {
                     System.out.println("Processing transfer...");

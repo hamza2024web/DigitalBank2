@@ -1,10 +1,7 @@
 package controller;
 
 import domain.User;
-import dto.AccountDTO;
-import dto.ClientAccountDepositDTO;
-import dto.ClientAccountsRequestDTO;
-import dto.CreateAccountDTO;
+import dto.*;
 import service.AccountService;
 
 import java.util.List;
@@ -47,4 +44,19 @@ public class AccountController {
         System.out.println("Deposit performed by teller: " + teller.getEmail() + " . ");
     }
 
+    public void clientAccountWithdrawal(ClientAccountWithdrawalDTO clientAccountWithdrawal, User teller) {
+        try {
+            AccountDTO updatedAccount = accountService.clientAccountWithdrawal(clientAccountWithdrawal, teller);
+            System.out.println("✓ Withdrawal completed successfully!");
+            System.out.println("Client: " + updatedAccount.getClient().getNom() + " " + updatedAccount.getClient().getPrenom());
+            System.out.println("IBAN: " + updatedAccount.getIban());
+            System.out.println("Amount withdrawn: " + clientAccountWithdrawal.getAmount());
+            System.out.println("Remaining balance: " + updatedAccount.getSolde() + " " + updatedAccount.getDevise());
+            System.out.println("Deposit performed by teller: " + teller.getEmail() + " . ");
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Withdrawal failed: " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("✗ Error processing withdrawal: " + e.getMessage());
+        }
+    }
 }

@@ -1,10 +1,7 @@
 package service;
 
 import domain.*;
-import dto.ClientAccountDepositDTO;
-import dto.ClientAccountsRequestDTO;
-import dto.CreateAccountDTO;
-import dto.AccountDTO;
+import dto.*;
 import mapper.AccountMapper;
 import repository.AccountRepositoryImpl;
 import repository.AuditLogRepositoryImpl;
@@ -113,7 +110,7 @@ public class AccountService {
 
     public AccountDTO clientAccountDeposit(ClientAccountDepositDTO clientAccountDeposit, User teller) {
         String iban = clientAccountDeposit.getClientIban();
-        String amountStr = clientAccountDeposit.getAmount(); // Get amount from DTO
+        String amountStr = clientAccountDeposit.getAmount();
 
         Optional<Account> accountByIban = accountRepository.findByIban(iban);
 
@@ -153,6 +150,88 @@ public class AccountService {
                 LocalDateTime.now(),
                 "ACCOUNT_DEPOSIT",
                 "DEPOSIT account (ID=" + account.getId() + ", IBAN=" + account.getIban() + ")",
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
+
+        return AccountMapper.toAccountDTO(account);
+    }
+
+    public AccountDTO clientAccountWithdrawal(ClientAccountWithdrawalDTO clientAccountWithdrawal, User teller) {
+        String iban = clientAccountWithdrawal.getClientIban();
+        String amountStr = clientAccountWithdrawal.getAmount();
+
+        Optional<Account> accountByIban = accountRepository.findByIban(iban);
+
+        if (accountByIban.isEmpty()) {
+            throw new RuntimeException("No Account found for this IBAN: " + iban);
+        }
+
+        Account account = accountByIban.get();
+
+        BigDecimal amount;
+        try {
+            amount = new BigDecimal(amountStr);
+            if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Amount must be positive");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid amount format");
+        }
+
+        BigDecimal balance = account.getSolde();
+
+        if (balance.compareTo(amount) < 0) {
+            OperationHistory failedOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_WITHDRAWAL",
+                    account.getId().toString(),
+                    account.getId().toString(),
+                    "ATTEMPTED WITHDRAWAL OF AMOUNT: " + amount + " - INSUFFICIENT FUNDS",
+                    "FAILED",
+                    balance,
+                    account.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(failedOp);
+
+            AuditLog failedLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_WITHDRAWAL",
+                    "FAILED WITHDRAWAL attempt on account (ID=" + account.getId() + ", IBAN=" + account.getIban() + ")",
+                    teller.getId(),
+                    teller.getRole(),
+                    false,
+                    "Insufficient funds"
+            );
+            auditLogRepository.save(failedLog);
+
+            throw new IllegalArgumentException("Insufficient balance to perform this withdrawal. Available balance: " + balance + ", requested amount: " + amount);
+        }
+
+        account.setSolde(balance.subtract(amount));
+        accountRepository.update(account);
+
+        OperationHistory op = new OperationHistory(
+                LocalDateTime.now(),
+                "ACCOUNT_WITHDRAWAL",
+                account.getId().toString(),
+                account.getId().toString(),
+                "WITHDRAWAL OF AMOUNT: " + amount + ".",
+                "SUCCESS",
+                account.getSolde(),
+                account.getDevise(),
+                UUID.randomUUID().toString()
+        );
+        operationRepository.save(op);
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_WITHDRAWAL",
+                "SUCCESSFUL WITHDRAWAL from account (ID=" + account.getId() + ", IBAN=" + account.getIban() + ")",
                 teller.getId(),
                 teller.getRole(),
                 true,
