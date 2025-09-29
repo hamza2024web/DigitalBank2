@@ -64,6 +64,8 @@ public class AccountController {
         try {
             AccountDTO transferAccount = accountService.clientTransferAccount(clientTransferAccount, teller);
             System.out.println("✓ Transfer completed successfully!");
+            System.out.println("Client: " + transferAccount.getClient().getNom() + " " + transferAccount.getClient().getPrenom());
+            System.out.println("IBAN: " + transferAccount.getIban());
             System.out.println("Amount transferred: " + clientTransferAccount.getAmountTransaction());
             System.out.println("From: " + clientTransferAccount.getSendClientIban());
             System.out.println("To: " + clientTransferAccount.getDestinationClientIban());
