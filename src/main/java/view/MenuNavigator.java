@@ -125,9 +125,9 @@ public class MenuNavigator {
                 }
                 case 2 -> {
                     String clientIban = tellerView.askTellerIbanClient();
+                    System.out.println("Requesting account ...");
                     ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
-                    System.out.println("Requesting account ...");
                 }
                 case 3 -> {
                     System.out.println("Requesting account closure...");
@@ -147,6 +147,7 @@ public class MenuNavigator {
                     accountController.clientAccountWithdrawal(clientAccountWithdrawal,loggedInUser);
                 }
                 case 6 -> {
+                    String sendClientIban = tellerView.askTeller
                     System.out.println("Processing transfer...");
                 }
                 case 7 -> {

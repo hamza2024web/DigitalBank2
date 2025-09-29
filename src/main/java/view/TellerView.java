@@ -92,40 +92,14 @@ public class TellerView {
         return scanner.nextLine();
     }
 
-    public int askAccountId(){
-        int id = -1;
-        while (id <= 0) {
-            System.out.print("Enter account ID: ");
-            try {
-                id = scanner.nextInt();
-                scanner.nextLine();
-                if (id <= 0) {
-                    System.out.println("Account ID must be positive. Please enter a valid ID.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid account ID.");
-                scanner.nextLine();
-            }
-        }
-        return id;
+    public String askAccountIban(){
+        System.out.println("Enter Your Account IBAN : ");
+        return scanner.nextLine();
     }
 
-    public int askDestinationAccountId(){
-        int id = -1;
-        while (id <= 0) {
-            System.out.print("Enter destination account ID: ");
-            try {
-                id = scanner.nextInt();
-                scanner.nextLine();
-                if (id <= 0) {
-                    System.out.println("Destination account ID must be positive. Please enter a valid ID.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid destination account ID.");
-                scanner.nextLine();
-            }
-        }
-        return id;
+    public String askDestinationAccountId(){
+        System.out.println("Enter Distination Account IBAN : ");
+        return scanner.nextLine();
     }
 
     public double askTransactionAmount(){
