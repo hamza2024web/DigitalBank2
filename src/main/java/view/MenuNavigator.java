@@ -3,6 +3,7 @@ package view;
 import controller.AccountController;
 import controller.AuthController;
 import domain.User;
+import dto.ClientAccountDepositDTO;
 import dto.ClientAccountsRequestDTO;
 import dto.CreateAccountDTO;
 import dto.UserDTO;
@@ -114,6 +115,7 @@ public class MenuNavigator {
 
             switch (choice) {
                 case 1 -> {
+                    System.out.println("Requesting create account ...");
                     String firstName = tellerView.askClientFirstName();
                     String lastName = tellerView.askClientLastName();
                     String mounthlyIncome = tellerView.askClientMounthlyIncome();
@@ -125,6 +127,7 @@ public class MenuNavigator {
                     accountController.createAccount(createAccountDTO,loggedInUser);
                 }
                 case 2 -> {
+                    System.out.println("Requesting account ...");
                     String clientIban = tellerView.askTellerIbanClient();
                     ClientAccountsRequestDTO clientAccountRequest = new ClientAccountsRequestDTO(clientIban,loggedInUser);
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
@@ -133,6 +136,9 @@ public class MenuNavigator {
                     System.out.println("Requesting account closure...");
                 }
                 case 4 -> {
+                    String clientIban = tellerView.askTellerIbanClient();
+                    String amount = tellerView.askTellerAmountClient();
+                    ClientAccountDepositDTO clientAccountDeposit = new ClientAccountDepositDTO(clientIban,amount,loggedInUser);
                     System.out.println("Processing deposit...");
                 }
                 case 5 -> {

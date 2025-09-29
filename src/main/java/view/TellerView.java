@@ -87,6 +87,11 @@ public class TellerView {
         return currency;
     }
 
+    public String askTellerAmountClient(){
+        System.out.println("Enter amount : ");
+        return scanner.nextLine();
+    }
+
     public int askAccountId(){
         int id = -1;
         while (id <= 0) {
@@ -129,13 +134,13 @@ public class TellerView {
             System.out.print("Enter amount: ");
             try {
                 amount = scanner.nextDouble();
-                scanner.nextLine(); // consume newline
+                scanner.nextLine();
                 if (amount <= 0) {
                     System.out.println("Amount must be positive. Please enter a valid amount.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a valid amount.");
-                scanner.nextLine(); // consume invalid input
+                scanner.nextLine();
             }
         }
         return amount;
