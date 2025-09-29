@@ -242,31 +242,134 @@ public class AccountService {
         return AccountMapper.toAccountDTO(account);
     }
 
-    public AccountDTO clientTransferAccount(ClientAccountTransferDTO clientTransferAccount,User teller){
+    public AccountDTO clientTransferAccount(ClientAccountTransferDTO clientTransferAccount, User teller) {
         String sendIban = clientTransferAccount.getSendClientIban();
         String destinationIban = clientTransferAccount.getDestinationClientIban();
-        String amountTransaction = clientTransferAccount.getAmountTransaction();
+        String amountStr = clientTransferAccount.getAmountTransaction();
+
+        if (sendIban.equals(destinationIban)) {
+            throw new IllegalArgumentException("Cannot transfer to the same account");
+        }
 
         Optional<Account> sendIbanAccount = accountRepository.findByIban(sendIban);
         Optional<Account> destinationIbanAccount = accountRepository.findByIban(destinationIban);
 
-        if (sendIbanAccount.isEmpty()){
-            throw new RuntimeException("No Account found for this IBAN: " + sendIban);
+        if (sendIbanAccount.isEmpty()) {
+            throw new RuntimeException("No Account found for sender IBAN: " + sendIban);
         }
 
-        if (destinationIbanAccount.isEmpty()){
-            throw new RuntimeException("No Account found for this IBAN: " + destinationIban);
+        if (destinationIbanAccount.isEmpty()) {
+            throw new RuntimeException("No Account found for destination IBAN: " + destinationIban);
         }
 
         Account sendAccount = sendIbanAccount.get();
-        Account destiantionAccount = sendIbanAccount.get();
+        Account destinationAccount = destinationIbanAccount.get();
 
-        if (!destiantionAccount.getActive()){
-            throw new RuntimeException("The Account with this IBAN : " + destinationIban + " Is not Active .");
-        } else {
-            if (sendAccount.getSolde() >= )
+        BigDecimal transferAmount;
+        try {
+            transferAmount = new BigDecimal(amountStr);
+            if (transferAmount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Transfer amount must be positive");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid amount format: " + amountStr);
         }
+
+        if (!sendAccount.getActive()) {
+            throw new RuntimeException("Sender account (IBAN: " + sendIban + ") is not active");
+        }
+
+        if (!destinationAccount.getActive()) {
+            throw new RuntimeException("Destination account (IBAN: " + destinationIban + ") is not active");
+        }
+
+        BigDecimal senderBalance = sendAccount.getSolde();
+
+        if (senderBalance.compareTo(transferAmount) < 0) {
+            OperationHistory failedOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    sendAccount.getId().toString(),
+                    destinationAccount.getId().toString(),
+                    "ATTEMPTED TRANSFER OF AMOUNT: " + transferAmount + " - INSUFFICIENT FUNDS",
+                    "FAILED",
+                    senderBalance,
+                    sendAccount.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(failedOp);
+
+            AuditLog failedLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    "FAILED TRANSFER attempt from account (ID=" + sendAccount.getId() + ") to account (ID=" + destinationAccount.getId() + ") - Insufficient funds",
+                    teller.getId(),
+                    teller.getRole(),
+                    false,
+                    "Insufficient funds for transfer of " + transferAmount
+            );
+            auditLogRepository.save(failedLog);
+
+            throw new IllegalArgumentException("Insufficient balance for transfer. Available balance: " + senderBalance + ", requested amount: " + transferAmount);
+        }
+
+        destinationAccount.setSolde(destinationAccount.getSolde().add(transferAmount));
+        sendAccount.setSolde(senderBalance.subtract(transferAmount));
+
+        accountRepository.update(destinationAccount);
+        accountRepository.update(sendAccount);
+
+        OperationHistory senderOp = new OperationHistory(
+                LocalDateTime.now(),
+                "ACCOUNT_TRANSFER_OUT",
+                sendAccount.getId().toString(),
+                destinationAccount.getId().toString(),
+                "TRANSFER OUT OF AMOUNT: " + transferAmount + " TO IBAN: " + destinationIban,
+                "SUCCESS",
+                sendAccount.getSolde(),
+                sendAccount.getDevise(),
+                UUID.randomUUID().toString()
+        );
+        operationRepository.save(senderOp);
+
+        OperationHistory receiverOp = new OperationHistory(
+                LocalDateTime.now(),
+                "ACCOUNT_TRANSFER_IN",
+                sendAccount.getId().toString(),
+                destinationAccount.getId().toString(),
+                "TRANSFER IN OF AMOUNT: " + transferAmount + " FROM IBAN: " + sendIban,
+                "SUCCESS",
+                destinationAccount.getSolde(),
+                destinationAccount.getDevise(),
+                UUID.randomUUID().toString()
+        );
+        operationRepository.save(receiverOp);
+
+        AuditLog senderLog = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_TRANSFER",
+                "SUCCESSFUL TRANSFER OUT from account (ID=" + sendAccount.getId() + ", IBAN=" + sendAccount.getIban() + ") to IBAN: " + destinationIban,
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(senderLog);
+
+        AuditLog receiverLog = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_TRANSFER",
+                "SUCCESSFUL TRANSFER IN to account (ID=" + destinationAccount.getId() + ", IBAN=" + destinationAccount.getIban() + ") from IBAN: " + sendIban,
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(receiverLog);
+
+        return AccountMapper.toAccountDTO(sendAccount);
     }
+
     private Client findOrCreateClient(CreateAccountDTO dto) {
         var existing = clientRepository.findByFirsName(dto.getFirstName());
         if (existing.isPresent()) {

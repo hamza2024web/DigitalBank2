@@ -60,13 +60,19 @@ public class AccountController {
         }
     }
 
-    public void clientTransferAccount(ClientAccountTransferDTO clientTransferAccount,User teller){
+    public void clientTransferAccount(ClientAccountTransferDTO clientTransferAccount, User teller) {
         try {
-            AccountDTO transferAccount = accountService.clientTransferAccount(clientTransferAccount,teller);
-        } catch (IllegalArgumentException e){
+            AccountDTO transferAccount = accountService.clientTransferAccount(clientTransferAccount, teller);
+            System.out.println("✓ Transfer completed successfully!");
+            System.out.println("Amount transferred: " + clientTransferAccount.getAmountTransaction());
+            System.out.println("From: " + clientTransferAccount.getSendClientIban());
+            System.out.println("To: " + clientTransferAccount.getDestinationClientIban());
+            System.out.println("Remaining sender balance: " + transferAccount.getSolde() + " " + transferAccount.getDevise());
+        } catch (IllegalArgumentException e) {
             System.out.println("✗ Transfer failed: " + e.getMessage());
-        }catch (RuntimeException e){
-            System.out.println("✗ Error processing transfer : " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("✗ Error processing transfer: " + e.getMessage());
         }
     }
+
 }
