@@ -14,6 +14,7 @@ public class FeeRule {
     private Currency devise;
     private boolean isActive;
 
+    // Constructor
     public FeeRule(Long id, TransactionType operationType, FeeMode mode, BigDecimal value, Currency devise, boolean isActive) {
         this.id = id;
         this.operationType = operationType;
@@ -23,6 +24,7 @@ public class FeeRule {
         this.isActive = isActive;
     }
 
+    // Getters and Setters
     public Long getId() {
         return id;
     }
