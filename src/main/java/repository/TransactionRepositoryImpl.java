@@ -9,9 +9,9 @@ import java.sql.SQLException;
 public class TransactionRepositoryImpl implements TransactionRepository{
     @Override
     public void save(Transaction transaction) {
-        String sql = "INSERT INTO transactions " +
-                "(amount, type, status, timestamp, currency, description, source_account_id, destination_account_id) " +
-                "VALUES (?, ?::transaction_type_enum, ?::transaction_status_enum, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO transaction " +
+                "(montant, type, status, date_transaction, devise, description, compte_source_id, compte_destination_id) " +
+                "VALUES (?, ?::transaction_type_enum, ?::transaction_status_enum, ?, ?::currency_enum, ?, ?, ?)";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setBigDecimal(1, transaction.getMontant());
