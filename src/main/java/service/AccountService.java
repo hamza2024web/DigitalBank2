@@ -114,13 +114,7 @@ public class AccountService {
         String iban = clientAccountDeposit.getClientIban();
         String amountStr = clientAccountDeposit.getAmount();
 
-        Optional<Account> accountByIban = accountRepository.findByIban(iban);
-
-        if (accountByIban.isEmpty()) {
-            throw new RuntimeException("No account found for IBAN: " + iban);
-        }
-
-        Account account = accountByIban.get();
+        Account account = accountRepository.findByIban(iban).orElseThrow(() -> new RuntimeException("This Account : " + iban + " has Pending status ."));
 
         BigDecimal amount;
         try {
