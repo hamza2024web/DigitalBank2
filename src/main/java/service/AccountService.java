@@ -472,7 +472,7 @@ public class AccountService {
                 .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
 
         account.setCloseStatus(AccountCloseStatus.PENDING);
-        accountRepository.update(account);
+        accountRepository.updateCloseStatus(account);
 
         AuditLog log = new AuditLog(
                 LocalDateTime.now(),
@@ -484,6 +484,7 @@ public class AccountService {
                 null
         );
         auditLogRepository.save(log);
+        return AccountMapper.toAccountDTO(account);
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {

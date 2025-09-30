@@ -162,6 +162,22 @@ public class AccountRepositoryImpl implements AccountRepository{
         return false;
     }
 
+    @Override
+    public void updateCloseStatus(Account account) {
+        String sql = "UPDATE account SET closeStatus = ? WHERE id = ?";
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setString(1,account.getCloseStatus().toString());
+            stmt.setString(2,account.getId());
+
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated == 0){
+                throw new RuntimeException("No account found with ID: " + account.getId());
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private void saveAccount(Connection connection , Account account) throws SQLException{
         String sql = "INSERT INTO accounts (id,iban,type,solde,devise,date_creation,is_active,client_id) VALUES (?,?,?::account_type_enum,?,?::currency_enum,?,?,?) ";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
