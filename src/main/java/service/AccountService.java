@@ -21,12 +21,14 @@ public class AccountService {
     private final OperationRepositoryImpl operationRepository;
     private final AuditLogRepositoryImpl auditLogRepository;
     private final TransactionRepositoryImpl transactionRepository;
-    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository,OperationRepositoryImpl operationRepository ,AuditLogRepositoryImpl auditLogRepository,TransactionRepositoryImpl transactionRepository) {
+    private final ExchangeRateRepositoryImpl exchangeRateRepository;
+    public AccountService(AccountRepositoryImpl accountRepository, ClientRepositoryImpl clientRepository,OperationRepositoryImpl operationRepository ,AuditLogRepositoryImpl auditLogRepository,TransactionRepositoryImpl transactionRepository , ExchangeRateRepositoryImpl exchangeRateRepository) {
         this.accountRepository = accountRepository;
         this.clientRepository = clientRepository;
         this.operationRepository = operationRepository;
         this.auditLogRepository = auditLogRepository;
         this.transactionRepository = transactionRepository;
+        this.exchangeRateRepository = exchangeRateRepository;
     }
 
     public AccountDTO createAccount(CreateAccountDTO createAccountDTO, User teller) {
@@ -312,72 +314,154 @@ public class AccountService {
             throw new IllegalArgumentException("Insufficient balance for transfer. Available balance: " + senderBalance + ", requested amount: " + transferAmount);
         }
 
-        destinationAccount.setSolde(destinationAccount.getSolde().add(transferAmount));
-        sendAccount.setSolde(senderBalance.subtract(transferAmount));
+        if (destinationAccount.getDevise() == sendAccount.getDevise()){
+            destinationAccount.setSolde(destinationAccount.getSolde().add(transferAmount));
+            sendAccount.setSolde(senderBalance.subtract(transferAmount));
 
-        accountRepository.update(destinationAccount);
-        accountRepository.update(sendAccount);
+            accountRepository.update(destinationAccount);
+            accountRepository.update(sendAccount);
 
-        OperationHistory senderOp = new OperationHistory(
-                LocalDateTime.now(),
-                "ACCOUNT_TRANSFER_OUT",
-                sendAccount.getId().toString(),
-                destinationAccount.getId().toString(),
-                "TRANSFER OUT OF AMOUNT: " + transferAmount + " TO IBAN: " + destinationIban,
-                "SUCCESS",
-                sendAccount.getSolde(),
-                sendAccount.getDevise(),
-                UUID.randomUUID().toString()
-        );
-        operationRepository.save(senderOp);
+            OperationHistory senderOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER_OUT",
+                    sendAccount.getId().toString(),
+                    destinationAccount.getId().toString(),
+                    "TRANSFER OUT OF AMOUNT: " + transferAmount + " TO IBAN: " + destinationIban,
+                    "SUCCESS",
+                    sendAccount.getSolde(),
+                    sendAccount.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(senderOp);
 
-        OperationHistory receiverOp = new OperationHistory(
-                LocalDateTime.now(),
-                "ACCOUNT_TRANSFER_IN",
-                sendAccount.getId().toString(),
-                destinationAccount.getId().toString(),
-                "TRANSFER IN OF AMOUNT: " + transferAmount + " FROM IBAN: " + sendIban,
-                "SUCCESS",
-                destinationAccount.getSolde(),
-                destinationAccount.getDevise(),
-                UUID.randomUUID().toString()
-        );
-        operationRepository.save(receiverOp);
+            OperationHistory receiverOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER_IN",
+                    sendAccount.getId().toString(),
+                    destinationAccount.getId().toString(),
+                    "TRANSFER IN OF AMOUNT: " + transferAmount + " FROM IBAN: " + sendIban,
+                    "SUCCESS",
+                    destinationAccount.getSolde(),
+                    destinationAccount.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(receiverOp);
 
-        AuditLog senderLog = new AuditLog(
-                LocalDateTime.now(),
-                "ACCOUNT_TRANSFER",
-                "SUCCESSFUL TRANSFER OUT from account (ID=" + sendAccount.getId() + ", IBAN=" + sendAccount.getIban() + ") to IBAN: " + destinationIban,
-                teller.getId(),
-                teller.getRole(),
-                true,
-                null
-        );
-        auditLogRepository.save(senderLog);
+            AuditLog senderLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    "SUCCESSFUL TRANSFER OUT from account (ID=" + sendAccount.getId() + ", IBAN=" + sendAccount.getIban() + ") to IBAN: " + destinationIban,
+                    teller.getId(),
+                    teller.getRole(),
+                    true,
+                    null
+            );
+            auditLogRepository.save(senderLog);
 
-        AuditLog receiverLog = new AuditLog(
-                LocalDateTime.now(),
-                "ACCOUNT_TRANSFER",
-                "SUCCESSFUL TRANSFER IN to account (ID=" + destinationAccount.getId() + ", IBAN=" + destinationAccount.getIban() + ") from IBAN: " + sendIban,
-                teller.getId(),
-                teller.getRole(),
-                true,
-                null
-        );
-        auditLogRepository.save(receiverLog);
+            AuditLog receiverLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    "SUCCESSFUL TRANSFER IN to account (ID=" + destinationAccount.getId() + ", IBAN=" + destinationAccount.getIban() + ") from IBAN: " + sendIban,
+                    teller.getId(),
+                    teller.getRole(),
+                    true,
+                    null
+            );
+            auditLogRepository.save(receiverLog);
 
-        Transaction transaction = new Transaction(
-                transferAmount,
-                TransactionType.TRANSFERIN,
-                TransactionStatus.SUCCESS,
-                LocalDateTime.now(),
-                sendAccount.getDevise(),
-                "TRANSFER AN AMOUNT " + transferAmount + "TO ACCOUNT : " + sendAccount.getIban() + " .",
-                sendAccount,
-                destinationAccount
-        );
+            Transaction transaction = new Transaction(
+                    transferAmount,
+                    TransactionType.TRANSFERIN,
+                    TransactionStatus.SUCCESS,
+                    LocalDateTime.now(),
+                    sendAccount.getDevise(),
+                    "TRANSFER AN AMOUNT " + transferAmount + "TO ACCOUNT : " + sendAccount.getIban() + " .",
+                    sendAccount,
+                    destinationAccount
+            );
 
-        transactionRepository.save(transaction);
+            transactionRepository.save(transaction);
+        } else {
+            BigDecimal rate = exchangeRateRepository.findActiveByOperationAndCurrency(sendAccount.getDevise().toString(),destinationAccount.getDevise().toString());
+
+            BigDecimal convertedAmount = transferAmount.multiply(rate);
+
+            destinationAccount.setSolde(destinationAccount.getSolde().add(convertedAmount));
+            sendAccount.setSolde(senderBalance.subtract(transferAmount));
+
+            accountRepository.update(destinationAccount);
+            accountRepository.update(sendAccount);
+
+            OperationHistory senderOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER_OUT",
+                    sendAccount.getId().toString(),
+                    destinationAccount.getId().toString(),
+                    "TRANSFER OUT OF " + transferAmount + " " + sendAccount.getDevise() +
+                            " TO IBAN: " + destinationIban + " (Converted to " + convertedAmount + " " + destinationAccount.getDevise() + ")",
+                    "SUCCESS",
+                    sendAccount.getSolde(),
+                    sendAccount.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(senderOp);
+
+            OperationHistory receiverOp = new OperationHistory(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER_IN",
+                    sendAccount.getId().toString(),
+                    destinationAccount.getId().toString(),
+                    "TRANSFER IN OF " + convertedAmount + " " + destinationAccount.getDevise() +
+                            " FROM IBAN: " + sendIban + " (Original amount " + transferAmount + " " + sendAccount.getDevise() + ")",
+                    "SUCCESS",
+                    destinationAccount.getSolde(),
+                    destinationAccount.getDevise(),
+                    UUID.randomUUID().toString()
+            );
+            operationRepository.save(receiverOp);
+
+            AuditLog senderLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    "SUCCESSFUL TRANSFER OUT (" + transferAmount + " " + sendAccount.getDevise() +
+                            ") from account (ID=" + sendAccount.getId() + ", IBAN=" + sendAccount.getIban() +
+                            ") to IBAN: " + destinationIban + " converted to " + convertedAmount + " " + destinationAccount.getDevise(),
+                    teller.getId(),
+                    teller.getRole(),
+                    true,
+                    null
+            );
+            auditLogRepository.save(senderLog);
+
+            AuditLog receiverLog = new AuditLog(
+                    LocalDateTime.now(),
+                    "ACCOUNT_TRANSFER",
+                    "SUCCESSFUL TRANSFER IN (" + convertedAmount + " " + destinationAccount.getDevise() +
+                            ") to account (ID=" + destinationAccount.getId() + ", IBAN=" + destinationAccount.getIban() +
+                            ") from IBAN: " + sendIban,
+                    teller.getId(),
+                    teller.getRole(),
+                    true,
+                    null
+            );
+            auditLogRepository.save(receiverLog);
+
+            Transaction transaction = new Transaction(
+                    convertedAmount,
+                    TransactionType.TRANSFERIN,
+                    TransactionStatus.SUCCESS,
+                    LocalDateTime.now(),
+                    destinationAccount.getDevise(),
+                    "TRANSFER OF " + transferAmount + " " + sendAccount.getDevise() +
+                            " converted to " + convertedAmount + " " + destinationAccount.getDevise() +
+                            " to IBAN: " + destinationAccount.getIban(),
+                    sendAccount,
+                    destinationAccount
+            );
+
+            transactionRepository.save(transaction);
+        }
+
         return AccountMapper.toAccountDTO(sendAccount);
     }
 
