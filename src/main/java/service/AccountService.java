@@ -460,27 +460,29 @@ public class AccountService {
         return AccountMapper.toAccountDTO(sendAccount);
     }
 
-    public AccountDTO clientAccountClose(ClientAccountCloseDTO clientAccountClose,User teller){
+    public AccountDTO clientAccountClose(ClientAccountCloseDTO clientAccountClose, User teller) {
         String iban = clientAccountClose.getClientIban();
-        Account account = accountRepository.findByIban(iban).orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
+        Account account = accountRepository.findByIban(iban)
+                .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
 
-        if (account.getSolde().compareTo(BigDecimal.ZERO) > 0){
-            System.out.println("Please Withdraw Firstly the balance to be 0 Then Your account will be Close");
-        } else {
-            account.setCloseStatus(AccountCloseStatus.PENDING);
-            accountRepository.updateCloseStatus(account);
-
-            AuditLog log = new AuditLog(
-                    LocalDateTime.now(),
-                    "ACCOUNT_CLOSE_REQUEST",
-                    "Teller requested closure for account with IBAN: " + iban,
-                    teller.getId(),
-                    teller.getRole(),
-                    true,
-                    null
-            );
-            auditLogRepository.save(log);
+        if (account.getSolde().compareTo(BigDecimal.ZERO) > 0) {
+            throw new IllegalArgumentException("Please Withdraw Firstly the balance to 0 Then Your account will be Close");
         }
+
+        account.setCloseStatus(AccountCloseStatus.PENDING);
+        accountRepository.updateCloseStatus(account);
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_CLOSE_REQUEST",
+                "Teller requested closure for account with IBAN: " + iban,
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
+
         return AccountMapper.toAccountDTO(account);
     }
 
