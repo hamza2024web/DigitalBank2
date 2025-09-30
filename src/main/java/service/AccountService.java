@@ -1,6 +1,7 @@
 package service;
 
 import domain.*;
+import domain.Enums.AccountCloseStatus;
 import domain.Enums.TransactionStatus;
 import domain.Enums.TransactionType;
 import dto.*;
@@ -463,6 +464,26 @@ public class AccountService {
         }
 
         return AccountMapper.toAccountDTO(sendAccount);
+    }
+
+    public AccountDTO clientAccountClose(ClientAccountCloseDTO clientAccountClose,User teller){
+        String iban = clientAccountClose.getClientIban();
+        Account account = accountRepository.findByIban(iban)
+                .orElseThrow(() -> new RuntimeException("Account not found with IBAN: " + iban));
+
+        account.setCloseStatus(AccountCloseStatus.PENDING);
+        accountRepository.update(account);
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_CLOSE_REQUEST",
+                "Teller requested closure for account with IBAN: " + iban,
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {

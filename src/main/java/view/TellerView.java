@@ -124,6 +124,14 @@ public class TellerView {
         System.out.println("Enter Account IBAN : ");
         return scanner.nextLine();
     }
+
+    public void askTellerClientTypeTransafer(){
+        System.out.println("Enter Type of Transfer : ");
+        System.out.println("======= 1 . Transfer In =======");
+        System.out.println("======= 2 . Transfer Out =======");
+        System.out.print("Enter your choice: ");
+    }
+
     public void showMessage(String message){
         System.out.println(message);
     }
@@ -135,4 +143,5 @@ public class TellerView {
     public void showSuccess(String successMessage){
         System.out.println("SUCCESS: " + successMessage);
     }
+
 }

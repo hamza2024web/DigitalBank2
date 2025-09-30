@@ -1,5 +1,6 @@
 package domain;
 
+import domain.Enums.AccountCloseStatus;
 import domain.Enums.AccountType;
 import domain.Enums.Currency;
 
@@ -14,9 +15,10 @@ public abstract class Account{
     protected Currency devise;
     protected LocalDate dateCreation;
     protected boolean isActive;
+    protected AccountCloseStatus closeStatus;
     protected Client client;
 
-    public Account(String id , String iban , AccountType type , BigDecimal solde , Currency devise , LocalDate dateCreation , boolean isActive , Client client){
+    public Account(String id , String iban , AccountType type , BigDecimal solde , Currency devise , LocalDate dateCreation , boolean isActive , Client client, AccountCloseStatus closeStatus){
         this.id = id;
         this.iban = iban;
         this.type = type;
@@ -25,6 +27,7 @@ public abstract class Account{
         this.dateCreation = dateCreation;
         this.isActive = isActive;
         this.client = client;
+        this.closeStatus = closeStatus;
     }
 
     public String getId(){
@@ -88,5 +91,13 @@ public abstract class Account{
 
     public void setType(AccountType type){
         this.type = type;
+    }
+
+    public void setCloseStatus(AccountCloseStatus closeStatus){
+        this.closeStatus = closeStatus;
+    }
+
+    public AccountCloseStatus getCloseStatus (){
+        return closeStatus;
     }
 }

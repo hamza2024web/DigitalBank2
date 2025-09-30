@@ -130,7 +130,10 @@ public class MenuNavigator {
                     accountController.clientAccountRequest(clientAccountRequest,loggedInUser);
                 }
                 case 3 -> {
+                    String clientIban = tellerView.askTellerIbanClient();
                     System.out.println("Requesting account closure...");
+                    ClientAccountCloseDTO clientAccountClose = new ClientAccountCloseDTO(clientIban,loggedInUser);
+                    accountController.clientAccountClose(clientAccountClose,loggedInUser);
                 }
                 case 4 -> {
                     String clientIban = tellerView.askTellerIbanClient();
@@ -147,13 +150,22 @@ public class MenuNavigator {
                     accountController.clientAccountWithdrawal(clientAccountWithdrawal,loggedInUser);
                 }
                 case 6 -> {
-                    String sendClientIban = tellerView.askTellerIbanClient();
-                    String destinationClientIban = tellerView.askDestinationAccountId();
-                    String amountTransaction = tellerView.askTransactionAmount();
-                    System.out.println("Processing transfer...");
-                    ClientAccountTransferDTO clientTransferAccount = new ClientAccountTransferDTO(sendClientIban,destinationClientIban,amountTransaction,loggedInUser);
-                    accountController.clientTransferAccount(clientTransferAccount,loggedInUser);
+                    tellerView.askTellerClientTypeTransafer();
+                    int choice2 = tellerView.getMenuChoice();
 
+                    switch (choice2){
+                        case 1 -> {
+                            String sendClientIban = tellerView.askTellerIbanClient();
+                            String destinationClientIban = tellerView.askDestinationAccountId();
+                            String amountTransaction = tellerView.askTransactionAmount();
+                            System.out.println("Processing transfer...");
+                            ClientAccountTransferDTO clientTransferAccount = new ClientAccountTransferDTO(sendClientIban,destinationClientIban,amountTransaction,loggedInUser);
+                            accountController.clientTransferAccount(clientTransferAccount,loggedInUser);
+                        }
+                        case 2 -> {
+
+                        }
+                    }
                 }
                 case 7 -> {
                     System.out.println("Showing transaction history...");

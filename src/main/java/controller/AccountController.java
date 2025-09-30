@@ -77,4 +77,12 @@ public class AccountController {
         }
     }
 
+    public void clientAccountClose(ClientAccountCloseDTO clientAccountClose , User teller){
+        try {
+            AccountDTO closeAccount = accountService.clientAccountClose(clientAccountClose,teller);
+        } catch (IllegalArgumentException e){
+            System.out.println("✗ The closer failed: " + e.getMessage());
+        }
+    }
+
 }
