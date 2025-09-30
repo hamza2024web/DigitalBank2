@@ -89,7 +89,7 @@ public class AccountController {
     public void clientAccountClose(ClientAccountCloseDTO clientAccountClose, User teller) {
         try {
             AccountDTO closeAccount = accountService.clientAccountClose(clientAccountClose, teller);
-            System.out.println("✓ Account closure request processed successfully!");
+            System.out.println("✓ Account closure request processed successfully , Please Wait for the manager to validate the process !");
             System.out.println("Client: " + closeAccount.getClient().getNom() + " " + closeAccount.getClient().getPrenom());
             System.out.println("IBAN: " + closeAccount.getIban());
             System.out.println("Account Type: " + closeAccount.getType());

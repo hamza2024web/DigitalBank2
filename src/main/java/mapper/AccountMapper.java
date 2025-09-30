@@ -43,17 +43,17 @@ public class AccountMapper {
                         new BigDecimal("0.03")   // tauxInteret (3% interest rate)
                 );
 
-            case CREDIT:
-                // Assuming CreditAccount has a similar constructor
-                return new CreditAccount(
-                        null,                    // id
-                        null,                    // iban
-                        client,                  // client
-                        initialBalance,          // credit limit
-                        36,                      // duration in months
-                        5.0,                     // interest rate
-                        null                     // start date
-                );
+//            case CREDIT:
+//                // Assuming CreditAccount has a similar constructor
+//                return new CreditAccount(
+//                        null,                    // id
+//                        null,                    // iban
+//                        client,                  // client
+//                        initialBalance,          // credit limit
+//                        36,                      // duration in months
+//                        5.0,                     // interest rate
+//                        null                     // start date
+//                );
 
             default:
                 throw new IllegalArgumentException("Unsupported account type: " + accountType);
