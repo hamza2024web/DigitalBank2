@@ -181,7 +181,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void updateCloseStatus(Account account) {
-        String sql = "UPDATE accounts SET close_status = ?::account_close_status_enum WHERE id = ?";
+        String sql = "UPDATE accounts SET close_status = ?::close_status_enum WHERE id = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, account.getCloseStatus().toString());
             stmt.setString(2, account.getId());
