@@ -43,14 +43,20 @@ public class AccountController {
     }
 
     public void clientAccountDeposit(ClientAccountDepositDTO clientAccountDeposit, User teller) {
-        AccountDTO updatedAccount = accountService.clientAccountDeposit(clientAccountDeposit, teller);
+        try {
+            AccountDTO depositAccount = accountService.clientAccountDeposit(clientAccountDeposit, teller);
 
-        System.out.println("✓ Deposit successful!");
-        System.out.println("Client: " + updatedAccount.getClient().getNom() + " " + updatedAccount.getClient().getPrenom());
-        System.out.println("IBAN: " + updatedAccount.getIban());
-        System.out.println("Amount deposited: " + clientAccountDeposit.getAmount());
-        System.out.println("New Balance: " + updatedAccount.getSolde() + " " + updatedAccount.getDevise());
-        System.out.println("Operation performed by teller: " + teller.getEmail());
+            System.out.println("✓ Deposit successful!");
+            System.out.println("Client: " + depositAccount.getClient().getNom() + " " + depositAccount.getClient().getPrenom());
+            System.out.println("IBAN: " + depositAccount.getIban());
+            System.out.println("New Balance: " + depositAccount.getSolde() + " " + depositAccount.getDevise());
+            System.out.println("Operation performed by: " + teller.getEmail());
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Deposit failed: " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("✗ Error processing deposit: " + e.getMessage());
+        }
     }
 
     public void clientAccountWithdrawal(ClientAccountWithdrawalDTO clientAccountWithdrawal, User teller) {
