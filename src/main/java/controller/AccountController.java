@@ -1,5 +1,6 @@
 package controller;
 
+import domain.OperationHistory;
 import domain.User;
 import dto.*;
 import service.AccountService;
@@ -108,4 +109,54 @@ public class AccountController {
             System.out.println("✗ Error processing account closure: " + e.getMessage());
         }
     }
+
+    public void clientAccountHistory(ClientAccountHistoryDTO clientAccountHistory, User teller) {
+        try {
+            AccountDTO accountDTO = accountService.findAccountByIban(clientAccountHistory.getClientIban());
+
+            List<OperationHistory> operations = accountService.clientAccountHistory(clientAccountHistory, teller);
+
+            accountDTO.setOperations(operations);
+
+            System.out.println("==================================================");
+            System.out.println("               ACCOUNT HISTORY DETAILS");
+            System.out.println("==================================================");
+            System.out.println("Client       : " + accountDTO.getClient().getNom() + " " + accountDTO.getClient().getPrenom());
+            System.out.println("IBAN         : " + accountDTO.getIban());
+            System.out.println("Account Type : " + accountDTO.getType());
+            System.out.println("Balance      : " + accountDTO.getSolde() + " " + accountDTO.getDevise());
+            System.out.println("Close Status : " + accountDTO.getCloseStatus());
+            System.out.println("--------------------------------------------------");
+            System.out.println("Operations History:");
+            System.out.println("--------------------------------------------------");
+            System.out.printf("| %-21s | %-13s | %-10s | %-8s | %-8s |\n",
+                    "Date/Time", "Type", "Amount", "Currency", "Status");
+            System.out.println("|-----------------------|---------------|------------|----------|----------|");
+
+            if (accountDTO.getOperations() == null || accountDTO.getOperations().isEmpty()) {
+                System.out.println("| No operations found for this account.                                   |");
+            } else {
+                for (OperationHistory op : accountDTO.getOperations()) {
+                    String sign = op.getOperationType().contains("WITHDRAW") || op.getOperationType().contains("TRANSFER_OUT") ? "-" : "+";
+                    System.out.printf("| %-21s | %-13s | %s%-9s | %-8s | %-8s |\n",
+                            op.getDateOperation(),
+                            op.getOperationType(),
+                            sign,
+                            op.getAmount(),
+                            op.getCurrency(),
+                            op.getStatus());
+                }
+            }
+
+            System.out.println("--------------------------------------------------");
+            System.out.println("Operation performed by teller: " + teller.getEmail());
+            System.out.println("==================================================");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("✗ Account history failed: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("✗ An error occurred while retrieving account history: " + e.getMessage());
+        }
+    }
+
 }

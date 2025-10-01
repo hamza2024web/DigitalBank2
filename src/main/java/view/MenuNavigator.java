@@ -168,7 +168,10 @@ public class MenuNavigator {
                     }
                 }
                 case 7 -> {
+                    String clientIban = tellerView.askTellerIbanClient();
                     System.out.println("Showing transaction history...");
+                    ClientAccountHistoryDTO clientAccountHistroy = new ClientAccountHistoryDTO(clientIban,loggedInUser);
+                    accountController.clientAccountHistory(clientAccountHistroy,loggedInUser);
                 }
                 case 8 -> {
                     return;

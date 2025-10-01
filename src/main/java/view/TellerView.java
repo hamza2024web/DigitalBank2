@@ -22,6 +22,7 @@ public class TellerView {
         System.out.println("5. Withdraw");
         System.out.println("6. Transfer");
         System.out.println("7. Transaction history");
+        System.out.println("8. Credit Request");
         System.out.println("Account:");
         System.out.println("8. Logout");
         System.out.print("Enter your choice: ");

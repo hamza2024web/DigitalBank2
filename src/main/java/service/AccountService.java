@@ -513,6 +513,33 @@ public class AccountService {
         return AccountMapper.toAccountDTO(account);
     }
 
+    public List<OperationHistory> clientAccountHistory(ClientAccountHistoryDTO clientAccountHistory, User teller) {
+        String iban = clientAccountHistory.getClientIban();
+
+        Account account = accountRepository.findByIban(iban)
+                .orElseThrow(() -> new RuntimeException("No account found by this IBAN: " + iban));
+
+        List<OperationHistory> operations = operationRepository.findByAccountId(account);
+
+        AuditLog log = new AuditLog(
+                LocalDateTime.now(),
+                "ACCOUNT_HISTORY_VIEW",
+                "Teller viewed history for account with IBAN: " + iban,
+                teller.getId(),
+                teller.getRole(),
+                true,
+                null
+        );
+        auditLogRepository.save(log);
+
+        return operations;
+    }
+
+    public AccountDTO findAccountByIban(String iban){
+        Account account = accountRepository.findByIban(iban).orElseThrow(() -> new RuntimeException("No account Found by this IBAN : " + iban ));
+
+        return AccountMapper.toAccountDTO(account);
+    }
     private Client findOrCreateClient(CreateAccountDTO dto) {
         var existing = clientRepository.findByFirsName(dto.getFirstName());
         if (existing.isPresent()) {
@@ -547,7 +574,6 @@ public class AccountService {
     }
 
     private String generateIban() {
-        // Generate proper Moroccan IBAN format
         return "MA64BMCE" + String.format("%020d", System.currentTimeMillis() % 100000000000000000L);
     }
 }
