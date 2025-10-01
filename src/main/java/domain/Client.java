@@ -1,17 +1,18 @@
 package domain;
 
+import java.math.BigDecimal;
+
 public class Client {
     private Long id;
     private String nom;
     private String prenom;
-    private Double revenueMensuel;
-    private User utilisateur;
+    private BigDecimal revenueMensuel;
 
-    public Client(String nom , String prenom , Double revenueMensuel , User utilisateur){
+    public Client(Long id, String nom , String prenom , BigDecimal revenueMensuel){
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.revenueMensuel = revenueMensuel;
-        this.utilisateur = utilisateur;
     }
 
     public Long getId(){
@@ -26,12 +27,12 @@ public class Client {
         return prenom;
     }
 
-    public Double getRevenueMensuel(){
+    public BigDecimal getRevenueMensuel(){
         return revenueMensuel;
     }
 
-    public User getUtilisateur(){
-        return utilisateur;
+    public void setId(Long id){
+        this.id = id;
     }
 
     public void setNom(String nom){
@@ -42,12 +43,8 @@ public class Client {
         this.prenom = prenom;
     }
 
-    public void setRevenueMensuel(Double revenueMensuel){
+    public void setRevenueMensuel(BigDecimal revenueMensuel){
         this.revenueMensuel = revenueMensuel;
-    }
-
-    public void setUtilisateur(User utlisateur){
-        this.utilisateur = utilisateur;
     }
 
 }

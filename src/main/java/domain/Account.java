@@ -1,12 +1,13 @@
 package domain;
 
+import domain.Enums.AccountCloseStatus;
 import domain.Enums.AccountType;
 import domain.Enums.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public abstract class Account{
+public abstract class Account {
     protected String id;
     protected String iban;
     protected AccountType type;
@@ -14,9 +15,10 @@ public abstract class Account{
     protected Currency devise;
     protected LocalDate dateCreation;
     protected boolean isActive;
+    protected AccountCloseStatus closeStatus;
     protected Client client;
 
-    public Account(String id , String iban , AccountType type , BigDecimal solde , Currency devise , LocalDate dateCreation , boolean isActive , Client client){
+    public Account(String id, String iban, AccountType type, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus) {
         this.id = id;
         this.iban = iban;
         this.type = type;
@@ -25,44 +27,50 @@ public abstract class Account{
         this.dateCreation = dateCreation;
         this.isActive = isActive;
         this.client = client;
+        this.closeStatus = closeStatus;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 
-    public String getIban(){
+    public String getIban() {
         return iban;
     }
 
-    public AccountType getAccountType(){
+    public AccountType getAccountType() {
         return type;
     }
 
-    public BigDecimal getSolde(){
+    public BigDecimal getSolde() {
         return solde;
     }
 
-    public Currency getDevise(){
+    public Currency getDevise() {
         return devise;
     }
 
-    public LocalDate getDate(){
+    public LocalDate getDate() {
         return dateCreation;
     }
 
-    public boolean getActive(){
+    public boolean getActive() {
         return isActive;
     }
 
-    public Client getClient(){
+    public Client getClient() {
         return client;
     }
 
-    public void setId(String id){
+    public AccountCloseStatus getCloseStatus() {
+        return closeStatus;
+    }
+
+    public void setId(String id) {
         this.id = id;
     }
-    public void SetIban(String iban){
+
+    public void setIban(String iban) {
         this.iban = iban;
     }
 
@@ -86,7 +94,11 @@ public abstract class Account{
         this.client = client;
     }
 
-    public void setType(AccountType type){
+    public void setType(AccountType type) {
         this.type = type;
+    }
+
+    public void setCloseStatus(AccountCloseStatus closeStatus) {
+        this.closeStatus = closeStatus;
     }
 }

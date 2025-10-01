@@ -25,21 +25,24 @@ public class AuthController {
         this.consoleView = consoleView;
     }
 
-    public void login(){
+    public User login() {
         String email = authView.askEmail();
         String password = authView.askPassword();
 
-        LoginRequestDTO loginDTO = new LoginRequestDTO(email,password);
+        LoginRequestDTO loginDTO = new LoginRequestDTO(email, password);
 
-        currentUser = authManager.login(loginDTO.getEmail(),loginDTO.getPassword());
+        currentUser = authManager.login(loginDTO.getEmail(), loginDTO.getPassword());
 
-        if (currentUser != null){
-            UserDTO userDTO = new UserDTO(currentUser.getId(),currentUser.getEmail(),currentUser.getRole());
-            consoleView.showMessage("Login successful! Welcome " + userDTO.getEmail() + " | Role: " + userDTO.getRole() + " . ");
+        if (currentUser != null) {
+            UserDTO userDTO = new UserDTO(currentUser.getId(), currentUser.getEmail(), currentUser.getRole());
+            consoleView.showMessage("Login successful! Welcome " + userDTO.getEmail() + " | Role: " + userDTO.getRole());
+            return currentUser;
         } else {
             consoleView.showMessage("Login failed! Check your credentials.");
+            return null;
         }
     }
+
 
     public boolean checkAccess(Role role){
         if (currentUser != null && authorization.hasRole(currentUser,role)){

@@ -18,8 +18,7 @@ public class Transaction {
     private Account accountSource;
     private Account accountDestination;
 
-    public Transaction(Long id , BigDecimal montant , TransactionType type , LocalDateTime dateTransaction , Currency devise , String description , Account accountSource , Account accountDestination) {
-        this.id = id;
+    public Transaction(BigDecimal montant , TransactionType type , TransactionStatus status ,LocalDateTime dateTransaction , Currency devise , String description , Account accountSource , Account accountDestination) {
         this.montant = montant;
         this.type = type;
         this.status = status;

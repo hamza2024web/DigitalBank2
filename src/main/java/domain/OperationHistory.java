@@ -11,20 +11,17 @@ public class OperationHistory {
     private String operationType;
     private String sourceAccountId;
     private String destinationAccountId;
-    private Long userId;
     private String description;
     private String status;
     private BigDecimal amount;
     private Currency currency;
     private String reference;
 
-    public OperationHistory(Long id, LocalDateTime dateOperation, String operationType, String sourceAccountId, String destinationAccountId, Long userId, String description, String status, BigDecimal amount, Currency currency, String reference) {
-        this.id = id;
+    public OperationHistory(LocalDateTime dateOperation, String operationType, String sourceAccountId, String destinationAccountId, String description, String status, BigDecimal amount, Currency currency, String reference) {
         this.dateOperation = dateOperation;
         this.operationType = operationType;
         this.sourceAccountId = sourceAccountId;
         this.destinationAccountId = destinationAccountId;
-        this.userId = userId;
         this.description = description;
         this.status = status;
         this.amount = amount;
@@ -70,14 +67,6 @@ public class OperationHistory {
 
     public void setDestinationAccountId(String destinationAccountId) {
         this.destinationAccountId = destinationAccountId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getDescription() {

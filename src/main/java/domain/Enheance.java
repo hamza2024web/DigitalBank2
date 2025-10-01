@@ -8,14 +8,14 @@ public class Enheance {
     private BigDecimal montant;
     private LocalDate dateEcheance;
     private boolean estPayee;
-    private Credit credit;
+//    private CreditAccount credit;
 
-    public Enheance(Long id, BigDecimal montant, LocalDate dateEcheance, boolean estPayee, Credit credit) {
+    public Enheance(Long id, BigDecimal montant, LocalDate dateEcheance, boolean estPayee) {
         this.id = id;
         this.montant = montant;
         this.dateEcheance = dateEcheance;
         this.estPayee = estPayee;
-        this.credit = credit;
+//        this.credit = credit;
     }
 
     public Long getId() {
@@ -50,11 +50,11 @@ public class Enheance {
         this.estPayee = estPayee;
     }
 
-    public Credit getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Credit credit) {
-        this.credit = credit;
-    }
+//    public CreditAccount getCredit() {
+//        return credit;
+//    }
+//
+//    public void setCredit(CreditAccount credit) {
+//        this.credit = credit;
+//    }
 }
