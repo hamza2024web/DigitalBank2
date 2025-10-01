@@ -83,7 +83,7 @@ public class AccountService {
     }
 
     public List<AccountDTO> clientAccountRequest(ClientAccountsRequestDTO clientAccountsRequest , User teller){
-        String iban = clientAccountsRequest.getClientIban();
+        String iban = clientAccountsRequest.getClientIban().trim();
 
         System.out.println("Searching IBAN: '" + iban + "'");
 
@@ -96,7 +96,7 @@ public class AccountService {
         Account account = accountOpt.get();
         Client client = account.getClient();
 
-        List<Account> ClientAccounts = accountRepository.findByClientId(client.getId().toString());
+        List<Account> ClientAccounts = accountRepository.findByClientId(client.getId());
 
         AuditLog log = new AuditLog(
                 LocalDateTime.now(),
