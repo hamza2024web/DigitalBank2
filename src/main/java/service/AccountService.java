@@ -118,8 +118,8 @@ public class AccountService {
 
         Account account = accountRepository.findByIban(iban).orElseThrow(() -> new RuntimeException("This Account : " + iban + " not found ."));
 
-        if (account.getAccountType().equals(AccountCloseStatus.PENDING)){
-            throw new IllegalArgumentException("Sorry , This Account has a Pending Status Contact the manager to Active this account .");
+        if (account.getCloseStatus() == AccountCloseStatus.PENDING) {
+            throw new IllegalArgumentException("Sorry, this account has a Pending Close request. Contact the manager to activate this account.");
         }
 
         if (account.getAccountType().equals(AccountType.CREDIT)){
@@ -172,7 +172,7 @@ public class AccountService {
 
         Account account = accountRepository.findByIban(iban).orElseThrow(() -> new RuntimeException("No Account Foudn by this : " + iban + " ."));
 
-        if (account.getAccountType().equals(AccountCloseStatus.PENDING)){
+        if (account.getCloseStatus() == AccountCloseStatus.PENDING){
             throw new IllegalArgumentException("Sorry , This Account has a Pending Status Contact the manager to Active this account .");
         }
 

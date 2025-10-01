@@ -33,7 +33,6 @@ public class AccountDTO {
         this.closeStatus = AccountCloseStatus.NONE;
     }
 
-    // Constructor with closeStatus
     public AccountDTO(String id, String iban, AccountType type, BigDecimal solde, Currency devise,
                       LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus) {
         this.id = id;
@@ -47,7 +46,6 @@ public class AccountDTO {
         this.closeStatus = closeStatus;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
