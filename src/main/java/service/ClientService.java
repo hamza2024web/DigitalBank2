@@ -1,6 +1,7 @@
 package service;
 
 import domain.Client;
+import dto.ClientDTO;
 import mapper.ClientMapper;
 import repository.ClientRepositoryImpl;
 
@@ -11,7 +12,7 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public Client findClientByNomAndPrenom(String clientNom , String clientPrenom){
+    public ClientDTO findClientByNomAndPrenom(String clientNom , String clientPrenom){
         Client client = clientRepository.findByFirsName(clientNom).orElseThrow(() -> new RuntimeException("No Client Found By this Nom : "+clientNom));
 
         return ClientMapper.toClientDTO(client);

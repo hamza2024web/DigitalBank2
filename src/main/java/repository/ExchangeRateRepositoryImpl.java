@@ -1,5 +1,6 @@
 package repository;
 
+import repository.Interface.ExchangeRateRepository;
 import util.JDBCUtil;
 
 import java.math.BigDecimal;
@@ -7,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExchangeRateRepositoryImpl implements ExchangeRateRepository{
+public class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
     @Override
     public BigDecimal findActiveByOperationAndCurrency(String fromCurrency, String toCurrency) {
         String sql = "SELECT rate FROM exchange_rates WHERE from_currency = ? AND to_currency = ? AND active = true";

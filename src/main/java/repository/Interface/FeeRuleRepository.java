@@ -1,4 +1,4 @@
-package repository;
+package repository.Interface;
 
 import domain.Enums.Currency;
 import domain.Enums.TransactionType;

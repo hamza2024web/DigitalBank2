@@ -1,6 +1,7 @@
 package repository;
 
 import domain.Client;
+import repository.Interface.ClientRepository;
 import util.JDBCUtil;
 
 import java.sql.PreparedStatement;

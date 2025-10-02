@@ -2,14 +2,14 @@ package repository;
 
 import domain.Enums.Role;
 import domain.User;
-import org.mindrot.jbcrypt.BCrypt;
+import repository.Interface.UserRepository;
 import util.JDBCUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UserRepositoryImpl implements UserRepository{
+public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";

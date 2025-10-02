@@ -3,6 +3,7 @@ package repository;
 import domain.Account;
 import domain.Enums.Currency;
 import domain.OperationHistory;
+import repository.Interface.OperationRepository;
 import util.JDBCUtil;
 
 import java.math.BigDecimal;

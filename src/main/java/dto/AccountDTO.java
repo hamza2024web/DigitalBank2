@@ -51,7 +51,7 @@ public class AccountDTO {
     public Client getClient() { return client; }
     public AccountCloseStatus getCloseStatus() { return closeStatus; }
 
-    public List<OperationHistory> getOperations() { // <-- getter pour la liste
+    public List<OperationHistory> getOperations() {
         return operations;
     }
 

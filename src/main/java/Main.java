@@ -31,14 +31,14 @@ public class Main {
         CreditService creditService = new CreditService();
         ClientService clientService = new ClientService(clientRepository);
 
-        // Controllers
-        AccountController accountController = new AccountController(accountService);
-        CreditController creditController = new CreditController(creditService,clientService);
-
-
         // Views
         TellerView tellerView = new TellerView();
         CreditView creditView = new CreditView();
+
+        // Controllers
+        AccountController accountController = new AccountController(accountService);
+        CreditController creditController = new CreditController(creditService,clientService,accountService,creditView);
+
 
         // Menu Navigator
         MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController);

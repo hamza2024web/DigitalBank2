@@ -1,14 +1,15 @@
-package domain;
+package dto;
 
-import domain.Enums.Currency;
 import domain.Enums.CreditStatus;
+import domain.Enums.Currency;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class CreditRequest {
+
+public class CreditReqDTO {
     private String id;
-    private Client client;
+    private ClientDTO client;
     private BigDecimal montant;
     private Currency currency;
     private int dureeMois;
@@ -18,8 +19,10 @@ public class CreditRequest {
     private LocalDate requestDate;
     private String requestedBy;
 
-    public CreditRequest(String id, Client client, BigDecimal montant, Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description,
-                         CreditStatus status, LocalDate requestDate, String requestedBy) {
+    public CreditReqDTO() {
+    }
+
+    public CreditReqDTO(String id, ClientDTO client, BigDecimal montant, Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description, CreditStatus status, LocalDate requestDate, String requestedBy) {
         this.id = id;
         this.client = client;
         this.montant = montant;
@@ -32,80 +35,81 @@ public class CreditRequest {
         this.requestedBy = requestedBy;
     }
 
+
     public String getId() {
         return id;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public BigDecimal getMontant() {
-        return montant;
-    }
-
-    public Currency getCurrency() {
-        return currency;
-    }
-
-    public int getDureeMois() {
-        return dureeMois;
-    }
-
-    public BigDecimal getTauxAnnuel() {
-        return tauxAnnuel;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public CreditStatus getStatus() {
-        return status;
-    }
-
-    public LocalDate getRequestDate() {
-        return requestDate;
-    }
-
-    public String getRequestedBy() {
-        return requestedBy;
     }
 
     public void setId(String id) {
         this.id = id;
     }
 
-    public void setClient(Client client) {
+    public ClientDTO getClient() {
+        return client;
+    }
+
+    public void setClient(ClientDTO client) {
         this.client = client;
+    }
+
+    public BigDecimal getMontant() {
+        return montant;
     }
 
     public void setMontant(BigDecimal montant) {
         this.montant = montant;
     }
 
+    public Currency getCurrency() {
+        return currency;
+    }
+
     public void setCurrency(Currency currency) {
         this.currency = currency;
+    }
+
+    public int getDureeMois() {
+        return dureeMois;
     }
 
     public void setDureeMois(int dureeMois) {
         this.dureeMois = dureeMois;
     }
 
+    public BigDecimal getTauxAnnuel() {
+        return tauxAnnuel;
+    }
+
     public void setTauxAnnuel(BigDecimal tauxAnnuel) {
         this.tauxAnnuel = tauxAnnuel;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public CreditStatus getStatus() {
+        return status;
+    }
+
     public void setStatus(CreditStatus status) {
         this.status = status;
     }
 
+    public LocalDate getRequestDate() {
+        return requestDate;
+    }
+
     public void setRequestDate(LocalDate requestDate) {
         this.requestDate = requestDate;
+    }
+
+    public String getRequestedBy() {
+        return requestedBy;
     }
 
     public void setRequestedBy(String requestedBy) {

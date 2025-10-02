@@ -10,7 +10,10 @@ public class ClientMapper {
         }
 
         return new ClientDTO(
-
+                client.getId(),
+                client.getNom(),
+                client.getPrenom(),
+                client.getRevenueMensuel()
         );
     }
 }

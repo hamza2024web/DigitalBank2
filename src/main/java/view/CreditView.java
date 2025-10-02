@@ -44,4 +44,11 @@ public class CreditView {
         return scanner.nextLine();
     }
 
+    public void showError(String s){
+        System.out.println("ERROR : " + s);
+    }
+
+    public void showSuccess(String s){
+        System.out.println("Success : " + s);
+    }
 }
