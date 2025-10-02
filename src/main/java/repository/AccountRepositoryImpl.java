@@ -310,21 +310,4 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-//    private void saveCreditAccountData(Connection connection, CreditAccount account) throws SQLException {
-//        String sql = "INSERT INTO credit_accounts (account_id, montant_demande, duree_mois, taux_annuel, statut, " +
-//                "solde_restant, date_demande, date_prochaine_echeance, compte_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-//            stmt.setString(1, account.getId());
-//            stmt.setBigDecimal(2, account.getMontantDemande());
-//            stmt.setInt(3, account.getDureeMois());
-//            stmt.setDouble(4, account.getTauxAnnuel());
-//            stmt.setString(5, account.getStatut().toString());
-//            stmt.setBigDecimal(6, account.getSoldeRestant());
-//            stmt.setDate(7, java.sql.Date.valueOf(account.getDateDemande()));
-//            stmt.setDate(8, java.sql.Date.valueOf(account.getDateProchaineEcheance()));
-//            stmt.setString(9, account.getRelatedAccount() != null ? account.getRelatedAccount().getId() : null);
-//            stmt.executeUpdate();
-//        }
-//    }
 }
