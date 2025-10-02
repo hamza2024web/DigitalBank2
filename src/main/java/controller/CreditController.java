@@ -93,7 +93,6 @@ public class CreditController {
             if (success){
                 creditView.showSuccess("Credit Application created successfully . IBAN : " + creditRequestDto.getIban());
                 creditView.showCreditRequestDetails(creditRequest);
-
             } else {
                 creditView.showError("Error creating Credit Application .");
             }
@@ -104,6 +103,7 @@ public class CreditController {
         }
 
     }
+
 
     private void validateCreditRequestDTO(CreditRequestDTO creditRequestDto){
         if (creditRequestDto.getNom() == null || creditRequestDto.getNom().trim().isEmpty()){

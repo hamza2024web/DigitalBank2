@@ -1,5 +1,9 @@
 package view;
 
+import dto.ClientDTO;
+import dto.CreditReqDTO;
+
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class CreditView {
@@ -50,5 +54,37 @@ public class CreditView {
 
     public void showSuccess(String s){
         System.out.println("Success : " + s);
+    }
+
+    public void showCreditRequestDetails(CreditReqDTO creditRequest) {
+        if (creditRequest == null) {
+            showError("Cannot display details: the credit request is null.");
+            return;
+        }
+
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        System.out.println("\n✅ SUCCESS: The credit request has been created with the following details:");
+        System.out.println("---------------------------------------------------------");
+
+        System.out.println("  Request ID: " + creditRequest.getId());
+        System.out.println("  Request Date: " + creditRequest.getRequestDate().format(dateFormatter));
+        System.out.println("  Current Status: " + creditRequest.getStatus());
+        System.out.println("---------------------------------------------------------");
+
+        ClientDTO client = creditRequest.getClient();
+
+        if (client != null) {
+            System.out.println("  Client: " + client.getPrenom() + " " + client.getNom());
+        }
+
+        System.out.println("  Requested Amount: " + creditRequest.getMontant() + " " + creditRequest.getCurrency());
+        System.out.println("  Duration: " + creditRequest.getDureeMois() + " months");
+        System.out.println("  Annual Interest Rate: " + creditRequest.getTauxAnnuel() + " %");
+        System.out.println("---------------------------------------------------------");
+
+        System.out.println("  Description: " + creditRequest.getDescription());
+        System.out.println("  Created by: " + creditRequest.getRequestedBy());
+        System.out.println("---------------------------------------------------------\n");
     }
 }
