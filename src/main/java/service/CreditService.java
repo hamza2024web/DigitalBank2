@@ -1,5 +1,8 @@
 package service;
 
+import domain.CreditRequest;
+import dto.CreditReqDTO;
+import mapper.CreditMapper;
 import repository.CreditAccountRepositoryImpl;
 import repository.CreditRequestRepositoryImpl;
 import repository.Interface.CreditScheduleRepositoryImpl;
@@ -18,4 +21,16 @@ public class CreditService {
         this.transactionRepository = transactionRepository;
     }
 
+    public boolean createCreditRequest(CreditReqDTO creditReqDTO) {
+        try {
+            CreditRequest creditRequestDomain = CreditMapper.toCreditRequest(creditReqDTO);
+
+            return creditRequestRepository.save(creditRequestDomain);
+
+        } catch (Exception e) {
+            System.err.println("Failed to create credit request: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
