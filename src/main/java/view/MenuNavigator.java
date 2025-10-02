@@ -124,9 +124,9 @@ public class MenuNavigator {
                     String initialBalance = tellerView.askInitialBalanceInput();
                     String currency = tellerView.askCurrency();
 
+                    System.out.println("Requesting create account ...");
                     CreateAccountDTO createAccountDTO = new CreateAccountDTO(firstName,lastName,mounthlyIncome,accountType,initialBalance,currency);
                     accountController.createAccount(createAccountDTO,loggedInUser);
-                    System.out.println("Requesting create account ...");
                 }
                 case 2 -> {
                     String clientIban = tellerView.askTellerIbanClient();
@@ -184,9 +184,8 @@ public class MenuNavigator {
                     String amount = creditView.askTellerClientAmountCredit();
                     String duration = creditView.askTellerClientTime();
                     String interestRate = creditView.askTellerClientRate();
-                    String iban = creditView.askTellerClientIbanCredit();
                     String description = creditView.askTellerClientPurposeCredit();
-                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,duration,interestRate,iban,description);
+                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,duration,interestRate,description);
                     creditController.creditRequest(creditRequest,loggedInUser);
                 }
                 case 9 -> {

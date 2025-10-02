@@ -41,20 +41,6 @@ public class CreditController {
                 return;
             }
 
-            AccountDTO relatedAccount = accountService.findAccountByIban(creditRequestDto.getIban());
-            if (relatedAccount == null){
-                creditView.showError("No Account found by this IBAN : " + creditRequestDto.getIban());
-            }
-
-            if (!relatedAccount.getClient().getId().equals(client.getId())){
-                creditView.showError("The Iban provided not belonge to the specfied Client");
-                return;
-            }
-
-            if (!relatedAccount.isActive()){
-                creditView.showError("This Account is not Active");
-            }
-
             BigDecimal amount = new BigDecimal(creditRequestDto.getAmount());
             int dureeMois = Integer.parseInt(creditRequestDto.getDuration());
             BigDecimal tauxAnnuel = new BigDecimal(creditRequestDto.getInterestRate());
@@ -91,7 +77,7 @@ public class CreditController {
             boolean success = creditService.createCreditRequest(creditRequest);
 
             if (success){
-                creditView.showSuccess("Credit Application created successfully . IBAN : " + creditRequestDto.getIban());
+                creditView.showSuccess("Credit Application created successfully . By The Client : " + creditRequestDto.getNom() + " " + creditRequestDto.getPrenom());
                 creditView.showCreditRequestDetails(creditRequest);
             } else {
                 creditView.showError("Error creating Credit Application .");
@@ -120,9 +106,6 @@ public class CreditController {
         }
         if (creditRequestDto.getInterestRate() == null || creditRequestDto.getInterestRate().trim().isEmpty()) {
             throw new IllegalArgumentException("Interest rate require");
-        }
-        if (creditRequestDto.getIban() == null || creditRequestDto.getIban().trim().isEmpty()) {
-            throw new IllegalArgumentException("The iban require");
         }
         if (creditRequestDto.getDescription() == null || creditRequestDto.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("The description require");

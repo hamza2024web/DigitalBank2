@@ -9,13 +9,12 @@ public class CreditRequestDTO {
     private String iban;
     private String description;
 
-    public CreditRequestDTO(String nom , String prenom , String amount , String duration , String interestRate , String iban , String description){
+    public CreditRequestDTO(String nom , String prenom , String amount , String duration , String interestRate , String description){
         this.nom = nom ;
         this.prenom = prenom ;
         this.amount = amount;
         this.duration = duration;
         this.interestRate = interestRate;
-        this.iban = iban;
         this.description = description;
     }
 
@@ -37,10 +36,6 @@ public class CreditRequestDTO {
 
     public String getInterestRate() {
         return interestRate;
-    }
-
-    public String getIban() {
-        return iban;
     }
 
     public String getDescription() {
@@ -65,10 +60,6 @@ public class CreditRequestDTO {
 
     public void setInterestRate(String interestRate) {
         this.interestRate = interestRate;
-    }
-
-    public void setIban(String iban) {
-        this.iban = iban;
     }
 
     public void setDescription(String description) {

@@ -35,17 +35,6 @@ public class AccountMapper {
                         new BigDecimal("0.03")
                 );
 
-            case CREDIT:
-                return new CreditAccount(
-                        null,
-                        null,
-                        client,
-                        initialBalance,
-                        36,
-                        new BigDecimal("5.0"),
-                        null
-                );
-
             default:
                 throw new IllegalArgumentException("Unsupported account type: " + accountType);
         }

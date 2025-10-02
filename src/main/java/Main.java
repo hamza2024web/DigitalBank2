@@ -1,8 +1,9 @@
+import config.FeeConfig;
 import controller.AccountController;
 import controller.AuthController;
 import controller.CreditController;
-import domain.User;
 import repository.*;
+import repository.CreditScheduleRepositoryImpl;
 import security.AuthManager;
 import security.Authorization;
 import service.*;
@@ -18,6 +19,11 @@ public class Main {
         AuditLogRepositoryImpl auditLogRepository = new AuditLogRepositoryImpl();
         TransactionRepositoryImpl transactionRepsoitory = new TransactionRepositoryImpl();
         ExchangeRateRepositoryImpl exchangeRateRepository = new ExchangeRateRepositoryImpl();
+        CreditRequestRepositoryImpl creditRequestRepository = new CreditRequestRepositoryImpl();
+        CreditAccountRepositoryImpl creditAccountRepository = new CreditAccountRepositoryImpl();
+        CreditScheduleRepositoryImpl creditScheduleRepository = new CreditScheduleRepositoryImpl();
+        TransactionRepositoryImpl transactionRepository = new TransactionRepositoryImpl();
+        FeeRuleRepositoryImpl feeRuleRepository = new FeeRuleRepositoryImpl();
 
         // Auth Layer
         AuthManager authManager = new AuthManager(userRepository);
@@ -26,9 +32,12 @@ public class Main {
         ConsoleView consoleView = new ConsoleView();
         AuthController authController = new AuthController(authManager, authorization, authView, consoleView);
 
+        //Config
+        FeeConfig feeConfig = new FeeConfig(feeRuleRepository);
+
         // Services
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
-        CreditService creditService = new CreditService();
+        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,feeConfig);
         ClientService clientService = new ClientService(clientRepository);
 
         // Views

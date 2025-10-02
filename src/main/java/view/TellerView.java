@@ -22,7 +22,7 @@ public class TellerView {
         System.out.println("5. Withdraw");
         System.out.println("6. Transfer");
         System.out.println("7. Transaction history");
-        System.out.println("8. Credit Request");
+        System.out.println("8. Credit Request ( If the application has approved By manager The account Will be created Succefully");
         System.out.println("Account:");
         System.out.println("9. Logout");
         System.out.print("Enter your choice: ");
@@ -59,10 +59,10 @@ public class TellerView {
         return lastName;
     }
     public String askAccountType(){
-        System.out.print("Enter account type (Courant/Epargne/Credit): ");
+        System.out.print("Enter account type (Courant/Epargne): ");
         String type = scanner.nextLine().trim().toUpperCase();
-        while (!type.equals("COURANT") && !type.equals("EPARGNE") && !type.equals("CREDIT")) {
-            System.out.print("Invalid account type. Please enter (Courant/Epargne/Credit): ");
+        while (!type.equals("COURANT") && !type.equals("EPARGNE")) {
+            System.out.print("Invalid account type. Please enter (Courant/Epargne): ");
             type = scanner.nextLine().trim().toUpperCase();
         }
         return type;
