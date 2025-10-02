@@ -567,7 +567,9 @@ public class AccountService {
             if (savingAccount.getTauxInteret() == null) {
                 savingAccount.setTauxInteret(new BigDecimal("0.03"));
             }
-        } else if (account instanceof domain.CreditAccount )
+        } else if (account instanceof domain.CreditAccount creditAccount){
+
+        }
     }
 
     private String generateAccountId() {

@@ -1,5 +1,6 @@
 import controller.AccountController;
 import controller.AuthController;
+import controller.CreditController;
 import domain.User;
 import repository.*;
 import security.AuthManager;
@@ -27,15 +28,20 @@ public class Main {
 
         // Services
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
+        CreditService creditService = new CreditService();
+        ClientService clientService = new ClientService(clientRepository);
 
         // Controllers
         AccountController accountController = new AccountController(accountService);
+        CreditController creditController = new CreditController(creditService,clientService);
+
 
         // Views
         TellerView tellerView = new TellerView();
         CreditView creditView = new CreditView();
+
         // Menu Navigator
-        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController );
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController);
         menuNavigator.start();
     }
 }

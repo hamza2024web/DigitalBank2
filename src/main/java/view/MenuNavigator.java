@@ -2,6 +2,7 @@ package view;
 
 import controller.AccountController;
 import controller.AuthController;
+import controller.CreditController;
 import domain.User;
 import dto.*;
 import mapper.UserMapper;
@@ -13,13 +14,15 @@ public class MenuNavigator {
     private final TellerView tellerView;
     private final CreditView creditView;
     private final AccountController accountController;
+    private final CreditController creditController;
     private User loggedInUser;
     private final Scanner scanner = new Scanner(System.in);
-    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController){
+    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController){
         this.authController = authController;
         this.tellerView = tellerView;
         this.creditView = creditView;
         this.accountController = accountController;
+        this.creditController = creditController;
     }
 
     public void start(){
@@ -184,6 +187,7 @@ public class MenuNavigator {
                     String iban = creditView.askTellerClientIbanCredit();
                     String description = creditView.askTellerClientPurposeCredit();
                     CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,duration,interestRate,iban,description);
+                    creditController.creditRequest(creditRequest,loggedInUser);
                 }
                 case 9 -> {
                     return;
