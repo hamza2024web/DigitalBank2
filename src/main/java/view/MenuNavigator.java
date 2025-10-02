@@ -169,11 +169,23 @@ public class MenuNavigator {
                 }
                 case 7 -> {
                     String clientIban = tellerView.askTellerIbanClient();
+                    String amount = tellerView.askTellerClientAmount();
+
                     System.out.println("Showing transaction history...");
                     ClientAccountHistoryDTO clientAccountHistroy = new ClientAccountHistoryDTO(clientIban,loggedInUser);
                     accountController.clientAccountHistory(clientAccountHistroy,loggedInUser);
                 }
                 case 8 -> {
+                    System.out.println("==================================================\n" +
+                            "                   NEW LOAN APPLICATION\n" +
+                            "==================================================\n" +
+                            "To process your application, please provide the following information.\n" +
+                            "You can type 'cancel' at any time to return to the main menu.\n");
+                    String iban = tellerView.askTellerIbanClient();
+                    String amount = tellerView.askTellerClientAmount();
+                    String duration = tellerView.askTellerClientDurration();
+                }
+                case 9 -> {
                     return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");

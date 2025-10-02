@@ -540,6 +540,7 @@ public class AccountService {
 
         return AccountMapper.toAccountDTO(account);
     }
+
     private Client findOrCreateClient(CreateAccountDTO dto) {
         var existing = clientRepository.findByFirsName(dto.getFirstName());
         if (existing.isPresent()) {
@@ -566,7 +567,7 @@ public class AccountService {
             if (savingAccount.getTauxInteret() == null) {
                 savingAccount.setTauxInteret(new BigDecimal("0.03"));
             }
-        }
+        } else if (account instanceof domain.CreditAccount )
     }
 
     private String generateAccountId() {

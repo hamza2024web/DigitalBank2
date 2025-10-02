@@ -24,7 +24,7 @@ public class TellerView {
         System.out.println("7. Transaction history");
         System.out.println("8. Credit Request");
         System.out.println("Account:");
-        System.out.println("8. Logout");
+        System.out.println("9. Logout");
         System.out.print("Enter your choice: ");
     }
 
@@ -133,6 +133,14 @@ public class TellerView {
         System.out.print("Enter your choice: ");
     }
 
+    public String askTellerClientAmount(){
+        System.out.println("What amount would you like to borrow? (e.g., 50000.00)");
+        return scanner.nextLine();
+    }
+
+    public String askTellerClientDurration(){
+
+    }
     public void showMessage(String message){
         System.out.println(message);
     }

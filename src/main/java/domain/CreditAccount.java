@@ -11,46 +11,14 @@ import java.time.LocalDate;
 public class CreditAccount extends Account {
     private BigDecimal montantDemande;
     private int dureeMois;
-    private Double tauxAnnuel;
+    private BigDecimal tauxAnnuel;
     private CreditStatus statut;
     private BigDecimal soldeRestant;
     private LocalDate dateDemande;
     private LocalDate dateProchaineEcheance;
     private Account relatedAccount;
 
-    public CreditAccount(String id, String iban, AccountType type, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus, BigDecimal montantDemande, int dureeMois, Double tauxAnnuel, CreditStatus statut, BigDecimal soldeRestant, LocalDate dateDemande,
-                         LocalDate dateProchaineEcheance, Account relatedAccount) {
-
-        super(id, iban, type, solde, devise, dateCreation, isActive, client, closeStatus);
-
-        this.montantDemande = montantDemande;
-        this.dureeMois = dureeMois;
-        this.tauxAnnuel = tauxAnnuel;
-        this.statut = statut;
-        this.soldeRestant = soldeRestant;
-        this.dateDemande = dateDemande;
-        this.dateProchaineEcheance = dateProchaineEcheance;
-        this.relatedAccount = relatedAccount;
-    }
-
-    public CreditAccount(String id, String iban, Client client,
-                         BigDecimal montantDemande, int dureeMois, Double tauxAnnuel,
-                         Account relatedAccount) {
-
-        super(id, iban, AccountType.CREDIT, BigDecimal.ZERO, Currency.MAD, LocalDate.now(), true, client, AccountCloseStatus.NONE);
-
-        this.montantDemande = montantDemande;
-        this.dureeMois = dureeMois;
-        this.tauxAnnuel = tauxAnnuel;
-        this.statut = CreditStatus.PENDING;
-        this.soldeRestant = montantDemande;
-        this.dateDemande = LocalDate.now();
-        this.dateProchaineEcheance = LocalDate.now().plusMonths(1);
-        this.relatedAccount = relatedAccount;
-    }
-
-    public CreditAccount(String id, String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus, BigDecimal montantDemande, int dureeMois, Double tauxAnnuel,
-                         CreditStatus statut, BigDecimal soldeRestant, LocalDate dateDemande,
+    public CreditAccount(String id, String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus, BigDecimal montantDemande, int dureeMois, BigDecimal tauxAnnuel, CreditStatus statut, BigDecimal soldeRestant, LocalDate dateDemande,
                          LocalDate dateProchaineEcheance, Account relatedAccount) {
 
         super(id, iban, AccountType.CREDIT, solde, devise, dateCreation, isActive, client, closeStatus);
@@ -65,6 +33,19 @@ public class CreditAccount extends Account {
         this.relatedAccount = relatedAccount;
     }
 
+    public CreditAccount(String id, String iban, Client client, BigDecimal montantDemande, int dureeMois,
+                         BigDecimal tauxAnnuel, Account relatedAccount) {
+        super(id, iban, AccountType.CREDIT, BigDecimal.ZERO, Currency.MAD, LocalDate.now(), true, client, AccountCloseStatus.NONE);
+        this.montantDemande = montantDemande;
+        this.dureeMois = dureeMois;
+        this.tauxAnnuel = tauxAnnuel;
+        this.statut = CreditStatus.PENDING;
+        this.soldeRestant = montantDemande;
+        this.dateDemande = LocalDate.now();
+        this.dateProchaineEcheance = LocalDate.now().plusMonths(1);
+        this.relatedAccount = relatedAccount;
+    }
+
     public BigDecimal getMontantDemande() {
         return montantDemande;
     }
@@ -73,7 +54,7 @@ public class CreditAccount extends Account {
         return dureeMois;
     }
 
-    public Double getTauxAnnuel() {
+    public BigDecimal getTauxAnnuel() {
         return tauxAnnuel;
     }
 
@@ -105,7 +86,7 @@ public class CreditAccount extends Account {
         this.dureeMois = dureeMois;
     }
 
-    public void setTauxAnnuel(Double tauxAnnuel) {
+    public void setTauxAnnuel(BigDecimal tauxAnnuel) {
         this.tauxAnnuel = tauxAnnuel;
     }
 
