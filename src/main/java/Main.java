@@ -33,9 +33,9 @@ public class Main {
 
         // Views
         TellerView tellerView = new TellerView();
-
+        CreditView creditView = new CreditView();
         // Menu Navigator
-        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, accountController);
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController );
         menuNavigator.start();
     }
 }

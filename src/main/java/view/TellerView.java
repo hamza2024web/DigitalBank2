@@ -133,14 +133,6 @@ public class TellerView {
         System.out.print("Enter your choice: ");
     }
 
-    public String askTellerClientAmount(){
-        System.out.println("What amount would you like to borrow? (e.g., 50000.00)");
-        return scanner.nextLine();
-    }
-
-    public String askTellerClientDurration(){
-
-    }
     public void showMessage(String message){
         System.out.println(message);
     }
