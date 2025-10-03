@@ -4,6 +4,7 @@ import domain.Client;
 import domain.CreditRequest;
 import domain.Enums.CreditStatus;
 import domain.Enums.Currency;
+import dto.CreditReqDTO;
 import repository.Interface.CreditRequestRepository;
 import util.JDBCUtil;
 
@@ -12,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreditRequestRepositoryImpl implements CreditRequestRepository {
@@ -67,7 +69,24 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public List<CreditRequest> findByStatus(CreditStatus status) {
-        return List.of();
+        String sql = "SELECT id ,client_id , montant , currency , duree_mois , taux_annuel , description , status , request_date , request_by"+
+                "FROM credit_requests " +
+                "INNER JOIN clients ON clients.id = credit_requests.client_id"+
+                "WHERE credit_requests.status = ?" +
+                "ORDER BY credit_requests.request_date DESC";
+        List<CreditRequest> requests = new ArrayList<>();
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
+            stmt.setString(1,status.name());
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()){
+                requests.add(mapResultSetToCreditRequest(rs));
+            }
+        } catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return requests;
     }
 
     @Override

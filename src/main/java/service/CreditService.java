@@ -2,12 +2,16 @@ package service;
 
 import config.FeeConfig;
 import domain.CreditRequest;
+import domain.Enums.CreditStatus;
+import domain.User;
 import dto.CreditReqDTO;
 import mapper.CreditMapper;
 import repository.CreditAccountRepositoryImpl;
 import repository.CreditRequestRepositoryImpl;
 import repository.CreditScheduleRepositoryImpl;
 import repository.TransactionRepositoryImpl;
+
+import java.util.List;
 
 public class CreditService {
     private final CreditRequestRepositoryImpl creditRequestRepository;
@@ -35,6 +39,12 @@ public class CreditService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<CreditReqDTO> creditPending(User loggedInUser){
+        List<CreditRequest> creditRequests = creditRequestRepository.findByStatus(CreditStatus.PENDING);
+
+        return creditRequests.stream().map(CreditMapper::toCreditReqDTO).toList();
     }
 
 }

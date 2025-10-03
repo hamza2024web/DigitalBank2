@@ -14,6 +14,7 @@ import view.CreditView;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -90,6 +91,38 @@ public class CreditController {
 
     }
 
+    public void creditPending(User loggedInUser){
+        List<CreditReqDTO> creditRequests = creditService.creditPending(loggedInUser);
+
+        if (creditRequests.isEmpty()){
+            System.out.println("No Credit Request Pending found.");
+        } else {
+            System.out.println("Pending Credit Requests :");
+            for (CreditReqDTO request : creditRequests){
+                ClientDTO client = request.getClient();
+
+                System.out.println("─────────────────────────────────────────────────────────");
+                System.out.println("Name of Client :" + client.getNom() + " " + client.getPrenom());
+                System.out.println("Monthly Income : " + client.getRevenueMensuel());
+
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+                System.out.println("  Request ID: " + request.getId());
+                System.out.println("  Request Date: " + request.getRequestDate().format(dateFormatter));
+                System.out.println("  Current Status: " + request.getStatus());
+                System.out.println("---------------------------------------------------------");
+
+                System.out.println("  Requested Amount: " + request.getMontant() + " " + request.getCurrency());
+                System.out.println("  Duration: " + request.getDureeMois() + " months");
+                System.out.println("  Annual Interest Rate: " + request.getTauxAnnuel() + " %");
+                System.out.println("---------------------------------------------------------");
+
+                System.out.println("  Description: " + request.getDescription());
+                System.out.println("  Created by: " + request.getRequestedBy());
+                System.out.println("---------------------------------------------------------\n");
+            }
+        }
+    }
 
     private void validateCreditRequestDTO(CreditRequestDTO creditRequestDto){
         if (creditRequestDto.getNom() == null || creditRequestDto.getNom().trim().isEmpty()){

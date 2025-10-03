@@ -16,13 +16,15 @@ public class MenuNavigator {
     private final AccountController accountController;
     private final CreditController creditController;
     private User loggedInUser;
+    private final ManagerView managerView;
     private final Scanner scanner = new Scanner(System.in);
-    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController){
+    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController, ManagerView managerView){
         this.authController = authController;
         this.tellerView = tellerView;
         this.creditView = creditView;
         this.accountController = accountController;
         this.creditController = creditController;
+        this.managerView = managerView;
     }
 
     public void start(){
@@ -86,26 +88,16 @@ public class MenuNavigator {
     }
 
     private void showManagerMenu(){
-        while (true) {
-            System.out.println("\n=== MANAGER MENU ===");
-            System.out.println("1. Approve Transaction");
-            System.out.println("2. View Teller Performance");
-            System.out.println("3. Back to Main Menu");
-            System.out.print("Choice: ");
+        while (true){
+            managerView.displayMenu();
+            int choice = managerView.getMenuChoice();
 
-            int choice = getValidChoice();
-
-            switch (choice) {
+            switch (choice){
                 case 1 -> {
-                    System.out.println("Approving transactions...");
+                    System.out.println("Request processing ...");
+                    ManagerCreditPendingDTO mangerCreditPendingDto = new ManagerCreditPendingDTO(loggedInUser);
+                    creditController.creditPending(loggedInUser);
                 }
-                case 2 -> {
-                    System.out.println("Viewing teller performance...");
-                }
-                case 3 -> {
-                    return;
-                }
-                default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
