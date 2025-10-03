@@ -42,11 +42,10 @@ public class CreditView {
         return scanner.nextLine();
     }
 
-    public String askTellerClientRate(){
-        System.out.println("What is the annual interest rate applicable for this type of credit?");
+    public String askTellerClientIncome(){
+        System.out.println("How mush your monthly income : ");
         return scanner.nextLine();
     }
-
     public String askTellerClientIbanCredit(){
         System.out.println("Which existing account should the credit amount be deposited into? (IBAN)");
         return scanner.nextLine();

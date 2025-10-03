@@ -11,6 +11,7 @@ public class CreditReqDTO {
     private String id;
     private ClientDTO client;
     private BigDecimal montant;
+    private BigDecimal monthly_income;
     private Currency currency;
     private int dureeMois;
     private BigDecimal tauxAnnuel;
@@ -22,10 +23,11 @@ public class CreditReqDTO {
     public CreditReqDTO() {
     }
 
-    public CreditReqDTO(String id, ClientDTO client, BigDecimal montant, Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description, CreditStatus status, LocalDate requestDate, String requestedBy) {
+    public CreditReqDTO(String id, ClientDTO client, BigDecimal montant, BigDecimal monthly_income,Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description, CreditStatus status, LocalDate requestDate, String requestedBy) {
         this.id = id;
         this.client = client;
         this.montant = montant;
+        this.monthly_income = monthly_income;
         this.currency = currency;
         this.dureeMois = dureeMois;
         this.tauxAnnuel = tauxAnnuel;
@@ -54,6 +56,10 @@ public class CreditReqDTO {
 
     public BigDecimal getMontant() {
         return montant;
+    }
+
+    public BigDecimal getMonthlyIncome() {
+        return monthly_income;
     }
 
     public void setMontant(BigDecimal montant) {

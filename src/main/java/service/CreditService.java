@@ -11,6 +11,7 @@ import repository.CreditRequestRepositoryImpl;
 import repository.CreditScheduleRepositoryImpl;
 import repository.TransactionRepositoryImpl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CreditService {
@@ -32,6 +33,8 @@ public class CreditService {
         try {
             CreditRequest creditRequestDomain = CreditMapper.toCreditRequest(creditReqDTO);
 
+            BigDecimal montant =  creditRequestDomain.getMontant();
+            BigDecimal
             return creditRequestRepository.save(creditRequestDomain);
 
         } catch (Exception e) {

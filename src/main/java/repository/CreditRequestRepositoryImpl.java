@@ -20,7 +20,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
     @Override
     public boolean save(CreditRequest creditRequest) {
         String sql = "INSERT INTO credit_requests (id, client_id, montant, currency, duree_mois, " +
-                "taux_annuel, description, status, request_date, requested_by) " +
+                "taux_annuel, description, status, request_date, requested_by , monthly_income) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
@@ -33,6 +33,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
             stmt.setString(7, creditRequest.getDescription());
             stmt.setString(8, creditRequest.getStatus().name());
             stmt.setDate(9, Date.valueOf(creditRequest.getRequestDate()));
+            stmt.setBigDecimal(10,creditRequest.getMonthlyIncome());
             stmt.setString(10, creditRequest.getRequestedBy());
 
             int rowsAffected = stmt.executeUpdate();
@@ -69,7 +70,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public List<CreditRequest> findByStatus(CreditStatus status) {
-        String sql = "SELECT id ,client_id , montant , currency , duree_mois , taux_annuel , description , status , request_date , request_by"+
+        String sql = "SELECT id ,client_id , montant , monthly_income ,currency , duree_mois , taux_annuel , description , status , request_date , request_by"+
                 "FROM credit_requests " +
                 "INNER JOIN clients ON clients.id = credit_requests.client_id"+
                 "WHERE credit_requests.status = ?" +
@@ -141,6 +142,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
                 rs.getString("id"),
                 client,
                 rs.getBigDecimal("montant"),
+                rs.getBigDecimal("monthly_income"),
                 Currency.valueOf(rs.getString("currency")),
                 rs.getInt("duree_mois"),
                 rs.getBigDecimal("taux_annuel"),

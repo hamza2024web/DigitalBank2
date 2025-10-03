@@ -43,8 +43,9 @@ public class CreditController {
             }
 
             BigDecimal amount = new BigDecimal(creditRequestDto.getAmount());
+            BigDecimal monthly_income = new BigDecimal(creditRequestDto.getMonthlyIncome());
+
             int dureeMois = Integer.parseInt(creditRequestDto.getDuration());
-            BigDecimal tauxAnnuel = new BigDecimal(creditRequestDto.getInterestRate());
 
             if (amount.compareTo(BigDecimal.ZERO) <= 0){
                 creditView.showError("The amount should be positive");
@@ -56,19 +57,15 @@ public class CreditController {
                 return ;
             }
 
-            if (tauxAnnuel.compareTo(BigDecimal.ZERO) < 0 || tauxAnnuel.compareTo(new BigDecimal("100")) > 0){
-                creditView.showError("The interest Rate should be between 0 and 100%");
-                return ;
-            }
-
             String requestId = UUID.randomUUID().toString();
             CreditReqDTO creditRequest = new CreditReqDTO(
                     requestId,
                     client,
                     amount,
+                    monthly_income,
                     Currency.MAD,
                     dureeMois,
-                    tauxAnnuel,
+                    new BigDecimal(5),
                     creditRequestDto.getDescription(),
                     CreditStatus.PENDING,
                     LocalDate.now(),

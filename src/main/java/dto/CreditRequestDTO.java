@@ -6,18 +6,18 @@ public class CreditRequestDTO {
     private String nom;
     private String prenom;
     private String amount;
+    private String monthly_income;
     private String currency;
     private String duration;
-    private String interestRate;
     private String description;
 
-    public CreditRequestDTO(String nom , String prenom , String amount , String currency, String duration , String interestRate , String description){
+    public CreditRequestDTO(String nom , String prenom , String amount , String monthly_income,String currency, String duration , String description){
         this.nom = nom ;
         this.prenom = prenom ;
         this.amount = amount;
+        this.monthly_income = monthly_income;
         this.currency = currency;
         this.duration = duration;
-        this.interestRate = interestRate;
         this.description = description;
     }
 
@@ -33,6 +33,9 @@ public class CreditRequestDTO {
         return amount;
     }
 
+    public String getMonthlyIncome() {
+        return monthly_income;
+    }
 
     public String getCurrency() {
         return currency;
@@ -40,10 +43,6 @@ public class CreditRequestDTO {
 
     public String getDuration() {
         return duration;
-    }
-
-    public String getInterestRate() {
-        return interestRate;
     }
 
     public String getDescription() {
@@ -62,16 +61,16 @@ public class CreditRequestDTO {
         this.amount = amount;
     }
 
+    public void setMonthly_income(String monthly_income) {
+        this.monthly_income = monthly_income;
+    }
+
     public void setCurrency(String currency) {
         this.currency = currency;
     }
 
     public void setDuration(String duration) {
         this.duration = duration;
-    }
-
-    public void setInterestRate(String interestRate) {
-        this.interestRate = interestRate;
     }
 
     public void setDescription(String description) {

@@ -174,11 +174,11 @@ public class MenuNavigator {
                     String nom = creditView.askTellerClientConfirmNom();
                     String prenom = creditView.askTellerClientConfirmPrenom();
                     String amount = creditView.askTellerClientAmountCredit();
+                    String monthly_income = creditView.askTellerClientIncome();
                     String currency = creditView.askTellerClientCurrency();
                     String duration = creditView.askTellerClientTime();
-                    String interestRate = creditView.askTellerClientRate();
                     String description = creditView.askTellerClientPurposeCredit();
-                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,currency,duration,interestRate,description);
+                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,monthly_income,currency,duration,description);
                     creditController.creditRequest(creditRequest,loggedInUser);
                 }
                 case 9 -> {
