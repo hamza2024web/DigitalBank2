@@ -8,8 +8,7 @@ public class CreateAccountDTO {
     private String initialBalance;
     private String currency;
 
-    public CreateAccountDTO(String firstName, String lastName, String monthlyIncome,
-                            String accountType, String initialBalance, String currency) {
+    public CreateAccountDTO(String firstName, String lastName, String monthlyIncome, String accountType, String initialBalance, String currency) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.monthlyIncome = monthlyIncome;

@@ -49,7 +49,7 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<Client> findByFirsName(String firstName) {
-        String sql = "SELECT * FROM clients WHERE prenom = ?";
+        String sql = "SELECT * FROM clients WHERE nom = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, firstName);
             try (ResultSet rs = stmt.executeQuery()) {

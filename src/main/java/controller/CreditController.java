@@ -85,7 +85,7 @@ public class CreditController {
         } catch (NumberFormatException e){
             creditView.showError("Number Format Invalid : " + e.getMessage());
         } catch (Exception e){
-            creditView.showError("Error taitement Credit Applivation .");
+            creditView.showError("Error statement Credit Application .");
         }
 
     }

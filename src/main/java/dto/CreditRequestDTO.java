@@ -1,18 +1,21 @@
 package dto;
 
+import domain.Enums.Currency;
+
 public class CreditRequestDTO {
     private String nom;
     private String prenom;
     private String amount;
+    private String currency;
     private String duration;
     private String interestRate;
-    private String iban;
     private String description;
 
-    public CreditRequestDTO(String nom , String prenom , String amount , String duration , String interestRate , String description){
+    public CreditRequestDTO(String nom , String prenom , String amount , String currency, String duration , String interestRate , String description){
         this.nom = nom ;
         this.prenom = prenom ;
         this.amount = amount;
+        this.currency = currency;
         this.duration = duration;
         this.interestRate = interestRate;
         this.description = description;
@@ -28,6 +31,11 @@ public class CreditRequestDTO {
 
     public String getAmount() {
         return amount;
+    }
+
+
+    public String getCurrency() {
+        return currency;
     }
 
     public String getDuration() {
@@ -52,6 +60,10 @@ public class CreditRequestDTO {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public void setDuration(String duration) {

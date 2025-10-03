@@ -23,7 +23,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, creditRequest.getId());
-            stmt.setString(2, creditRequest.getClient().getId().toString());
+            stmt.setLong(2, creditRequest.getClient().getId());
             stmt.setBigDecimal(3, creditRequest.getMontant());
             stmt.setString(4, creditRequest.getCurrency().name());
             stmt.setInt(5, creditRequest.getDureeMois());

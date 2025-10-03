@@ -28,6 +28,15 @@ public class CreditView {
         return scanner.nextLine();
     }
 
+    public String askTellerClientCurrency(){
+        System.out.print("Enter currency (MAD/EUR/USD): ");
+        String currency = scanner.nextLine().trim().toUpperCase();
+        while (!currency.equals("MAD") && !currency.equals("EUR") && !currency.equals("USD")) {
+            System.out.print("Invalid currency. Please enter (MAD/EUR/USD): ");
+            currency = scanner.nextLine().trim().toUpperCase();
+        }
+        return currency;
+    }
     public String askTellerClientTime(){
         System.out.println("What is the desired repayment period (in months)?");
         return scanner.nextLine();
