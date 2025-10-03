@@ -1,12 +1,13 @@
 package repository;
 
 import domain.AuditLog;
+import repository.Interface.AuditLogRepository;
 import util.JDBCUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class AuditLogRepositoryImpl implements AuditLogRepository{
+public class AuditLogRepositoryImpl implements AuditLogRepository {
     @Override
     public void save(AuditLog auditLog) {
         String sql = "INSERT INTO audit_log (timestamp,user_id,user_role,action,details,success,error_message) VALUES (?,?,?::role_enum,?,?,?,?) ";

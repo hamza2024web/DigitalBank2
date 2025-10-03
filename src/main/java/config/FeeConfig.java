@@ -21,7 +21,6 @@ public class FeeConfig {
             TransactionType transactionType = TransactionType.valueOf(operationType.toUpperCase());
             return calculateFee(transactionType, amount, currency);
         } catch (IllegalArgumentException e) {
-            // If operation type is not found, return zero fee
             return BigDecimal.ZERO;
         }
     }
@@ -39,7 +38,6 @@ public class FeeConfig {
             BigDecimal fee = amount.multiply(rule.getValue()).divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
             return fee;
         } else {
-            // Handle unknown fee mode
             return BigDecimal.ZERO;
         }
     }

@@ -1,7 +1,9 @@
+import config.FeeConfig;
 import controller.AccountController;
 import controller.AuthController;
-import domain.User;
+import controller.CreditController;
 import repository.*;
+import repository.CreditScheduleRepositoryImpl;
 import security.AuthManager;
 import security.Authorization;
 import service.*;
@@ -17,6 +19,11 @@ public class Main {
         AuditLogRepositoryImpl auditLogRepository = new AuditLogRepositoryImpl();
         TransactionRepositoryImpl transactionRepsoitory = new TransactionRepositoryImpl();
         ExchangeRateRepositoryImpl exchangeRateRepository = new ExchangeRateRepositoryImpl();
+        CreditRequestRepositoryImpl creditRequestRepository = new CreditRequestRepositoryImpl();
+        CreditAccountRepositoryImpl creditAccountRepository = new CreditAccountRepositoryImpl();
+        CreditScheduleRepositoryImpl creditScheduleRepository = new CreditScheduleRepositoryImpl();
+        TransactionRepositoryImpl transactionRepository = new TransactionRepositoryImpl();
+        FeeRuleRepositoryImpl feeRuleRepository = new FeeRuleRepositoryImpl();
 
         // Auth Layer
         AuthManager authManager = new AuthManager(userRepository);
@@ -25,17 +32,25 @@ public class Main {
         ConsoleView consoleView = new ConsoleView();
         AuthController authController = new AuthController(authManager, authorization, authView, consoleView);
 
+        //Config
+        FeeConfig feeConfig = new FeeConfig(feeRuleRepository);
+
         // Services
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
-
-        // Controllers
-        AccountController accountController = new AccountController(accountService);
+        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,feeConfig);
+        ClientService clientService = new ClientService(clientRepository);
 
         // Views
         TellerView tellerView = new TellerView();
+        CreditView creditView = new CreditView();
+
+        // Controllers
+        AccountController accountController = new AccountController(accountService);
+        CreditController creditController = new CreditController(creditService,clientService,accountService,creditView);
+
 
         // Menu Navigator
-        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, accountController);
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController);
         menuNavigator.start();
     }
 }

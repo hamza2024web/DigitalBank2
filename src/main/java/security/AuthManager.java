@@ -2,8 +2,7 @@ package security;
 
 import domain.User;
 import org.mindrot.jbcrypt.BCrypt;
-import repository.UserRepository;
-import repository.UserRepositoryImpl;
+import repository.Interface.UserRepository;
 
 public class AuthManager {
 

@@ -1,4 +1,4 @@
-package repository;
+package repository.Interface;
 
 import domain.Account;
 
@@ -9,7 +9,7 @@ public interface AccountRepository {
     void save(Account account);
     Optional<Account> findById(String accountId);
     Optional<Account> findByIban(String iban);
-    List<Account> findByClientId(String clientId);
+    List<Account> findByClientId(Long clientId);
     List<Account> findAll();
     void update(Account account);
     void delete(String accountId);

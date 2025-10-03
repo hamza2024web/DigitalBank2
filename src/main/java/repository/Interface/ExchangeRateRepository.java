@@ -1,4 +1,4 @@
-package repository;
+package repository.Interface;
 
 import java.math.BigDecimal;
 

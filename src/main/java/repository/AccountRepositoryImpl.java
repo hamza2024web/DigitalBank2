@@ -2,7 +2,9 @@ package repository;
 
 import domain.*;
 import domain.Enums.AccountCloseStatus;
+import domain.Enums.AccountType;
 import domain.Enums.Currency;
+import repository.Interface.AccountRepository;
 import util.JDBCUtil;
 
 import java.math.BigDecimal;
@@ -11,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,9 +125,74 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> findByClientId(String clientId) {
-        return List.of();
+    public List<Account> findByClientId(Long clientId) {
+        String sql = "SELECT * FROM accounts " +
+                "LEFT JOIN courant_accounts ON courant_accounts.account_id = accounts.id " +
+                "LEFT JOIN saving_accounts ON saving_accounts.account_id = accounts.id " +
+                "WHERE accounts.client_id = ?";
+
+        List<Account> accounts = new ArrayList<>();
+
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            stmt.setLong(1, clientId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String accountId = rs.getString("id");
+                    String accountIban = rs.getString("iban");
+                    BigDecimal solde = rs.getBigDecimal("solde");
+                    Currency devise = Currency.valueOf(rs.getString("devise"));
+                    LocalDate dateCreation = rs.getDate("date_creation").toLocalDate();
+                    boolean isActive = rs.getBoolean("is_active");
+                    AccountCloseStatus closeStatus = AccountCloseStatus.valueOf(rs.getString("close_status"));
+                    AccountType accountType = AccountType.valueOf(rs.getString("type"));
+
+                    ClientRepositoryImpl clientRepository = new ClientRepositoryImpl();
+                    Client client = clientRepository.findById(clientId)
+                            .orElseThrow(() -> new RuntimeException("Client not found with id: " + clientId));
+
+                    Account account;
+
+                    if (accountType == AccountType.COURANT) {
+                        BigDecimal decouvertAutorise = rs.getBigDecimal("decouvert_autorise");
+                        account = new CurrentAccount(
+                                accountId,
+                                accountIban,
+                                solde,
+                                devise,
+                                dateCreation,
+                                isActive,
+                                client,
+                                decouvertAutorise,
+                                closeStatus
+                        );
+                    } else if (accountType == AccountType.EPARGNE) {
+                        BigDecimal tauxInteret = rs.getBigDecimal("taux_interet");
+                        account = new SavingAccount(
+                                accountId,
+                                accountIban,
+                                solde,
+                                devise,
+                                dateCreation,
+                                isActive,
+                                client,
+                                tauxInteret,
+                                closeStatus
+                        );
+                    } else {
+                        throw new IllegalStateException("Unsupported account type: " + accountType);
+                    }
+
+                    accounts.add(account);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error while finding accounts by clientId: " + clientId, e);
+        }
+
+        return accounts;
     }
+
 
     @Override
     public List<Account> findAll() {
@@ -242,21 +310,4 @@ public class AccountRepositoryImpl implements AccountRepository {
         }
     }
 
-//    private void saveCreditAccountData(Connection connection, CreditAccount account) throws SQLException {
-//        String sql = "INSERT INTO credit_accounts (account_id, montant_demande, duree_mois, taux_annuel, statut, " +
-//                "solde_restant, date_demande, date_prochaine_echeance, compte_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//
-//        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-//            stmt.setString(1, account.getId());
-//            stmt.setBigDecimal(2, account.getMontantDemande());
-//            stmt.setInt(3, account.getDureeMois());
-//            stmt.setDouble(4, account.getTauxAnnuel());
-//            stmt.setString(5, account.getStatut().toString());
-//            stmt.setBigDecimal(6, account.getSoldeRestant());
-//            stmt.setDate(7, java.sql.Date.valueOf(account.getDateDemande()));
-//            stmt.setDate(8, java.sql.Date.valueOf(account.getDateProchaineEcheance()));
-//            stmt.setString(9, account.getRelatedAccount() != null ? account.getRelatedAccount().getId() : null);
-//            stmt.executeUpdate();
-//        }
-//    }
 }

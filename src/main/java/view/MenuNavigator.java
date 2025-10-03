@@ -2,6 +2,7 @@ package view;
 
 import controller.AccountController;
 import controller.AuthController;
+import controller.CreditController;
 import domain.User;
 import dto.*;
 import mapper.UserMapper;
@@ -11,13 +12,17 @@ import java.util.Scanner;
 public class MenuNavigator {
     private final AuthController authController;
     private final TellerView tellerView;
+    private final CreditView creditView;
     private final AccountController accountController;
+    private final CreditController creditController;
     private User loggedInUser;
     private final Scanner scanner = new Scanner(System.in);
-    public MenuNavigator(AuthController authController, TellerView tellerView , AccountController accountController){
+    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController){
         this.authController = authController;
         this.tellerView = tellerView;
+        this.creditView = creditView;
         this.accountController = accountController;
+        this.creditController = creditController;
     }
 
     public void start(){
@@ -119,9 +124,9 @@ public class MenuNavigator {
                     String initialBalance = tellerView.askInitialBalanceInput();
                     String currency = tellerView.askCurrency();
 
+                    System.out.println("Requesting create account ...");
                     CreateAccountDTO createAccountDTO = new CreateAccountDTO(firstName,lastName,mounthlyIncome,accountType,initialBalance,currency);
                     accountController.createAccount(createAccountDTO,loggedInUser);
-                    System.out.println("Requesting create account ...");
                 }
                 case 2 -> {
                     String clientIban = tellerView.askTellerIbanClient();
@@ -168,9 +173,23 @@ public class MenuNavigator {
                     }
                 }
                 case 7 -> {
+                    String clientIban = tellerView.askTellerIbanClient();
                     System.out.println("Showing transaction history...");
+                    ClientAccountHistoryDTO clientAccountHistroy = new ClientAccountHistoryDTO(clientIban,loggedInUser);
+                    accountController.clientAccountHistory(clientAccountHistroy,loggedInUser);
                 }
                 case 8 -> {
+                    String nom = creditView.askTellerClientConfirmNom();
+                    String prenom = creditView.askTellerClientConfirmPrenom();
+                    String amount = creditView.askTellerClientAmountCredit();
+                    String currency = creditView.askTellerClientCurrency();
+                    String duration = creditView.askTellerClientTime();
+                    String interestRate = creditView.askTellerClientRate();
+                    String description = creditView.askTellerClientPurposeCredit();
+                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,currency,duration,interestRate,description);
+                    creditController.creditRequest(creditRequest,loggedInUser);
+                }
+                case 9 -> {
                     return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.");

@@ -1,12 +1,13 @@
 package repository;
 
 import domain.Transaction;
+import repository.Interface.TransactionRepository;
 import util.JDBCUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class TransactionRepositoryImpl implements TransactionRepository{
+public class TransactionRepositoryImpl implements TransactionRepository {
     @Override
     public void save(Transaction transaction) {
         String sql = "INSERT INTO transaction " +
