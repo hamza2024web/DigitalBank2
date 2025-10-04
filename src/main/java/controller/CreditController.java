@@ -38,7 +38,7 @@ public class CreditController {
             ClientDTO client = clientService.findClientByNomAndPrenom(creditRequestDto.getNom() , creditRequestDto.getPrenom());
 
             if (client == null){
-                creditView.showError("Client not found with this last Name : " + creditRequestDto.getNom() + " + dto.getPrenom()");
+                creditView.showError("Client not found with this last Name : " + creditRequestDto.getNom() + " " + creditRequestDto.getPrenom());
                 return;
             }
 

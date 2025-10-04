@@ -1,6 +1,7 @@
 package service;
 
 import config.FeeConfig;
+import domain.Client;
 import domain.CreditRequest;
 import domain.Enums.CreditStatus;
 import domain.User;
