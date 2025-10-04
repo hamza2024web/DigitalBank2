@@ -64,6 +64,26 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
+    public Optional<Client> findByNomAndPrenom(String lastName, String firstName) {
+        String sql = "SELECT * FROM clients WHERE nom = ? AND prenom = ?";
+
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            stmt.setString(1, lastName);
+            stmt.setString(2, firstName);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return Optional.of(mapResultSetToClient(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
     public List<Client> findAll() {
         List<Client> clients = new ArrayList<>();
         String sql = "SELECT * FROM clients";

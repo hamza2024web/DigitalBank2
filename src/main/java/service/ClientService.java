@@ -5,6 +5,8 @@ import dto.ClientDTO;
 import mapper.ClientMapper;
 import repository.ClientRepositoryImpl;
 
+import java.util.Optional;
+
 public class ClientService {
     private final ClientRepositoryImpl clientRepository;
 
@@ -12,9 +14,13 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public ClientDTO findClientByNomAndPrenom(String clientNom , String clientPrenom){
-        Client client = clientRepository.findByFirsName(clientNom).orElseThrow(() -> new RuntimeException("No Client Found By this Nom : "+clientNom));
+    public ClientDTO findByNomAndPrenom(String clientNom, String clientPrenom) {
+        Optional<Client> clientOpt = clientRepository.findByNomAndPrenom(clientNom,clientPrenom);
 
-        return ClientMapper.toClientDTO(client);
+        if (clientOpt.isPresent()) {
+            return ClientMapper.toClientDTO(clientOpt.get());
+        }
+
+        return null; // Retourne null si non trouvé
     }
 }

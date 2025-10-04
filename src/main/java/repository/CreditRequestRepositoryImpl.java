@@ -20,8 +20,8 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
     @Override
     public boolean save(CreditRequest creditRequest) {
         String sql = "INSERT INTO credit_requests (id, client_id, montant, currency, duree_mois, " +
-                "taux_annuel, description, status, request_date, requested_by , monthly_income) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                "taux_annuel, description, status, request_date, requested_by, monthly_income) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, creditRequest.getId());
@@ -33,14 +33,14 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
             stmt.setString(7, creditRequest.getDescription());
             stmt.setString(8, creditRequest.getStatus().name());
             stmt.setDate(9, Date.valueOf(creditRequest.getRequestDate()));
-            stmt.setBigDecimal(10,creditRequest.getMonthlyIncome());
             stmt.setString(10, creditRequest.getRequestedBy());
-            stmt.setBigDecimal(11,creditRequest.getMonthlyIncome());
+            stmt.setBigDecimal(11, creditRequest.getMonthlyIncome());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
 
         } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la sauvegarde : " + e.getMessage());
             e.printStackTrace();
             return false;
         }

@@ -47,7 +47,6 @@ public class CreditService {
 
             if (mensualite.compareTo(plafond) <= 0){
                 creditRequestDomain.setStatus(CreditStatus.PENDING);
-                creditRequestDomain.setMontant(montantTotal);
             } else {
                 creditRequestDomain.setStatus(CreditStatus.REJECTED);
             }

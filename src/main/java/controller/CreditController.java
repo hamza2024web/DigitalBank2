@@ -35,7 +35,7 @@ public class CreditController {
         try {
             validateCreditRequestDTO(creditRequestDto);
 
-            ClientDTO client = clientService.findClientByNomAndPrenom(creditRequestDto.getNom() , creditRequestDto.getPrenom());
+            ClientDTO client = clientService.findByNomAndPrenom(creditRequestDto.getNom() , creditRequestDto.getPrenom());
 
             if (client == null){
                 creditView.showError("Client not found with this last Name : " + creditRequestDto.getNom() + " " + creditRequestDto.getPrenom());
@@ -44,7 +44,6 @@ public class CreditController {
 
             BigDecimal amount = new BigDecimal(creditRequestDto.getAmount());
             BigDecimal monthly_income = new BigDecimal(creditRequestDto.getMonthlyIncome());
-
             int dureeMois = Integer.parseInt(creditRequestDto.getDuration());
 
             if (amount.compareTo(BigDecimal.ZERO) <= 0){
