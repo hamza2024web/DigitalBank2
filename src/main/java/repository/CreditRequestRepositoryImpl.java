@@ -21,7 +21,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
     public boolean save(CreditRequest creditRequest) {
         String sql = "INSERT INTO credit_requests (id, client_id, montant, currency, duree_mois, " +
                 "taux_annuel, description, status, request_date, requested_by , monthly_income) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, creditRequest.getId());
@@ -35,6 +35,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
             stmt.setDate(9, Date.valueOf(creditRequest.getRequestDate()));
             stmt.setBigDecimal(10,creditRequest.getMonthlyIncome());
             stmt.setString(10, creditRequest.getRequestedBy());
+            stmt.setBigDecimal(11,creditRequest.getMonthlyIncome());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;

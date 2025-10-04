@@ -134,8 +134,8 @@ public class CreditController {
         if (creditRequestDto.getDuration() == null || creditRequestDto.getDuration().trim().isEmpty()) {
             throw new IllegalArgumentException("the duration require");
         }
-        if (creditRequestDto.getInterestRate() == null || creditRequestDto.getInterestRate().trim().isEmpty()) {
-            throw new IllegalArgumentException("Interest rate require");
+        if (creditRequestDto.getMonthlyIncome() == null || creditRequestDto.getMonthlyIncome().trim().isEmpty()) {
+            throw new IllegalArgumentException("Monthly income require");
         }
         if (creditRequestDto.getDescription() == null || creditRequestDto.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("The description require");

@@ -12,6 +12,7 @@ import repository.CreditScheduleRepositoryImpl;
 import repository.TransactionRepositoryImpl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 public class CreditService {
@@ -34,7 +35,22 @@ public class CreditService {
             CreditRequest creditRequestDomain = CreditMapper.toCreditRequest(creditReqDTO);
 
             BigDecimal montant =  creditRequestDomain.getMontant();
-            BigDecimal
+            BigDecimal monthlyIncome = creditRequestDomain.getMonthlyIncome();
+            int dureeMois = creditRequestDomain.getDureeMois();
+
+            BigDecimal plafond = monthlyIncome.multiply(new BigDecimal("0.40"));
+            BigDecimal frais = montant.multiply(new BigDecimal("0.05"));
+            BigDecimal montantTotal = montant.add(frais);
+
+            BigDecimal mensualite = montantTotal.divide(new BigDecimal(dureeMois), RoundingMode.HALF_UP);
+
+            if (mensualite.compareTo(plafond) <= 0){
+                creditRequestDomain.setStatus(CreditStatus.PENDING);
+                creditRequestDomain.setMontant(montantTotal);
+            } else {
+                creditRequestDomain.setStatus(CreditStatus.REJECTED);
+            }
+
             return creditRequestRepository.save(creditRequestDomain);
 
         } catch (Exception e) {
