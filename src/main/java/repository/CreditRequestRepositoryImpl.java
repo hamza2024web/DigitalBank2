@@ -71,11 +71,11 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public List<CreditRequest> findByStatus(CreditStatus status) {
-        String sql = "select clients.nom , clients.prenom  , credit_requests.*\n" +
-                "from credit_requests \n" +
-                "inner join clients on clients.id = credit_requests.client_id\n" +
-                "where credit_requests.status = 'PENDING'\n" +
-                "order by credit_requests.request_date desc";
+        String sql = "SELECT clients.id , clients.nom, clients.prenom, clients.revenue_mensuel,credit_requests.* " +
+                "FROM credit_requests " +
+                "INNER JOIN clients ON clients.id = credit_requests.client_id " +
+                "WHERE credit_requests.status = ? " +
+                "ORDER BY credit_requests.request_date DESC";
         List<CreditRequest> requests = new ArrayList<>();
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
             stmt.setString(1,status.name());
