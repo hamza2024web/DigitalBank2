@@ -5,6 +5,7 @@ import domain.Enums.CreditStatus;
 import domain.Enums.Currency;
 import domain.Enums.Role;
 import dto.*;
+import mapper.CreditMapper;
 import service.AccountService;
 import service.ClientService;
 import service.CreditService;
@@ -153,20 +154,37 @@ public class CreditController {
     public void rejectCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto) {
         try {
             if (managerCreditApproveDto.getManager().getRole() != Role.MANAGER) {
-                creditView.showError("Seul un manager peut approuver une demande de crédit");
+                creditView.showError("Only a manager can approve a credit application");
                 return;
             }
 
             boolean success = creditService.rejectCreditRequest(managerCreditApproveDto);
 
             if (success) {
-                creditView.showSuccess("Demande de crédit rejetée");
+                creditView.showSuccess("Credit Request Rejected");
             } else {
-                creditView.showError("Erreur lors du rejet de la demande");
+                creditView.showError("Error rejecting request");
             }
 
         } catch (Exception e) {
-            creditView.showError("Erreur: " + e.getMessage());
+            creditView.showError("Error: " + e.getMessage());
+        }
+    }
+
+    public void getAllCreditAccount(User manager) {
+        List<CreditAccount> accounts = creditService.getAllCreditAccount(manager);
+
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found.");
+        } else {
+            System.out.println("=== Credit Accounts ===");
+            System.out.println("Total: " + accounts.size());
+            System.out.println("─".repeat(80));
+
+            for (CreditAccount account : accounts) {
+                displayCreditAccount(account);
+                System.out.println("─".repeat(80));
+            }
         }
     }
 
@@ -188,6 +206,24 @@ public class CreditController {
         }
         if (creditRequestDto.getDescription() == null || creditRequestDto.getDescription().trim().isEmpty()) {
             throw new IllegalArgumentException("The description require");
+        }
+    }
+
+    private void displayCreditAccount(CreditAccount account) {
+        System.out.println("Account ID      : " + account.getId());
+        System.out.println("IBAN            : " + account.getIban());
+        System.out.println("Client          : " + account.getClient().getNom() + " " + account.getClient().getPrenom());
+        System.out.println("Amount Requested : " + account.getMontantDemande() + " " + account.getDevise());
+        System.out.println("Remaining Balance : " + account.getSoldeRestant() + " " + account.getDevise());
+        System.out.println("Duration           : " + account.getDureeMois() + " Months");
+        System.out.println("Annual Rate     : " + account.getTauxAnnuel() + "%");
+        System.out.println("Statut          : " + account.getStatut());
+        System.out.println("Date Request    : " + account.getDateDemande());
+        System.out.println("Next Deadline: " + (account.getDateProchaineEcheance() != null ? account.getDateProchaineEcheance() : "N/A"));
+        System.out.println("Active          : " + (account.getActive() ? "Yes" : "No"));
+
+        if (account.getRelatedAccount() != null) {
+            System.out.println("Related Accounts   : " + account.getRelatedAccount().getIban());
         }
     }
 }

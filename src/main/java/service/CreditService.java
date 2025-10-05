@@ -181,17 +181,16 @@ public class CreditService {
         }
     }
 
-    public boolean rejectCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto, User manager){
+    public boolean rejectCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto){
         try {
             CreditRequest request = creditRequestRepository.findById(managerCreditApproveDto.getCreditId());
             if (request == null){
-                // Add Audit Log for not found
                 AuditLog log = new AuditLog(
                         LocalDateTime.now(),
                         "CREDIT_REJECTION",
                         "FAILED to reject credit request: Request not found (ID=" + managerCreditApproveDto.getCreditId() + ")",
-                        manager.getId(),
-                        manager.getRole(),
+                        managerCreditApproveDto.getManager().getId(),
+                        managerCreditApproveDto.getManager().getRole(),
                         false,
                         "Credit request not found"
                 );
@@ -287,6 +286,12 @@ public class CreditService {
             currentDate = currentDate.plusMonths(1);
         }
         return schedule;
+    }
+
+    public List<CreditAccount> getAllCreditAccount(User manager) {
+        List<CreditAccount> accounts = creditAccountRepository.getAllCreditAccount();
+
+        return accounts;
     }
 
     private BigDecimal calculateMonthlyPayment(BigDecimal principal, int months, BigDecimal monthlyRate) {

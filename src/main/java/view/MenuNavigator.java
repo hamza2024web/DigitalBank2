@@ -110,6 +110,10 @@ public class MenuNavigator {
                     ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
                     creditController.rejectCreditRequest(managerCreditApproveDto);
                 }
+                case 4 -> {
+                    System.out.println("request processing ...");
+                    creditController.getAllCreditAccount(loggedInUser);
+                }
             }
         }
     }
