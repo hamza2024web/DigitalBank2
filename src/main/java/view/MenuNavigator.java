@@ -17,14 +17,16 @@ public class MenuNavigator {
     private final CreditController creditController;
     private User loggedInUser;
     private final ManagerView managerView;
+    private final AdminView adminView;
     private final Scanner scanner = new Scanner(System.in);
-    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController, ManagerView managerView){
+    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController, ManagerView managerView, AdminView adminView){
         this.authController = authController;
         this.tellerView = tellerView;
         this.creditView = creditView;
         this.accountController = accountController;
         this.creditController = creditController;
         this.managerView = managerView;
+        this.adminView = adminView;
     }
 
     public void start(){

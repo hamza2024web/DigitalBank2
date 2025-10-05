@@ -44,6 +44,7 @@ public class Main {
         TellerView tellerView = new TellerView();
         CreditView creditView = new CreditView();
         ManagerView managerView = new ManagerView();
+        AdminView adminView = new AdminView();
 
         // Controllers
         AccountController accountController = new AccountController(accountService);
@@ -51,7 +52,7 @@ public class Main {
 
 
         // Menu Navigator
-        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController, managerView);
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController, managerView,adminView);
         menuNavigator.start();
     }
 }
