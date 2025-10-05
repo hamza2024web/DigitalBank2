@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepository {
-    void save(Client client);
+    Client save(Client client);
     Optional<Client> findById(Long clientId);
-    Optional<Client> findByFirsName(String firstName);
-    List<Client> findAll();
-    void update(Client client);
-    void delete(String clientId);
-    boolean exists(String clientId);
-    boolean existsByFirsName(String firstName);
+    Optional<Client> findByLastName(String lastName);
+    Optional<Client> findByNomAndPrenom(String lastName , String firstName);
+
 }

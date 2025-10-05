@@ -37,12 +37,13 @@ public class Main {
 
         // Services
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
-        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,feeConfig);
+        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,accountRepository,feeConfig,operationRepository,auditLogRepository);
         ClientService clientService = new ClientService(clientRepository);
 
         // Views
         TellerView tellerView = new TellerView();
         CreditView creditView = new CreditView();
+        ManagerView managerView = new ManagerView();
 
         // Controllers
         AccountController accountController = new AccountController(accountService);
@@ -50,7 +51,7 @@ public class Main {
 
 
         // Menu Navigator
-        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController);
+        MenuNavigator menuNavigator = new MenuNavigator(authController, tellerView, creditView,accountController , creditController, managerView);
         menuNavigator.start();
     }
 }

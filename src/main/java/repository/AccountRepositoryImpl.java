@@ -52,6 +52,28 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
+    public Account saveCreditAccount(Account account) {
+        String sql = "INSERT INTO accounts (id, iban, type, solde, devise, date_creation, is_active, client_id, close_status) VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::close_status_enum)";
+
+        try (PreparedStatement statement = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            statement.setString(1, account.getId());
+            statement.setString(2, account.getIban());
+            statement.setString(3, account.getAccountType().name());
+            statement.setBigDecimal(4, account.getSolde());
+            statement.setString(5, account.getDevise().name());
+            statement.setDate(6, java.sql.Date.valueOf(account.getDate()));
+            statement.setBoolean(7, account.getActive());
+            statement.setLong(8, account.getClient().getId());
+            statement.setString(9, account.getCloseStatus().name());
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return account;
+    }
+
+    @Override
     public Optional<Account> findById(String accountId) {
         return Optional.empty();
     }
@@ -265,7 +287,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private void saveAccount(Connection connection, Account account) throws SQLException {
         String sql = "INSERT INTO accounts (id, iban, type, solde, devise, date_creation, is_active, client_id, close_status) " +
-                "VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::account_close_status_enum)";
+                "VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::close_status_enum)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, account.getId());

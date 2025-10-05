@@ -23,6 +23,10 @@ public class FeeRule {
         this.isActive = isActive;
     }
 
+    public FeeRule() {
+
+    }
+
     public Long getId() {
         return id;
     }

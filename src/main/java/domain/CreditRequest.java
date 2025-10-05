@@ -10,6 +10,7 @@ public class CreditRequest {
     private String id;
     private Client client;
     private BigDecimal montant;
+    private BigDecimal monthly_income;
     private Currency currency;
     private int dureeMois;
     private BigDecimal tauxAnnuel;
@@ -18,11 +19,12 @@ public class CreditRequest {
     private LocalDate requestDate;
     private String requestedBy;
 
-    public CreditRequest(String id, Client client, BigDecimal montant, Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description,
+    public CreditRequest(String id, Client client, BigDecimal montant, BigDecimal monthly_income,Currency currency, int dureeMois, BigDecimal tauxAnnuel, String description,
                          CreditStatus status, LocalDate requestDate, String requestedBy) {
         this.id = id;
         this.client = client;
         this.montant = montant;
+        this.monthly_income = monthly_income;
         this.currency = currency;
         this.dureeMois = dureeMois;
         this.tauxAnnuel = tauxAnnuel;
@@ -32,7 +34,7 @@ public class CreditRequest {
         this.requestedBy = requestedBy;
     }
 
-    public String getId() {
+    public String getReferenceId() {
         return id;
     }
 
@@ -42,6 +44,10 @@ public class CreditRequest {
 
     public BigDecimal getMontant() {
         return montant;
+    }
+
+    public BigDecimal getMonthlyIncome() {
+        return monthly_income;
     }
 
     public Currency getCurrency() {
@@ -72,7 +78,7 @@ public class CreditRequest {
         return requestedBy;
     }
 
-    public void setId(String id) {
+    public void setReferenceId(String id) {
         this.id = id;
     }
 
@@ -82,6 +88,10 @@ public class CreditRequest {
 
     public void setMontant(BigDecimal montant) {
         this.montant = montant;
+    }
+
+    public void setMonthlyIncome(BigDecimal monthly_income) {
+        this.monthly_income = monthly_income;
     }
 
     public void setCurrency(Currency currency) {

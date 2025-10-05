@@ -25,6 +25,11 @@ public class CurrentAccount extends Account {
         this.decouvertAutorise = decouvertAutorise;
     }
 
+    public CurrentAccount(BigDecimal solde, Currency devise, Client client, BigDecimal decouvertAutorise) {
+        super(null, null, AccountType.COURANT, solde, devise, null, true, client, AccountCloseStatus.NONE);
+        this.decouvertAutorise = decouvertAutorise;
+    }
+
     public CurrentAccount(String id, String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, BigDecimal decouvertAutorise, AccountCloseStatus closeStatus) {
         super(id, iban, AccountType.COURANT, solde, devise, dateCreation, isActive, client, closeStatus);
         this.decouvertAutorise = decouvertAutorise;

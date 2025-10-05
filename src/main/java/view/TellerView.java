@@ -22,7 +22,7 @@ public class TellerView {
         System.out.println("5. Withdraw");
         System.out.println("6. Transfer");
         System.out.println("7. Transaction history");
-        System.out.println("8. Credit Request ( If the application has approved By manager The account Will be created Succefully");
+        System.out.println("8. Credit Request ( If the application has approved By manager The account Will be created Successfully )");
         System.out.println("Account:");
         System.out.println("9. Logout");
         System.out.print("Enter your choice: ");

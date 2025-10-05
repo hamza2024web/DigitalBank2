@@ -16,13 +16,15 @@ public class MenuNavigator {
     private final AccountController accountController;
     private final CreditController creditController;
     private User loggedInUser;
+    private final ManagerView managerView;
     private final Scanner scanner = new Scanner(System.in);
-    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController){
+    public MenuNavigator(AuthController authController, TellerView tellerView, CreditView creditView, AccountController accountController, CreditController creditController, ManagerView managerView){
         this.authController = authController;
         this.tellerView = tellerView;
         this.creditView = creditView;
         this.accountController = accountController;
         this.creditController = creditController;
+        this.managerView = managerView;
     }
 
     public void start(){
@@ -86,26 +88,35 @@ public class MenuNavigator {
     }
 
     private void showManagerMenu(){
-        while (true) {
-            System.out.println("\n=== MANAGER MENU ===");
-            System.out.println("1. Approve Transaction");
-            System.out.println("2. View Teller Performance");
-            System.out.println("3. Back to Main Menu");
-            System.out.print("Choice: ");
+        while (true){
+            managerView.displayMenu();
+            int choice = managerView.getMenuChoice();
 
-            int choice = getValidChoice();
-
-            switch (choice) {
+            switch (choice){
                 case 1 -> {
-                    System.out.println("Approving transactions...");
+                    System.out.println("Request processing ...");
+                    ManagerCreditPendingDTO mangerCreditPendingDto = new ManagerCreditPendingDTO(loggedInUser);
+                    creditController.creditPending(loggedInUser);
                 }
                 case 2 -> {
-                    System.out.println("Viewing teller performance...");
+                    String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
+                    ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
+                    creditController.approveCreditRequest(managerCreditApproveDto);
                 }
                 case 3 -> {
+                    String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
+                    ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
+                    creditController.rejectCreditRequest(managerCreditApproveDto);
+                }
+                case 4 -> {
+                    System.out.println("request processing ...");
+                    creditController.getAllCreditAccount(loggedInUser);
+                }
+                case 5 -> {
                     return;
                 }
-                default -> System.out.println("Invalid choice. Please try again.");
             }
         }
     }
@@ -182,12 +193,13 @@ public class MenuNavigator {
                     String nom = creditView.askTellerClientConfirmNom();
                     String prenom = creditView.askTellerClientConfirmPrenom();
                     String amount = creditView.askTellerClientAmountCredit();
+                    String monthly_income = creditView.askTellerClientIncome();
                     String currency = creditView.askTellerClientCurrency();
                     String duration = creditView.askTellerClientTime();
-                    String interestRate = creditView.askTellerClientRate();
                     String description = creditView.askTellerClientPurposeCredit();
-                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,currency,duration,interestRate,description);
-                    creditController.creditRequest(creditRequest,loggedInUser);
+                    CreateAccountDTO creatAccountdto = new CreateAccountDTO(prenom,nom,monthly_income,"CREDIT","0",currency);
+                    CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,monthly_income,currency,duration,description);
+                    creditController.creditRequest(creditRequest,creatAccountdto,loggedInUser);
                 }
                 case 9 -> {
                     return;
