@@ -29,4 +29,9 @@ public class ManagerView {
             return -1;
         }
     }
+
+    public String askManagerRequestId(){
+        System.out.println("Enter the Credit Request ID : ");
+        return scanner.nextLine();
+    }
 }

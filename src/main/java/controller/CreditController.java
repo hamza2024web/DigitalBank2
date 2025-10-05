@@ -120,6 +120,37 @@ public class CreditController {
         }
     }
 
+    public void approveCreditRequest(String requestId, User loggedInUser){
+        try {
+//            if (!loggedInUser.getRole().equals("MANAGER")) {
+//                creditView.showError("Seul un manager peut approuver une demande de crédit");
+//                return;
+//            }
+
+            CreditRequest request = creditService.findCreditRequestById(requestId);
+            if (request == null) {
+                creditView.showError("Credit Application Not Found .");
+                return;
+            }
+
+            if (request.getStatus() != CreditStatus.PENDING) {
+                creditView.showError("This Application has Already traited .");
+                return;
+            }
+
+            CreditAccount creditAccount = creditService.approveCreditRequest(request);
+
+            if (creditAccount != null) {
+                creditView.showSuccess("Application Credit Approved , The Account created Successfully : " + creditAccount.getIban());
+            } else {
+                creditView.showError("Error during credit Approval");
+            }
+
+        } catch (Exception e) {
+            creditView.showError("Erreur: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     private void validateCreditRequestDTO(CreditRequestDTO creditRequestDto){
         if (creditRequestDto.getNom() == null || creditRequestDto.getNom().trim().isEmpty()){
             throw new IllegalArgumentException("The last name require");

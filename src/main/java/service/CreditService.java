@@ -2,8 +2,10 @@ package service;
 
 import config.FeeConfig;
 import domain.Client;
+import domain.CreditAccount;
 import domain.CreditRequest;
 import domain.Enums.CreditStatus;
+import domain.Enums.TransactionType;
 import domain.User;
 import dto.CreditReqDTO;
 import mapper.CreditMapper;
@@ -15,6 +17,7 @@ import repository.TransactionRepositoryImpl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.UUID;
 
 public class CreditService {
     private final CreditRequestRepositoryImpl creditRequestRepository;
@@ -64,6 +67,34 @@ public class CreditService {
         List<CreditRequest> creditRequests = creditRequestRepository.findByStatus(CreditStatus.PENDING);
 
         return creditRequests.stream().map(CreditMapper::toCreditReqDTO).toList();
+    }
+
+    public CreditRequest findCreditRequestById(String requestId) {
+        return creditRequestRepository.findById(requestId);
+    }
+
+    public CreditAccount approveCreditRequest(CreditRequest request){
+        try {
+            BigDecimal applicationFee = feeConfig.calculateFee(TransactionType.CREDIT_APPLICATION,request.getMontant(),request.getCurrency());
+
+            request.setStatus(CreditStatus.ACTIVE);
+            creditRequestRepository.update(request);
+
+            String creditAccountId = UUID.randomUUID().toString();
+            String iban = generateCreditIban();
+
+            CreditAccount creditAccount = new CreditAccount(
+                    creditAccountId,
+                    iban,
+                    request.getClient(),
+                    request.getMontant(),
+                    request.getDureeMois(),
+                    request.getTauxAnnuel()
+            );
+        } catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

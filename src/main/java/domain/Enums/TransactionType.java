@@ -8,5 +8,6 @@ public enum TransactionType {
     TRANSFER_EXTERNAL,
     FEE,
     FEEINCOME,
+    CREDIT_APPLICATION,
     CREDIT_REPAYMENT
 }

@@ -48,7 +48,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public CreditRequest findById(String requestId) {
-        String sql = "SELECT cr.*, c.id as client_id, c.nom, c.prenom, " +
+        String sql = "SELECT c.id as client_id, c.nom, c.prenom, cr.* " +
                 "c.revenue_mensuel " +
                 "FROM credit_requests cr " +
                 "INNER JOIN clients c ON cr.client_id = c.id " +
