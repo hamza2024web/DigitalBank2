@@ -2,6 +2,7 @@ package service;
 
 import config.FeeConfig;
 import domain.*;
+import domain.Enums.AccountCloseStatus;
 import domain.Enums.CreditStatus;
 import domain.Enums.TransactionType;
 import dto.CreditReqDTO;
@@ -78,7 +79,7 @@ public class CreditService {
             request.setStatus(CreditStatus.ACTIVE);
             creditRequestRepository.update(request);
 
-            String creditAccountId = UUID.randomUUID().toString();
+            String creditAccountId = generateAccountId();
             String iban = generateCreditIban();
 
             CreditAccount newcreditAccount = new CreditAccount(
@@ -89,10 +90,29 @@ public class CreditService {
                     LocalDate.now(),
                     true,
                     request.getClient(),
-                    "NONE"
+                    AccountCloseStatus.NONE
             );
 
-            accountRepository.saveCreditAccount(newcreditAccount);
+            Account account = accountRepository.saveCreditAccount(newcreditAccount);
+
+            CreditAccount creditAccount = new CreditAccount(
+                    creditAccountId,
+                    iban,
+                    request.getMontant(),
+                    request.getCurrency(),
+                    LocalDate.now(),
+                    true,
+                    request.getClient(),
+                    AccountCloseStatus.NONE,
+                    request.getMontant(),
+                    request.getDureeMois(),
+                    request.getTauxAnnuel(),
+                    CreditStatus.ACTIVE,
+                    request.getMontant(),
+                    request.getRequestDate(),
+                    LocalDate.now().plusMonths(1),
+                    account
+            );
 
             boolean saved = creditAccountRepository.save(creditAccount);
 
@@ -100,7 +120,7 @@ public class CreditService {
                 throw new RuntimeException("Error during creation of credit account .");
             }
 
-            List<CreditSchedule> schedule = calculateRepaymentSchedule(request.getMontant(),request.getDureeMois(),request.getTauxAnnuel());
+            List<CreditSchedule> schedule = calculateRepaymentSchedule(creditAccount,request.getMontant(),request.getDureeMois(),request.getTauxAnnuel());
 
             for (CreditSchedule scheduleItem : schedule) {
                 scheduleItem.setCreditAccount(creditAccount);
@@ -135,7 +155,7 @@ public class CreditService {
         }
     }
 
-    public List<CreditSchedule> calculateRepaymentSchedule(BigDecimal montant , int dureeMois , BigDecimal tauxAnnuel){
+    public List<CreditSchedule> calculateRepaymentSchedule(CreditAccount creditAccount,BigDecimal montant , int dureeMois , BigDecimal tauxAnnuel){
         List<CreditSchedule> schedule = new ArrayList<>();
 
         BigDecimal tauxMensuel = tauxAnnuel.divide(new BigDecimal("1200"),10,RoundingMode.HALF_UP);
@@ -158,8 +178,8 @@ public class CreditService {
             soldeRestant = soldeRestant.subtract(principal).setScale(2,RoundingMode.HALF_UP);
 
             CreditSchedule scheduleItem = new CreditSchedule(
-                    null, // L'ID sera généré lors de la sauvegarde
-                    null, // Le creditAccount sera assigné plus tard
+                    null,
+                    creditAccount,
                     currentDate,
                     principal,
                     interets,
@@ -241,5 +261,9 @@ public class CreditService {
 
     private String generateCreditIban() {
         return "MA" + System.currentTimeMillis() + "CREDIT";
+    }
+
+    private String generateAccountId() {
+        return "ACC-" + LocalDate.now().getYear() + "-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 }

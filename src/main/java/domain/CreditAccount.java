@@ -46,7 +46,7 @@ public class CreditAccount extends Account {
         this.relatedAccount = relatedAccount;
     }
 
-    public CreditAccount(String id, String iban, BigDecimal montant, Currency currency, LocalDate now, boolean b, Client client, String none) {
+    public CreditAccount(String id, String iban, BigDecimal montant, Currency currency, LocalDate now, boolean b, Client client, AccountCloseStatus none) {
         super(id, iban, AccountType.CREDIT, BigDecimal.ZERO, Currency.MAD, LocalDate.now(), true, client, AccountCloseStatus.NONE);
     }
 
