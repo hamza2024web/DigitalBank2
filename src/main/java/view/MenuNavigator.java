@@ -98,6 +98,10 @@ public class MenuNavigator {
                     ManagerCreditPendingDTO mangerCreditPendingDto = new ManagerCreditPendingDTO(loggedInUser);
                     creditController.creditPending(loggedInUser);
                 }
+                case 2 -> {
+                    System.out.println("request processing ...");
+
+                }
             }
         }
     }

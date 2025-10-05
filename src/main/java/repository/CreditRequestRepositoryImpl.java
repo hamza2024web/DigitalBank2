@@ -24,7 +24,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, creditRequest.getId());
+            stmt.setString(1, creditRequest.getReferenceId());
             stmt.setLong(2, creditRequest.getClient().getId());
             stmt.setBigDecimal(3, creditRequest.getMontant());
             stmt.setString(4, creditRequest.getCurrency().name());
@@ -71,7 +71,21 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public List<CreditRequest> findByStatus(CreditStatus status) {
-        String sql = "SELECT clients.id , clients.nom, clients.prenom, clients.revenue_mensuel,credit_requests.* " +
+        String sql = "SELECT " +
+                "clients.id as client_id, " +
+                "clients.nom, " +
+                "clients.prenom, " +
+                "clients.revenue_mensuel, " +
+                "credit_requests.id as credit_id, " +
+                "credit_requests.montant, " +
+                "credit_requests.monthly_income, " +
+                "credit_requests.currency, " +
+                "credit_requests.duree_mois, " +
+                "credit_requests.taux_annuel, " +
+                "credit_requests.description, " +
+                "credit_requests.status, " +
+                "credit_requests.request_date, " +
+                "credit_requests.requested_by " +
                 "FROM credit_requests " +
                 "INNER JOIN clients ON clients.id = credit_requests.client_id " +
                 "WHERE credit_requests.status = ? " +
@@ -133,14 +147,14 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     private CreditRequest mapResultSetToCreditRequest(ResultSet rs) throws SQLException {
         Client client = new Client(
-                rs.getLong("id"),
+                rs.getLong("client_id"),
                 rs.getString("nom"),
                 rs.getString("prenom"),
                 rs.getBigDecimal("revenue_mensuel")
         );
 
         return new CreditRequest(
-                rs.getString("id"),
+                rs.getString("credit_id"),
                 client,
                 rs.getBigDecimal("montant"),
                 rs.getBigDecimal("monthly_income"),

@@ -75,7 +75,7 @@ public class CreditView {
         System.out.println("\n✅ SUCCESS: The credit request has been created with the following details:");
         System.out.println("---------------------------------------------------------");
 
-        System.out.println("  Request ID: " + creditRequest.getId());
+        System.out.println("  Request ID: " + creditRequest.getReferenceId());
         System.out.println("  Request Date: " + creditRequest.getRequestDate().format(dateFormatter));
         System.out.println("  Current Status: " + creditRequest.getStatus());
         System.out.println("---------------------------------------------------------");

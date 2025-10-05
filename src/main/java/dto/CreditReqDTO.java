@@ -38,11 +38,11 @@ public class CreditReqDTO {
     }
 
 
-    public String getId() {
+    public String getReferenceId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setReferenceId(String id) {
         this.id = id;
     }
 

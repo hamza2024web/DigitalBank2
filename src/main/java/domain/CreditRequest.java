@@ -34,7 +34,7 @@ public class CreditRequest {
         this.requestedBy = requestedBy;
     }
 
-    public String getId() {
+    public String getReferenceId() {
         return id;
     }
 
@@ -78,7 +78,7 @@ public class CreditRequest {
         return requestedBy;
     }
 
-    public void setId(String id) {
+    public void setReferenceId(String id) {
         this.id = id;
     }
 

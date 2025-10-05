@@ -11,7 +11,7 @@ public class CreditMapper {
         }
 
         return new CreditReqDTO(
-                creditRequest.getId(),
+                creditRequest.getReferenceId(),
                 ClientMapper.toClientDTO(creditRequest.getClient()), // Reuse ClientMapper
                 creditRequest.getMontant(),
                 creditRequest.getMonthlyIncome(),
@@ -31,7 +31,7 @@ public class CreditMapper {
         }
 
         return new CreditRequest(
-                creditReqDTO.getId(),
+                creditReqDTO.getReferenceId(),
                 ClientMapper.toClient(creditReqDTO.getClient()),
                 creditReqDTO.getMontant(),
                 creditReqDTO.getMonthlyIncome(),

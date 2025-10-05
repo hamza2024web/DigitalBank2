@@ -103,7 +103,7 @@ public class CreditController {
 
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-                System.out.println("  Request ID: " + request.getId());
+                System.out.println("  Request ID: " + request.getReferenceId());
                 System.out.println("  Request Date: " + request.getRequestDate().format(dateFormatter));
                 System.out.println("  Current Status: " + request.getStatus());
                 System.out.println("---------------------------------------------------------");
