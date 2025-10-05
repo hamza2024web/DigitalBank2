@@ -136,7 +136,7 @@ public class CreditController {
                 return;
             }
 
-            CreditAccount creditAccount = creditService.approveCreditRequest(request);
+            CreditAccount creditAccount = creditService.approveCreditRequest(request,managerCreditApproveDto);
 
             if (creditAccount != null) {
                 creditView.showSuccess("Application Credit Approved , The Account created Successfully : " + creditAccount.getIban());
