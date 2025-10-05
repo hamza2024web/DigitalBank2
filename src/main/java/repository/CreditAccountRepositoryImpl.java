@@ -22,22 +22,30 @@ import java.util.List;
 public class CreditAccountRepositoryImpl implements CreditAccountRepository {
     @Override
     public boolean save(CreditAccount creditAccount) {
-        String sql = "INSERT INTO credit_accounts (montant_initiale,duree_mois,taux_annuel,statut,date_demande,date_prochaine_eheance,related_account_id,solde_restant)" +
-                "VALUES (?,?,?,?,?,?,?,?)";
-        try(PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)){
-            stmt.setBigDecimal(1,creditAccount.getMontantDemande());
-            stmt.setInt(2,creditAccount.getDureeMois());
-            stmt.setBigDecimal(3,creditAccount.getTauxAnnuel());
-            stmt.setString(4,creditAccount.getStatut().name());
-            stmt.setObject(5,creditAccount.getDateDemande());
-            stmt.setObject(6,creditAccount.getDateProchaineEcheance());
-            stmt.setString(7,creditAccount.getRelatedAccount().getId());
-            stmt.setBigDecimal(8,creditAccount.getSoldeRestant());
-            stmt.executeUpdate();
-        } catch (SQLException e){
+        String sql = "INSERT INTO credit_accounts " +
+                "(id, montant_initial, duree_mois, taux_annuel, statut, " +
+                "date_demande, date_prochaine_echeance, related_account_id, solde_restant) " +
+                "VALUES (?, ?, ?, ?, ?::credit_status_enum, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            stmt.setString(1, creditAccount.getId());
+            stmt.setBigDecimal(2, creditAccount.getMontantDemande());
+            stmt.setInt(3, creditAccount.getDureeMois());
+            stmt.setBigDecimal(4, creditAccount.getTauxAnnuel());
+            stmt.setString(5, creditAccount.getStatut().name());
+            stmt.setObject(6, creditAccount.getDateDemande());
+            stmt.setObject(7, creditAccount.getDateProchaineEcheance());
+            stmt.setString(8, creditAccount.getRelatedAccount().getId());
+            stmt.setBigDecimal(9, creditAccount.getSoldeRestant());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error saving credit account: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -48,7 +56,7 @@ public class CreditAccountRepositoryImpl implements CreditAccountRepository {
                 "ra.solde as related_solde, ra.devise as related_devise, ra.date_creation as related_date_creation, " +
                 "ra.is_active as related_is_active, ra.close_status as related_close_status " +
                 "FROM credit_accounts ca " +
-                "INNER JOIN accounts a ON ca.account_id = a.id " +
+                "INNER JOIN accounts a ON ca.id = a.id " +
                 "INNER JOIN clients c ON a.client_id = c.id " +
                 "LEFT JOIN accounts ra ON ca.related_account_id = ra.id";
 
@@ -58,7 +66,7 @@ public class CreditAccountRepositoryImpl implements CreditAccountRepository {
              ResultSet rs = stmt.executeQuery()) {
 
             while(rs.next()){
-                String accountId = rs.getString("account_id");
+                String accountId = rs.getString("id");
                 String iban = rs.getString("iban");
                 BigDecimal solde = rs.getBigDecimal("solde");
                 Currency devise = Currency.valueOf(rs.getString("devise"));
@@ -73,7 +81,7 @@ public class CreditAccountRepositoryImpl implements CreditAccountRepository {
                         rs.getBigDecimal("revenue_mensuel")
                 );
 
-                BigDecimal montantDemande = rs.getBigDecimal("montant_demande");
+                BigDecimal montantDemande = rs.getBigDecimal("montant_initial");
                 int dureeMois = rs.getInt("duree_mois");
                 BigDecimal tauxAnnuel = rs.getBigDecimal("taux_annuel");
                 CreditStatus statut = CreditStatus.valueOf(rs.getString("statut"));

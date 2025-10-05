@@ -43,24 +43,55 @@ public class CreditService {
         try {
             CreditRequest creditRequestDomain = CreditMapper.toCreditRequest(creditReqDTO);
 
-            BigDecimal montant =  creditRequestDomain.getMontant();
+            BigDecimal montant = creditRequestDomain.getMontant();
             BigDecimal monthlyIncome = creditRequestDomain.getMonthlyIncome();
             int dureeMois = creditRequestDomain.getDureeMois();
+            BigDecimal tauxAnnuel = creditRequestDomain.getTauxAnnuel();
+
+            if (montant == null || montant.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Montant must be greater than zero");
+            }
+            if (monthlyIncome == null || monthlyIncome.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Monthly income must be greater than zero");
+            }
+            if (dureeMois <= 0) {
+                throw new IllegalArgumentException("Duration must be greater than zero");
+            }
+
+            BigDecimal tauxMensuel = tauxAnnuel
+                    .divide(new BigDecimal("12"), 10, RoundingMode.HALF_UP)
+                    .divide(new BigDecimal("100"), 10, RoundingMode.HALF_UP);
+
+            BigDecimal mensualite;
+            if (tauxMensuel.compareTo(BigDecimal.ZERO) == 0) {
+                mensualite = montant.divide(new BigDecimal(dureeMois), 2, RoundingMode.HALF_UP);
+            } else {
+                BigDecimal onePlusRate = BigDecimal.ONE.add(tauxMensuel);
+                BigDecimal power = onePlusRate.pow(dureeMois);
+
+                BigDecimal numerator = montant.multiply(tauxMensuel).multiply(power);
+                BigDecimal denominator = power.subtract(BigDecimal.ONE);
+
+                mensualite = numerator.divide(denominator, 2, RoundingMode.HALF_UP);
+            }
 
             BigDecimal plafond = monthlyIncome.multiply(new BigDecimal("0.40"));
-            BigDecimal frais = montant.multiply(new BigDecimal("0.05"));
-            BigDecimal montantTotal = montant.add(frais);
 
-            BigDecimal mensualite = montantTotal.divide(new BigDecimal(dureeMois), RoundingMode.HALF_UP);
-
-            if (mensualite.compareTo(plafond) <= 0){
+            // ✅ Determine credit status
+            if (mensualite.compareTo(plafond) <= 0) {
                 creditRequestDomain.setStatus(CreditStatus.PENDING);
             } else {
                 creditRequestDomain.setStatus(CreditStatus.REJECTED);
             }
 
+            BigDecimal montantTotal = mensualite.multiply(new BigDecimal(dureeMois));
+            creditRequestDomain.setMontant(montantTotal);
+
             return creditRequestRepository.save(creditRequestDomain);
 
+        } catch (IllegalArgumentException e) {
+            System.err.println("Validation error: " + e.getMessage());
+            return false;
         } catch (Exception e) {
             System.err.println("Failed to create credit request: " + e.getMessage());
             e.printStackTrace();
@@ -239,8 +270,8 @@ public class CreditService {
                     LocalDateTime.now(),
                     "CREDIT_REJECTION",
                     "FAILED to reject credit request (ID=" + managerCreditApproveDto.getCreditId() + "): " + e.getMessage(),
-                    manager.getId(),
-                    manager.getRole(),
+                    managerCreditApproveDto.getManager().getId(),
+                    managerCreditApproveDto.getManager().getRole(),
                     false,
                     e.getMessage()
             );

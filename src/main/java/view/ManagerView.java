@@ -16,7 +16,7 @@ public class ManagerView {
         System.out.println("2. Validate a credit request .");
         System.out.println("3. Reject a credit request .");
         System.out.println("4. View existing credit accounts .");
-        System.out.println("5. Decision History");
+        System.out.println("5. Logout .");
         System.out.println("Enter your choice: ");
     }
 

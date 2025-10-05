@@ -48,8 +48,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public CreditRequest findById(String requestId) {
-        String sql = "SELECT c.id as client_id, c.nom, c.prenom, cr.* " +
-                "c.revenue_mensuel " +
+        String sql = "SELECT c.id as client_id, c.nom, c.prenom, c.revenue_mensuel, cr.* " +
                 "FROM credit_requests cr " +
                 "INNER JOIN clients c ON cr.client_id = c.id " +
                 "WHERE cr.id = ?";
@@ -76,7 +75,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
                 "clients.nom, " +
                 "clients.prenom, " +
                 "clients.revenue_mensuel, " +
-                "credit_requests.id as credit_id, " +
+                "credit_requests.id, " +
                 "credit_requests.montant, " +
                 "credit_requests.monthly_income, " +
                 "credit_requests.currency, " +
@@ -114,8 +113,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
                 "taux_annuel = ?, " +
                 "description = ?, " +
                 "status = ?, " +
-                "request_date = ?, " +
-                "requested_by = ? " +
+                "request_date = ? " +
                 "WHERE id = ?";
 
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
@@ -181,7 +179,7 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
         );
 
         return new CreditRequest(
-                rs.getString("credit_id"),
+                rs.getString("id"),
                 client,
                 rs.getBigDecimal("montant"),
                 rs.getBigDecimal("monthly_income"),

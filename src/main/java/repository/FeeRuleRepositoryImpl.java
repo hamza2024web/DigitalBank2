@@ -16,10 +16,12 @@ import java.util.Optional;
 public class FeeRuleRepositoryImpl implements FeeRuleRepository {
     @Override
     public Optional<FeeRule> findActiveByOperationAndCurrency(TransactionType operationType, Currency currency) {
-        String sql = "SELECT id, operation_type, mode, value, currency, is_active " +
-                "FROM fee_rules " +
-                "WHERE operation_type = ? AND is_active = TRUE AND (currency = ? OR currency IS NULL) " +
-                "ORDER BY currency DESC NULLS LAST " +
+        String sql = "SELECT id, operation_type, mode, value, devise, is_active " +
+                "FROM fee_rule " +
+                "WHERE operation_type = ?::transaction_type_enum " +
+                "AND is_active = TRUE " +
+                "AND (devise = ?::currency_enum OR devise IS NULL) " +
+                "ORDER BY devise DESC NULLS LAST " +
                 "LIMIT 1";
 
         try (PreparedStatement statement = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
@@ -35,7 +37,7 @@ public class FeeRuleRepositoryImpl implements FeeRuleRepository {
                     rule.setMode(FeeMode.valueOf(resultSet.getString("mode")));
                     rule.setValue(resultSet.getBigDecimal("value"));
 
-                    String currencyStr = resultSet.getString("currency");
+                    String currencyStr = resultSet.getString("devise");
                     if (currencyStr != null) {
                         rule.setDevise(Currency.valueOf(currencyStr));
                     }

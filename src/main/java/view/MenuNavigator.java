@@ -99,20 +99,23 @@ public class MenuNavigator {
                     creditController.creditPending(loggedInUser);
                 }
                 case 2 -> {
-                    System.out.println("request processing ...");
                     String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
                     ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
                     creditController.approveCreditRequest(managerCreditApproveDto);
                 }
                 case 3 -> {
-                    System.out.println("request processing ...");
                     String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
                     ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
                     creditController.rejectCreditRequest(managerCreditApproveDto);
                 }
                 case 4 -> {
                     System.out.println("request processing ...");
                     creditController.getAllCreditAccount(loggedInUser);
+                }
+                case 5 -> {
+                    return;
                 }
             }
         }

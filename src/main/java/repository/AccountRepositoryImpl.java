@@ -53,7 +53,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public Account saveCreditAccount(Account account) {
-        String sql = "INSERT INTO accounts (id, iban, type, solde, devise, date_creation, is_active, client_id, close_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO accounts (id, iban, type, solde, devise, date_creation, is_active, client_id, close_status) VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::close_status_enum)";
 
         try (PreparedStatement statement = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             statement.setString(1, account.getId());
