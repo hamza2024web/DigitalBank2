@@ -10,15 +10,12 @@ public class AdminView {
     }
 
     public void displayMenu(){
-        System.out.println("1. View all clients");
-        System.out.println("2. View all accounts");
-        System.out.println("3. View all accounts");
-        System.out.println("4. Approve or reject a credit request");
-        System.out.println("5. View all approved credit accounts");
-        System.out.println("6. View pending credit requests");
-        System.out.println("7. Close an account");
-        System.out.println("8. Audit logs (view teller operations)");
-        System.out.println("9. Logout .");
+        System.out.println("1. Account Management");
+        System.out.println("2. Approve or reject a credit request");
+        System.out.println("3. View all approved credit accounts");
+        System.out.println("4. View pending credit requests");
+        System.out.println("5. Audit logs (view teller operations)");
+        System.out.println("6. Logout .");
         System.out.println("Enter Your Choice :");
     }
 

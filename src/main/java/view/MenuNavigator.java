@@ -60,23 +60,19 @@ public class MenuNavigator {
         switch (userDTO.getRole()){
             case ADMIN -> showAdminMenu();
             case MANAGER -> showManagerMenu();
-            case TELLER -> showTellerMenu();
+            case TELLER -> showTellerMenu(loggedInUser);
         }
     }
 
     private void showAdminMenu(){
         while (true) {
-            System.out.println("\n=== ADMIN MENU ===");
-            System.out.println("1. Manage Users");
-            System.out.println("2. View Reports");
-            System.out.println("3. Back to Main Menu");
-            System.out.print("Choice: ");
-
+            adminView.displayMenu();
             int choice = getValidChoice();
 
             switch (choice) {
                 case 1 -> {
-                    System.out.println("Managing users...");
+                    showTellerMenu(loggedInUser);
+
                 }
                 case 2 -> {
                     System.out.println("Viewing reports...");
@@ -123,9 +119,9 @@ public class MenuNavigator {
         }
     }
 
-    private void showTellerMenu() {
+    private void showTellerMenu(User loggedInUser) {
         while (true) {
-            tellerView.displayMenu();
+            tellerView.displayMenu(loggedInUser);
             int choice = tellerView.getMenuChoice();
 
             switch (choice) {

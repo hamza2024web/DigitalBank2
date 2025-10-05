@@ -1,5 +1,8 @@
 package view;
 
+import domain.Enums.Role;
+import domain.User;
+
 import java.math.BigDecimal;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -11,8 +14,10 @@ public class TellerView {
         this.scanner = new Scanner(System.in);
     }
 
-    public void displayMenu(){
-        System.out.println("\n=== TELLER MENU ===");
+    public void displayMenu(User loggedInUser){
+        if (loggedInUser.getRole() == Role.TELLER){
+            System.out.println("\n=== TELLER MENU ===");
+        }
         System.out.println("Accounts:");
         System.out.println("1. Create account");
         System.out.println("2. List my accounts");
