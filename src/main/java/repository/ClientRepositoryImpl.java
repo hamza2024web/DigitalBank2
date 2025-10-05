@@ -14,7 +14,7 @@ import java.util.Optional;
 public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
-    public void save(Client client) {
+    public Client save(Client client) {
         String sql = "INSERT INTO clients (prenom, nom, revenue_mensuel) VALUES (?,?,?) RETURNING id";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, client.getPrenom());
@@ -29,6 +29,7 @@ public class ClientRepositoryImpl implements ClientRepository {
         } catch(SQLException e){
             e.printStackTrace();
         }
+        return client;
     }
 
     @Override

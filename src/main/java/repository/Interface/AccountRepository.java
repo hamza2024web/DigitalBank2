@@ -17,4 +17,5 @@ public interface AccountRepository {
     boolean exists(String accountId);
     boolean ibanExists(String iban);
     void updateCloseStatus(Account account);
+
 }

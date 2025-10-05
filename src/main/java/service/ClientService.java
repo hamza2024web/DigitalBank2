@@ -2,9 +2,11 @@ package service;
 
 import domain.Client;
 import dto.ClientDTO;
+import dto.CreateAccountDTO;
 import mapper.ClientMapper;
 import repository.ClientRepositoryImpl;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class ClientService {
@@ -14,13 +16,18 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public ClientDTO findByNomAndPrenom(String clientNom, String clientPrenom) {
-        Optional<Client> clientOpt = clientRepository.findByNomAndPrenom(clientNom,clientPrenom);
+    public ClientDTO findOrCreateClient(CreateAccountDTO dto) {
+        Optional<Client> existing = clientRepository.findByNomAndPrenom(dto.getLastName(), dto.getFirstName());
 
-        if (clientOpt.isPresent()) {
-            return ClientMapper.toClientDTO(clientOpt.get());
+        if (existing.isPresent()) {
+            return ClientMapper.toClientDTO(existing.get());
         }
 
-        return null; // Retourne null si non trouvé
+        BigDecimal income = new BigDecimal(dto.getMonthlyIncome());
+        Client newClient = new Client(null, dto.getLastName(), dto.getFirstName(), income);
+
+        Client savedClient = clientRepository.save(newClient);
+
+        return ClientMapper.toClientDTO(savedClient);
     }
 }

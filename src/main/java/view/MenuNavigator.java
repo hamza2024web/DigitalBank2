@@ -184,8 +184,9 @@ public class MenuNavigator {
                     String currency = creditView.askTellerClientCurrency();
                     String duration = creditView.askTellerClientTime();
                     String description = creditView.askTellerClientPurposeCredit();
+                    CreateAccountDTO creatAccountdto = new CreateAccountDTO(prenom,nom,monthly_income,"CREDIT","0",currency);
                     CreditRequestDTO creditRequest = new CreditRequestDTO(nom,prenom,amount,monthly_income,currency,duration,description);
-                    creditController.creditRequest(creditRequest,loggedInUser);
+                    creditController.creditRequest(creditRequest,creatAccountdto,loggedInUser);
                 }
                 case 9 -> {
                     return;

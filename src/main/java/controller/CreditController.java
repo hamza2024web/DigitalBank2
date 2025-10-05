@@ -4,10 +4,7 @@ import domain.*;
 import domain.Enums.CreditStatus;
 import domain.Enums.Currency;
 import domain.Enums.Role;
-import dto.AccountDTO;
-import dto.ClientDTO;
-import dto.CreditReqDTO;
-import dto.CreditRequestDTO;
+import dto.*;
 import service.AccountService;
 import service.ClientService;
 import service.CreditService;
@@ -32,11 +29,11 @@ public class CreditController {
         this.creditView = creditView;
     }
 
-    public void creditRequest(CreditRequestDTO creditRequestDto, User teller){
+    public void creditRequest(CreditRequestDTO creditRequestDto,CreateAccountDTO creatAccountdto, User teller){
         try {
             validateCreditRequestDTO(creditRequestDto);
 
-            ClientDTO client = clientService.findByNomAndPrenom(creditRequestDto.getNom() , creditRequestDto.getPrenom());
+            ClientDTO client = clientService.findOrCreateClient(creatAccountdto);
 
             if (client == null){
                 creditView.showError("Client not found with this last Name : " + creditRequestDto.getNom() + " " + creditRequestDto.getPrenom());

@@ -37,7 +37,7 @@ public class Main {
 
         // Services
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
-        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,feeConfig);
+        CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,accountRepository,feeConfig);
         ClientService clientService = new ClientService(clientRepository);
 
         // Views

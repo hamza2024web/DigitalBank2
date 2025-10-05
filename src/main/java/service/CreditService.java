@@ -74,18 +74,20 @@ public class CreditService {
 
     public CreditAccount approveCreditRequest(CreditRequest request){
         try {
-            BigDecimal applicationFee = feeConfig.calculateFee(TransactionType.CREDIT_APPLICATION,request.getMontant(),request.getCurrency());
+            BigDecimal applicationFee = feeConfig.calculateFee(TransactionType.CREDIT_APPLICATION, request.getMontant(), request.getCurrency());
 
+            BigDecimal montantTotal = request.getMontant().add(applicationFee);
             request.setStatus(CreditStatus.ACTIVE);
             creditRequestRepository.update(request);
 
             String creditAccountId = generateAccountId();
             String iban = generateCreditIban();
 
+
             CreditAccount newcreditAccount = new CreditAccount(
                     creditAccountId,
                     iban,
-                    request.getMontant(),
+                    montantTotal,
                     request.getCurrency(),
                     LocalDate.now(),
                     true,
@@ -98,17 +100,17 @@ public class CreditService {
             CreditAccount creditAccount = new CreditAccount(
                     creditAccountId,
                     iban,
-                    request.getMontant(),
+                    montantTotal,
                     request.getCurrency(),
                     LocalDate.now(),
                     true,
                     request.getClient(),
                     AccountCloseStatus.NONE,
-                    request.getMontant(),
+                    montantTotal,
                     request.getDureeMois(),
                     request.getTauxAnnuel(),
                     CreditStatus.ACTIVE,
-                    request.getMontant(),
+                    montantTotal,
                     request.getRequestDate(),
                     LocalDate.now().plusMonths(1),
                     account
@@ -116,22 +118,16 @@ public class CreditService {
 
             boolean saved = creditAccountRepository.save(creditAccount);
 
-            if (!saved){
+            if (!saved) {
                 throw new RuntimeException("Error during creation of credit account .");
             }
 
-            List<CreditSchedule> schedule = calculateRepaymentSchedule(creditAccount,request.getMontant(),request.getDureeMois(),request.getTauxAnnuel());
+            List<CreditSchedule> schedule = calculateRepaymentSchedule(creditAccount, montantTotal, request.getDureeMois(), request.getTauxAnnuel());
 
             for (CreditSchedule scheduleItem : schedule) {
                 scheduleItem.setCreditAccount(creditAccount);
                 creditScheduleRepository.save(scheduleItem);
             }
-
-            if (applicationFee.compareTo(BigDecimal.ZERO) > 0){
-                deductApplicationFee(request.getClient().getAccounts().get(0),applicationFee);
-            }
-
-            transferCreditToClientAccount(creditAccount);
 
             return creditAccount;
         } catch(Exception e){
@@ -207,56 +203,6 @@ public class CreditService {
 
         return principal.multiply(numerator.divide(denominator, 10, RoundingMode.HALF_UP))
                 .setScale(2, RoundingMode.HALF_UP);
-    }
-
-    private void transferCreditToClientAccount(CreditAccount creditAccount) {
-        Account relatedAccount = creditAccount.getRelatedAccount();
-
-        // Calculer les frais de déblocage
-        BigDecimal disbursementFee = feeConfig.calculateFee(
-                TransactionType.CREDIT_DISBURSEMENT,
-                creditAccount.getMontantDemande(),
-                relatedAccount.getDevise()
-        );
-
-        // Montant net à créditer (montant demandé - frais de déblocage)
-        BigDecimal netAmount = creditAccount.getMontantDemande().subtract(disbursementFee);
-
-        // Créditer le compte du client
-        relatedAccount.setSolde(relatedAccount.getSolde().add(netAmount));
-
-        // Créer la transaction de déblocage
-        Transaction disbursementTransaction = new Transaction(
-                netAmount,
-                TransactionType.CREDIT_DISBURSEMENT,
-                "SUCCESS",
-                LocalDate.now(),
-                "MAD",
-                String.format("Déblocage du crédit (Montant: %s MAD, Frais: %s MAD)",
-                        creditAccount.getMontantDemande(), disbursementFee)
-                UUID.randomUUID().toString(),
-                creditAccount,
-                relatedAccount
-        );
-        transactionRepository.save(disbursementTransaction);
-
-        // Enregistrer les frais de déblocage (revenu banque)
-        if (disbursementFee.compareTo(BigDecimal.ZERO) > 0) {
-            Transaction feeTransaction = new Transaction(
-                    UUID.randomUUID().toString(),
-                    relatedAccount,
-                    null, // Compte de la banque
-                    disbursementFee,
-                    LocalDate.now(),
-                    TransactionType.FEE_DEDUCTION,
-                    "Frais de déblocage crédit (revenu banque)"
-            );
-            transactionRepository.save(feeTransaction);
-        }
-
-        // Activer le compte crédit
-        creditAccount.setStatut(CreditStatus.ACTIVE);
-        creditAccountRepository.update(creditAccount);
     }
 
     private String generateCreditIban() {
