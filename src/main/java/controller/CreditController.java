@@ -5,8 +5,8 @@ import domain.Enums.CreditStatus;
 import domain.Enums.Currency;
 import domain.Enums.Role;
 import dto.*;
-import mapper.CreditMapper;
 import service.AccountService;
+import service.AuditLogService;
 import service.ClientService;
 import service.CreditService;
 import view.CreditView;
@@ -22,12 +22,14 @@ public class CreditController {
     private final ClientService clientService;
     private final AccountService accountService;
     private final CreditView creditView;
+    private final AuditLogService auditLogService;
 
-    public CreditController (CreditService creditService, ClientService clientService, AccountService accountService, CreditView creditView){
+    public CreditController (CreditService creditService, ClientService clientService, AccountService accountService, CreditView creditView, AuditLogService auditLogService){
         this.creditService = creditService;
         this.clientService = clientService;
         this.accountService = accountService;
         this.creditView = creditView;
+        this.auditLogService = auditLogService;
     }
 
     public void creditRequest(CreditRequestDTO creditRequestDto,CreateAccountDTO creatAccountdto, User teller){
@@ -185,6 +187,63 @@ public class CreditController {
                 displayCreditAccount(account);
                 System.out.println("─".repeat(80));
             }
+        }
+    }
+
+    public void getAllApproveCredit(User admin){
+        List<CreditAccount> accounts = creditService.getAllApproveCredit(admin);
+
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found.");
+        } else {
+            System.out.println("=== Credit Accounts Approved ===");
+            System.out.println("Total: " + accounts.size());
+            System.out.println("─".repeat(80));
+
+            for (CreditAccount account : accounts) {
+                displayCreditAccount(account);
+                System.out.println("─".repeat(80));
+            }
+        }
+    }
+
+    public void getTellerManagerLog(AdminCreditLogDTO adminCreditLogDTO) {
+        List<AuditLog> logs = auditLogService.getTellerManagerLog(adminCreditLogDTO);
+
+        if (logs == null || logs.isEmpty()) {
+            System.out.println("No audit logs found for user: " + adminCreditLogDTO.getEmail());
+            return;
+        }
+
+        displayAuditLogs(logs);
+    }
+
+    private void displayAuditLogs(List<AuditLog> logs) {
+        System.out.println("\n╔════════════════════════════════════════════════════════════════════════════╗");
+        System.out.println("║                            AUDIT LOG REPORT                                ║");
+        System.out.println("╠════════════════════════════════════════════════════════════════════════════╣");
+        System.out.printf("║ Total Logs: %-63d║%n", logs.size());
+        System.out.println("╚════════════════════════════════════════════════════════════════════════════╝\n");
+
+        for (AuditLog log : logs) {
+            displaySingleLog(log);
+            System.out.println("─".repeat(80));
+        }
+    }
+
+    private void displaySingleLog(AuditLog log) {
+        String statusIcon = log.isSuccess() ? "✓" : "✗";
+        String statusText = log.isSuccess() ? "SUCCESS" : "FAILED";
+
+        System.out.printf("Timestamp    : %s%n", log.getTimestamp());
+        System.out.printf("User ID      : %d%n", log.getUserId());
+        System.out.printf("Role         : %s%n", log.getUserRole());
+        System.out.printf("Action       : %s%n", log.getAction());
+        System.out.printf("Details      : %s%n", log.getDetails());
+        System.out.printf("Status       : %s %s%n", statusIcon, statusText);
+
+        if (!log.isSuccess() && log.getErrorMessage() != null) {
+            System.out.printf("Error        : %s%n", log.getErrorMessage());
         }
     }
 

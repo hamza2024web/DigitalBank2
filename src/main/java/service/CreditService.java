@@ -325,6 +325,10 @@ public class CreditService {
         return accounts;
     }
 
+    public List<CreditAccount> getAllApproveCredit(User admin){
+        List<CreditAccount> accounts = creditAccountRepository.getAllApproveCredit();
+        return accounts;
+    }
     private BigDecimal calculateMonthlyPayment(BigDecimal principal, int months, BigDecimal monthlyRate) {
         if (monthlyRate.compareTo(BigDecimal.ZERO) == 0) {
             return principal.divide(new BigDecimal(months), 2, RoundingMode.HALF_UP);

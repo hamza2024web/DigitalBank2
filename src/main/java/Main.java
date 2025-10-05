@@ -39,7 +39,7 @@ public class Main {
         AccountService accountService = new AccountService(accountRepository, clientRepository, operationRepository, auditLogRepository, transactionRepsoitory, exchangeRateRepository);
         CreditService creditService = new CreditService(creditRequestRepository,creditAccountRepository,creditScheduleRepository,transactionRepository,accountRepository,feeConfig,operationRepository,auditLogRepository);
         ClientService clientService = new ClientService(clientRepository);
-
+        AuditLogService auditLogService = new AuditLogService(auditLogRepository,userRepository);
         // Views
         TellerView tellerView = new TellerView();
         CreditView creditView = new CreditView();
@@ -48,7 +48,7 @@ public class Main {
 
         // Controllers
         AccountController accountController = new AccountController(accountService);
-        CreditController creditController = new CreditController(creditService,clientService,accountService,creditView);
+        CreditController creditController = new CreditController(creditService,clientService,accountService,creditView,auditLogService);
 
 
         // Menu Navigator

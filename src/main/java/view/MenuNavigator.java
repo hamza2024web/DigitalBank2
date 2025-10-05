@@ -72,13 +72,36 @@ public class MenuNavigator {
             switch (choice) {
                 case 1 -> {
                     showTellerMenu(loggedInUser);
-
                 }
                 case 2 -> {
-                    System.out.println("Viewing reports...");
+                    String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
+                    ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
+                    creditController.approveCreditRequest(managerCreditApproveDto);
                 }
                 case 3 -> {
-                    return;
+                    String creditId = managerView.askManagerRequestId();
+                    System.out.println("request processing ...");
+                    ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
+                    creditController.rejectCreditRequest(managerCreditApproveDto);
+                }
+                case 4 -> {
+                    System.out.println("Request processing ...");
+                    ManagerCreditPendingDTO mangerCreditPendingDto = new ManagerCreditPendingDTO(loggedInUser);
+                    creditController.creditPending(loggedInUser);
+                }
+                case 5 -> {
+                    System.out.println("Request processing ...");
+                    AdminCreditDTO adminCreditDTO = new AdminCreditDTO(loggedInUser);
+                    creditController.getAllApproveCredit(loggedInUser);
+                }
+                case 6 -> {
+                    String email = adminView.askAdminTellerEmail();
+                    AdminCreditLogDTO adminCreditLogDTO = new AdminCreditLogDTO(email,loggedInUser);
+                    creditController.getTellerManagerLog(adminCreditLogDTO);
+                }
+                case 7 -> {
+
                 }
                 default -> System.out.println("Invalid choice. Please try again.");
             }

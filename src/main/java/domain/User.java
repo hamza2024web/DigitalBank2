@@ -14,6 +14,10 @@ public class User {
         this.role = role;
     }
 
+    public User(String email) {
+        this.email = email;
+    }
+
     public Long getId(){
         return id;
     }
