@@ -6,6 +6,7 @@ import domain.Enums.AccountCloseStatus;
 import domain.Enums.CreditStatus;
 import domain.Enums.TransactionType;
 import dto.CreditReqDTO;
+import dto.ManagerCreditApproveDTO;
 import mapper.CreditMapper;
 import repository.*;
 
@@ -136,9 +137,9 @@ public class CreditService {
         }
     }
 
-    public boolean rejectCreditRequest(String requestId, String reason){
+    public boolean rejectCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto){
         try {
-            CreditRequest request = creditRequestRepository.findById(requestId);
+            CreditRequest request = creditRequestRepository.findById(managerCreditApproveDto.getCreditId());
             if (request == null){
                 return false;
             }

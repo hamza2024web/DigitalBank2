@@ -102,7 +102,13 @@ public class MenuNavigator {
                     System.out.println("request processing ...");
                     String creditId = managerView.askManagerRequestId();
                     ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
-                    creditController.approveCreditRequest(creditId,loggedInUser);
+                    creditController.approveCreditRequest(managerCreditApproveDto);
+                }
+                case 3 -> {
+                    System.out.println("request processing ...");
+                    String creditId = managerView.askManagerRequestId();
+                    ManagerCreditApproveDTO managerCreditApproveDto = new ManagerCreditApproveDTO(creditId,loggedInUser);
+                    creditController.rejectCreditRequest(managerCreditApproveDto);
                 }
             }
         }

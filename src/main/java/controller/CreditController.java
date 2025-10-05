@@ -118,14 +118,14 @@ public class CreditController {
         }
     }
 
-    public void approveCreditRequest(String requestId, User loggedInUser){
+    public void approveCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto){
         try {
-            if (loggedInUser.getRole() != Role.MANAGER) {
+            if (managerCreditApproveDto.getManager().getRole() != Role.MANAGER) {
                 creditView.showError("Seul un manager peut approuver une demande de crédit");
                 return;
             }
 
-            CreditRequest request = creditService.findCreditRequestById(requestId);
+            CreditRequest request = creditService.findCreditRequestById(managerCreditApproveDto.getCreditId());
             if (request == null) {
                 creditView.showError("Credit Application Not Found .");
                 return;
@@ -149,6 +149,27 @@ public class CreditController {
             e.printStackTrace();
         }
     }
+
+    public void rejectCreditRequest(ManagerCreditApproveDTO managerCreditApproveDto) {
+        try {
+            if (managerCreditApproveDto.getManager().getRole() != Role.MANAGER) {
+                creditView.showError("Seul un manager peut approuver une demande de crédit");
+                return;
+            }
+
+            boolean success = creditService.rejectCreditRequest(managerCreditApproveDto);
+
+            if (success) {
+                creditView.showSuccess("Demande de crédit rejetée");
+            } else {
+                creditView.showError("Erreur lors du rejet de la demande");
+            }
+
+        } catch (Exception e) {
+            creditView.showError("Erreur: " + e.getMessage());
+        }
+    }
+
     private void validateCreditRequestDTO(CreditRequestDTO creditRequestDto){
         if (creditRequestDto.getNom() == null || creditRequestDto.getNom().trim().isEmpty()){
             throw new IllegalArgumentException("The last name require");
