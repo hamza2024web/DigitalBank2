@@ -30,6 +30,11 @@ public class SavingAccount extends Account {
         this.tauxInteret = tauxInteret;
     }
 
+    public SavingAccount(BigDecimal solde, Currency devise, Client client, BigDecimal tauxInteret) {
+        super(null, null, AccountType.EPARGNE, solde, devise, null, true, client, AccountCloseStatus.NONE);
+        this.tauxInteret = tauxInteret;
+    }
+
     public BigDecimal getTauxInteret() {
         return tauxInteret;
     }

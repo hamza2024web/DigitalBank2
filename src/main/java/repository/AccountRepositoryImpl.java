@@ -287,7 +287,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     private void saveAccount(Connection connection, Account account) throws SQLException {
         String sql = "INSERT INTO accounts (id, iban, type, solde, devise, date_creation, is_active, client_id, close_status) " +
-                "VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::account_close_status_enum)";
+                "VALUES (?, ?, ?::account_type_enum, ?, ?::currency_enum, ?, ?, ?, ?::close_status_enum)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, account.getId());

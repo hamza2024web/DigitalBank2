@@ -49,7 +49,7 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public Optional<Client> findByFirsName(String lastName) {
+    public Optional<Client> findByLastName(String lastName) {
         String sql = "SELECT * FROM clients WHERE nom = ?";
         try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
             stmt.setString(1, lastName);
@@ -82,75 +82,6 @@ public class ClientRepositoryImpl implements ClientRepository {
         }
 
         return Optional.empty();
-    }
-
-    @Override
-    public List<Client> findAll() {
-        List<Client> clients = new ArrayList<>();
-        String sql = "SELECT * FROM clients";
-
-        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                clients.add(mapResultSetToClient(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return clients;
-    }
-
-    @Override
-    public void update(Client client) {
-        String sql = "UPDATE clients SET prenom = ?, nom = ?, revenue_mensuel = ? WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, client.getPrenom());
-            stmt.setString(2, client.getNom());
-            stmt.setBigDecimal(3, client.getRevenueMensuel());
-            stmt.setLong(4, client.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void delete(String clientId) {
-        String sql = "DELETE FROM clients WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setLong(1, Long.parseLong(clientId));
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public boolean exists(String clientId) {
-        String sql = "SELECT COUNT(*) FROM clients WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setLong(1, Long.parseLong(clientId));
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public boolean existsByFirsName(String firstName) {
-        String sql = "SELECT COUNT(*) FROM clients WHERE prenom = ?";
-        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
-            stmt.setString(1, firstName);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
     private Client mapResultSetToClient(ResultSet rs) throws SQLException {

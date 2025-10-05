@@ -542,7 +542,11 @@ public class AccountService {
     }
 
     private Client findOrCreateClient(CreateAccountDTO dto) {
-        var existing = clientRepository.findByFirsName(dto.getFirstName());
+        var existing = clientRepository.findByNomAndPrenom(
+                dto.getFirstName(),
+                dto.getLastName()
+        );
+
         if (existing.isPresent()) {
             return existing.get();
         }
@@ -550,10 +554,11 @@ public class AccountService {
         BigDecimal income = new BigDecimal(dto.getMonthlyIncome());
         Client client = new Client(null, dto.getLastName(), dto.getFirstName(), income);
 
-        clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
 
-        var savedClient = clientRepository.findByFirsName(dto.getFirstName())
-                .orElseThrow(() -> new RuntimeException("Failed to retrieve newly created client"));
+        if (savedClient.getId() == null) {
+            throw new RuntimeException("Failed to generate ID for new client");
+        }
 
         return savedClient;
     }

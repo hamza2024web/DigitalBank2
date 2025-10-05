@@ -19,21 +19,20 @@ public class AccountMapper {
         switch (accountType) {
             case COURANT:
                 return new CurrentAccount(
-                        null,
                         initialBalance,
                         currency,
-                        null,
+                        client,
                         BigDecimal.ZERO
                 );
 
             case EPARGNE:
                 return new SavingAccount(
-                        null,
                         initialBalance,
                         currency,
-                        null,
+                        client,
                         new BigDecimal("0.03")
                 );
+
             default:
                 throw new IllegalArgumentException("Unsupported account type: " + accountType);
         }
