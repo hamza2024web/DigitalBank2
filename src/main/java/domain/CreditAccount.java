@@ -16,9 +16,10 @@ public class CreditAccount extends Account {
     private BigDecimal soldeRestant;
     private LocalDate dateDemande;
     private LocalDate dateProchaineEcheance;
+    private Account relatedAccount;
 
     public CreditAccount(String id, String iban, BigDecimal solde, Currency devise, LocalDate dateCreation, boolean isActive, Client client, AccountCloseStatus closeStatus, BigDecimal montantDemande, int dureeMois, BigDecimal tauxAnnuel, CreditStatus statut, BigDecimal soldeRestant, LocalDate dateDemande,
-                         LocalDate dateProchaineEcheance) {
+                         LocalDate dateProchaineEcheance, Account relatedAccount) {
 
         super(id, iban, AccountType.CREDIT, solde, devise, dateCreation, isActive, client, closeStatus);
 
@@ -29,10 +30,11 @@ public class CreditAccount extends Account {
         this.soldeRestant = soldeRestant;
         this.dateDemande = dateDemande;
         this.dateProchaineEcheance = dateProchaineEcheance;
+        this.relatedAccount = relatedAccount;
     }
 
     public CreditAccount(String id, String iban, Client client, BigDecimal montantDemande, int dureeMois,
-                         BigDecimal tauxAnnuel) {
+                         BigDecimal tauxAnnuel, Account relatedAccount) {
         super(id, iban, AccountType.CREDIT, BigDecimal.ZERO, Currency.MAD, LocalDate.now(), true, client, AccountCloseStatus.NONE);
         this.montantDemande = montantDemande;
         this.dureeMois = dureeMois;
@@ -41,6 +43,11 @@ public class CreditAccount extends Account {
         this.soldeRestant = montantDemande;
         this.dateDemande = LocalDate.now();
         this.dateProchaineEcheance = LocalDate.now().plusMonths(1);
+        this.relatedAccount = relatedAccount;
+    }
+
+    public CreditAccount(String id, String iban, BigDecimal montant, Currency currency, LocalDate now, boolean b, Client client, String none) {
+        super(id, iban, AccountType.CREDIT, BigDecimal.ZERO, Currency.MAD, LocalDate.now(), true, client, AccountCloseStatus.NONE);
     }
 
     public BigDecimal getMontantDemande() {
@@ -71,6 +78,10 @@ public class CreditAccount extends Account {
         return dateProchaineEcheance;
     }
 
+    public Account getRelatedAccount() {
+        return relatedAccount;
+    }
+
     public void setMontantDemande(BigDecimal montantDemande) {
         this.montantDemande = montantDemande;
     }
@@ -99,4 +110,7 @@ public class CreditAccount extends Account {
         this.dateProchaineEcheance = dateProchaineEcheance;
     }
 
+    public void setRelatedAccount(Account relatedAccount) {
+        this.relatedAccount = relatedAccount;
+    }
 }

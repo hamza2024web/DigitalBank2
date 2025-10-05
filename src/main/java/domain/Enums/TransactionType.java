@@ -9,5 +9,6 @@ public enum TransactionType {
     FEE,
     FEEINCOME,
     CREDIT_APPLICATION,
-    CREDIT_REPAYMENT
+    CREDIT_REPAYMENT,
+    CREDIT_DISBURSEMENT
 }

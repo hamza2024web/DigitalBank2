@@ -3,6 +3,7 @@ package controller;
 import domain.*;
 import domain.Enums.CreditStatus;
 import domain.Enums.Currency;
+import domain.Enums.Role;
 import dto.AccountDTO;
 import dto.ClientDTO;
 import dto.CreditReqDTO;
@@ -122,10 +123,10 @@ public class CreditController {
 
     public void approveCreditRequest(String requestId, User loggedInUser){
         try {
-//            if (!loggedInUser.getRole().equals("MANAGER")) {
-//                creditView.showError("Seul un manager peut approuver une demande de crédit");
-//                return;
-//            }
+            if (loggedInUser.getRole() != Role.MANAGER) {
+                creditView.showError("Seul un manager peut approuver une demande de crédit");
+                return;
+            }
 
             CreditRequest request = creditService.findCreditRequestById(requestId);
             if (request == null) {

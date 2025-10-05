@@ -107,7 +107,34 @@ public class CreditRequestRepositoryImpl implements CreditRequestRepository {
 
     @Override
     public boolean update(CreditRequest request) {
-        return false;
+        String sql = "UPDATE credit_requests SET " +
+                "montant = ?, " +
+                "currency = ?, " +
+                "duree_mois = ?, " +
+                "taux_annuel = ?, " +
+                "description = ?, " +
+                "status = ?, " +
+                "request_date = ?, " +
+                "requested_by = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = JDBCUtil.getInstance().getConnection().prepareStatement(sql)) {
+            stmt.setBigDecimal(1, request.getMontant());
+            stmt.setString(2, request.getCurrency().name());
+            stmt.setInt(3, request.getDureeMois());
+            stmt.setBigDecimal(4, request.getTauxAnnuel());
+            stmt.setString(5, request.getDescription());
+            stmt.setString(6, request.getStatus().name());
+            stmt.setDate(7, Date.valueOf(request.getRequestDate()));
+            stmt.setString(8, request.getRequestedBy());
+
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

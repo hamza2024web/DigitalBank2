@@ -34,7 +34,6 @@ public class AccountMapper {
                         null,
                         new BigDecimal("0.03")
                 );
-
             default:
                 throw new IllegalArgumentException("Unsupported account type: " + accountType);
         }
